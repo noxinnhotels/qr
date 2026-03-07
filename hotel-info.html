@@ -741,6 +741,7 @@ async function delAnn(id){if(!confirm('Duyuruyu sil?'))return;await sb.from('ann
 
 function openAnnModal(id){
   editType='announcement';
+  editItem=null;
   if(id){sb.from('announcements').select('*').eq('id',id).single().then(({data})=>{editAnn=data;showAnnModal(data);});}
   else{editAnn=null;showAnnModal(null);}
 }
@@ -799,13 +800,24 @@ function closeModal(){document.getElementById('item-modal').classList.remove('op
 
 async function saveItem(){
   if(editType==='announcement'){
-    const type=document.getElementById('f-ann-type').value;
-    const messages={};LANGS.forEach(l=>{messages[l.code]=document.getElementById(`fann-${l.code}`)?.value||'';});
-    if(!messages.tr&&!messages.en){showToast('⚠️ En az bir dilde mesaj girin!');return;}
+    const type=document.getElementById('f-ann-type')?.value||'info';
+    const messages={};
+    LANGS.forEach(l=>{
+      const el=document.getElementById('fann-'+l.code);
+      if(el&&el.value.trim()) messages[l.code]=el.value.trim();
+    });
+    console.log('Saving announcement:',{type,messages,editAnn});
+    if(!Object.keys(messages).length){showToast('⚠️ En az bir dilde mesaj girin!');return;}
     const btn=document.getElementById('save-btn');btn.disabled=true;btn.textContent='Kaydediliyor…';
-    const{error}=editAnn?await sb.from('announcements').update({type,messages,updated_at:new Date().toISOString()}).eq('id',editAnn.id):await sb.from('announcements').insert({type,messages,is_active:true});
+    let res;
+    if(editAnn){
+      res=await sb.from('announcements').update({type,messages,updated_at:new Date().toISOString()}).eq('id',editAnn.id);
+    } else {
+      res=await sb.from('announcements').insert([{type,messages,is_active:true}]);
+    }
+    console.log('Save result:',res);
     btn.disabled=false;btn.textContent='Kaydet';
-    if(error){showToast('❌ '+error.message);return;}
+    if(res.error){showToast('❌ '+res.error.message);console.error('Ann error:',res.error);return;}
     closeModal();await fetchAll();renderA();renderAnn();showToast('✓ Duyuru kaydedildi');return;
   }
 
