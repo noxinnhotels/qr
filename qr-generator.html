@@ -522,8 +522,6 @@ input[type="color"] {
 <script>
 let currentTab = 'url';
 let logoDataURL = null;
-let history = [];
-try { history = JSON.parse(localStorage.getItem('qr-history') || '[]'); } catch(e) {}
 
 function switchTab(tab) {
   currentTab = tab;
@@ -608,7 +606,6 @@ function generateQR() {
   document.getElementById('qr-footer').style.display = 'flex';
   document.getElementById('qr-size-label').textContent = `${size} × ${size} px`;
 
-  setTimeout(() => saveToHistory(text, size), 250);
   showToast('✓ QR kodu oluşturuldu');
 }
 
@@ -772,50 +769,6 @@ function copyToClipboard() {
       });
     } catch(e) { showToast('⚠️ Bu tarayıcı kopyalamayı desteklemiyor'); }
   });
-}
-
-function saveToHistory(text, size) {
-  const c = getCanvas(); if (!c) return;
-  const entry = { id: Date.now(), text, type: getTabLabel(), time: new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}), dataURL: c.toDataURL() };
-  history.unshift(entry);
-  if (history.length > 10) history = history.slice(0,10);
-  try { localStorage.setItem('qr-history', JSON.stringify(history)); } catch(e) {}
-  renderHistory();
-}
-
-function renderHistory() {
-  const list = document.getElementById('history-list');
-  if (!history.length) { list.innerHTML = '<div class="empty-history">Henüz QR kodu oluşturulmadı</div>'; return; }
-  list.innerHTML = '';
-  history.forEach(item => {
-    const el = document.createElement('div'); el.className = 'history-item'; el.title = item.text;
-    el.onclick = () => loadFromHistory(item);
-    const img = document.createElement('img'); img.src = item.dataURL;
-    const info = document.createElement('div'); info.className = 'history-item-info';
-    info.innerHTML = `<div class="history-item-text">${item.text}</div><div class="history-item-meta">${item.time}</div>`;
-    const badge = document.createElement('div'); badge.className = 'history-item-type'; badge.textContent = item.type;
-    el.append(img, info, badge); list.appendChild(el);
-  });
-}
-
-function loadFromHistory(item) {
-  const output = document.getElementById('qr-output');
-  output.innerHTML = '';
-  const img = document.createElement('img'); img.src = item.dataURL; img.className = 'qr-pop';
-  img.style.cssText = 'border-radius:4px;display:block;max-width:100%';
-  output.appendChild(img);
-  document.getElementById('qr-placeholder').style.display = 'none';
-  output.style.display = 'flex';
-  document.getElementById('qr-footer').style.display = 'none';
-  document.getElementById('qr-size-label').textContent = item.type;
-  showToast('↩ Geçmişten yüklendi');
-}
-
-function clearHistory() {
-  history = [];
-  try { localStorage.removeItem('qr-history'); } catch(e) {}
-  renderHistory();
-  showToast('🗑 Geçmiş temizlendi');
 }
 
 function showToast(msg) {
