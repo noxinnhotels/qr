@@ -20,15 +20,63 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--text);m
 .hotel-label{font-family:'Playfair Display',serif;font-size:14px;font-weight:400;letter-spacing:5px;text-transform:uppercase;color:var(--gold-light);margin-bottom:10px;}
 .hero h1{font-family:'Playfair Display',serif;font-size:44px;font-weight:600;color:var(--white);line-height:1.1;margin-bottom:10px;}
 .hero-sub{font-size:15px;color:rgba(255,255,255,.6);letter-spacing:1.5px;font-weight:300;}
-.announcement-banner{display:none;padding:12px 16px;gap:10px;align-items:flex-start;}
-.announcement-banner.show{display:flex;}
-.announcement-banner.info{background:#e3f4fb;border-bottom:2px solid #7ec8e3;}
-.announcement-banner.warning{background:#fff8e1;border-bottom:2px solid #ffe082;}
-.announcement-banner.urgent{background:#ffebee;border-bottom:2px solid #ef9a9a;}
-.announcement-banner.success{background:#f1f8e9;border-bottom:2px solid #aed581;}
-.ann-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
-.ann-text{font-size:14px;line-height:1.6;flex:1;color:var(--text);}
-.ann-close{background:none;border:none;font-size:18px;color:var(--text-soft);cursor:pointer;padding:0 4px;flex-shrink:0;}
+/* ── CONTACT FAB ── */
+.contact-fabs{position:fixed;bottom:24px;left:24px;display:flex;flex-direction:column;gap:10px;z-index:100;}
+.cfab{width:50px;height:50px;border-radius:50%;border:none;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .2s;}
+.cfab:hover{transform:scale(1.1);}
+.cfab-wa{background:#25d366;color:white;}
+.cfab-ph{background:var(--palm);color:white;}
+
+/* ── ANNOUNCEMENT BANNER (geliştirilmiş) ── */
+.ann-banner-wrap{overflow:hidden;max-height:0;transition:max-height .4s ease;}
+.ann-banner-wrap.show{max-height:120px;}
+.announcement-banner{display:flex;padding:13px 16px;gap:10px;align-items:flex-start;}
+.announcement-banner.info{background:linear-gradient(90deg,#e3f4fb,#f0faff);border-left:4px solid #2a9bbf;}
+.announcement-banner.warning{background:linear-gradient(90deg,#fff8e1,#fffde7);border-left:4px solid #f9a825;}
+.announcement-banner.urgent{background:linear-gradient(90deg,#ffebee,#fff5f5);border-left:4px solid #e53935;}
+.announcement-banner.success{background:linear-gradient(90deg,#f1f8e9,#f9ffe0);border-left:4px solid #7cb342;}
+.ann-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:2px 8px;border-radius:20px;margin-right:2px;flex-shrink:0;align-self:center;}
+.ann-badge.info{background:#2a9bbf;color:white;}
+.ann-badge.warning{background:#f9a825;color:white;}
+.ann-badge.urgent{background:#e53935;color:white;animation:pulse-badge 1.5s infinite;}
+.ann-badge.success{background:#7cb342;color:white;}
+@keyframes pulse-badge{0%,100%{opacity:1;}50%{opacity:.6;}}
+.ann-body{flex:1;}
+.ann-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px;}
+.ann-title.info{color:#1a7a9a;}.ann-title.warning{color:#c17900;}.ann-title.urgent{color:#b71c1c;}.ann-title.success{color:#558b2f;}
+.ann-msg{font-size:14px;line-height:1.5;color:var(--text);}
+
+/* ── CHECK-IN/OUT SEKMESİ ── */
+.info-card{background:var(--white);border-radius:var(--radius);padding:20px;margin-bottom:12px;border:1px solid rgba(26,95,122,.12);box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.info-card-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.info-card-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,rgba(26,95,122,.12),rgba(42,155,191,.2));display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.info-card-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--text);}
+.checkin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.checkin-box{background:linear-gradient(135deg,var(--palm),var(--palm-light));border-radius:14px;padding:16px;text-align:center;color:white;}
+.checkin-box.out{background:linear-gradient(135deg,var(--ocean),#1a5f7a);}
+.checkin-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;opacity:.8;margin-bottom:6px;font-weight:500;}
+.checkin-time{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;line-height:1;}
+.rules-list{list-style:none;}
+.rules-list li{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--sand2);font-size:14px;line-height:1.5;}
+.rules-list li:last-child{border-bottom:none;}
+.rules-list li::before{content:'›';color:var(--palm);font-size:18px;font-weight:700;flex-shrink:0;margin-top:-1px;}
+
+/* ── ADMIN DASHBOARD ── */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.dash-card{background:white;border-radius:14px;padding:16px;border:1px solid var(--sand2);text-align:center;}
+.dash-card .dc-icon{font-size:28px;margin-bottom:6px;}
+.dash-card .dc-val{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--palm);line-height:1;}
+.dash-card .dc-label{font-size:12px;color:var(--text-soft);margin-top:4px;}
+.dash-card.urgent .dc-val{color:#e53935;}
+.dash-section{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;margin:18px 0 10px;color:var(--text);}
+.dash-activity{background:white;border-radius:12px;border:1px solid var(--sand2);}
+.da-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--sand2);font-size:13.5px;}
+.da-row:last-child{border-bottom:none;}
+.da-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.da-dot.unread{background:var(--gold);}
+.da-dot.info{background:#2a9bbf;}.da-dot.warning{background:#f9a825;}.da-dot.urgent{background:#e53935;}
+.da-text{flex:1;}
+.da-time{font-size:11px;color:var(--text-soft);}
 .lang-bar{background:var(--white);padding:10px 20px;display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--sand2);scrollbar-width:none;}
 .lang-bar::-webkit-scrollbar{display:none;}
 .lang-btn{flex-shrink:0;padding:4px;border-radius:50%;border:2.5px solid transparent;background:none;font-size:22px;cursor:pointer;transition:all .2s;line-height:1;width:36px;height:36px;display:flex;align-items:center;justify-content:center;}
@@ -198,14 +246,20 @@ textarea.fi2{resize:vertical;min-height:70px;}
     <h1 id="hnd">Noxinn Deluxe Hotel</h1>
     <div class="hero-sub" id="hsub">Your tropical escape awaits</div>
   </div>
-  <div class="announcement-banner" id="ann-banner">
-    <div class="ann-icon" id="ann-icon">ℹ️</div>
-    <div class="ann-text" id="ann-text"></div>
-    <button class="ann-close" onclick="document.getElementById('ann-banner').classList.remove('show')">×</button>
+  <div class="ann-banner-wrap" id="ann-banner-wrap">
+    <div class="announcement-banner" id="ann-banner">
+      <div class="ann-badge info" id="ann-badge">BİLGİ</div>
+      <div class="ann-body">
+        <div class="ann-title info" id="ann-title">Duyuru</div>
+        <div class="ann-msg" id="ann-text"></div>
+      </div>
+      <button class="ann-close" onclick="document.getElementById('ann-banner-wrap').classList.remove('show')" style="background:none;border:none;font-size:20px;color:var(--text-soft);cursor:pointer;flex-shrink:0;padding:0 4px;line-height:1">×</button>
+    </div>
   </div>
   <div class="lang-bar" id="lang-bar"></div>
   <div class="nav-tabs" id="nav-tabs"></div>
   <div class="content-area" id="content-area"><div class="loading-state"><div class="loading-spinner"></div><p>Yükleniyor…</p></div></div>
+  <div class="contact-fabs" id="contact-fabs"></div>
   <button class="admin-fab" onclick="openAdminLogin()">⚙️</button>
 </div>
 
@@ -260,28 +314,27 @@ const sb=supabase.createClient(SUPA_URL,SUPA_KEY);
 const BUCKET='hotel-media';
 
 const LANGS=[{code:'tr',label:'TR',name:'Türkçe',flag:'🇹🇷'},{code:'en',label:'EN',name:'English',flag:'🇬🇧'},{code:'ru',label:'RU',name:'Русский',flag:'🇷🇺'},{code:'de',label:'DE',name:'Deutsch',flag:'🇩🇪'},{code:'fr',label:'FR',name:'Français',flag:'🇫🇷'},{code:'nl',label:'NL',name:'Nederlands',flag:'🇳🇱'},{code:'cs',label:'CS',name:'Čeština',flag:'🇨🇿'},{code:'pl',label:'PL',name:'Polski',flag:'🇵🇱'},{code:'ro',label:'RO',name:'Română',flag:'🇷🇴'}];
-const ADMIN_TABS=[{id:'restaurants',icon:'🍽️',label:'Restoranlar'},{id:'pools',icon:'🏊',label:'Havuz & Spa'},{id:'events',icon:'🎉',label:'Etkinlikler'},{id:'services',icon:'🛎️',label:'Hizmetler'},{id:'requests',icon:'📝',label:'Talepler'},{id:'announcements',icon:'📢',label:'Duyuru'}];
+const ADMIN_TABS=[{id:'dashboard',icon:'📊',label:'Dashboard'},{id:'restaurants',icon:'🍽️',label:'Restoranlar'},{id:'pools',icon:'🏊',label:'Havuz & Spa'},{id:'events',icon:'🎉',label:'Etkinlikler'},{id:'services',icon:'🛎️',label:'Hizmetler'},{id:'requests',icon:'📝',label:'Talepler'},{id:'announcements',icon:'📢',label:'Duyuru'},{id:'hotelinfo',icon:'🏨',label:'Otel Bilgisi'}];
 const ICONS=['🍽️','🍹','🍸','☕','🥂','🍕','🏊','💆','🧖','🛁','🎉','🎶','🎭','🌅','🏄','⛵','🎯','🎪','🛎️','📶','🅿️','🚗','🏋️','👶','🧹','🏥','💊','🔑','📸','🌿','🌴','🦀','🐠','☀️','🌊','🎠','🎨','🎬','🍦','🥤'];
 const ANN_TYPES=[{id:'info',label:'ℹ️ Bilgi'},{id:'warning',label:'⚠️ Uyarı'},{id:'urgent',label:'🚨 Acil'},{id:'success',label:'✅ Başarı'}];
 const ANN_ICONS={info:'ℹ️',warning:'⚠️',urgent:'🚨',success:'✅'};
 
 const UI={
-  tr:{restaurants:'Restoranlar & Barlar',pools:'Havuz & Spa',events:'Etkinlikler',services:'Genel Hizmetler',gallery:'Galeri',request_tab:'Öneri & Şikayet',open:'Açık',closed:'Kapalı',location:'Konum',phone:'Telefon',hours:'Çalışma Saatleri',dress_code:'Kıyafet',reservation:'Rezervasyon',no_items:'Henüz içerik eklenmemiş.',hero_sub:'Tropikal kaçamağınız sizi bekliyor',ev_today:'Bugün',ev_upcoming:'Yaklaşan',ev_all:'Tümü',ev_none_today:'Bugün etkinlik yok. Sonraki günlere göz atın!',rt:'Öneri veya Şikayetiniz',rd:'Deneyiminizi geliştirmemize yardımcı olun. Tüm bildirimler değerlendirilir.',rl:'Oda No (isteğe bağlı)',rm:'Mesajınız',rs:'Gönder',rts:'Teşekkürler!',rds:'Geri bildiriminiz iletildi.'},
-  en:{restaurants:'Restaurants & Bars',pools:'Pool & Spa',events:'Events',services:'Services',gallery:'Gallery',request_tab:'Feedback',open:'Open',closed:'Closed',location:'Location',phone:'Phone',hours:'Opening Hours',dress_code:'Dress Code',reservation:'Reservation',no_items:'No content yet.',hero_sub:'Your tropical escape awaits',ev_today:'Today',ev_upcoming:'Upcoming',ev_all:'All',ev_none_today:'No events today. Check upcoming days!',rt:'Suggestions & Complaints',rd:'Help us improve your experience.',rl:'Room Number (optional)',rm:'Your Message',rs:'Send',rts:'Thank you!',rds:'Your feedback has been submitted.'},
-  ru:{restaurants:'Рестораны и Бары',pools:'Бассейн и Спа',events:'Мероприятия',services:'Услуги',gallery:'Галерея',request_tab:'Отзывы',open:'Открыто',closed:'Закрыто',location:'Место',phone:'Телефон',hours:'Часы работы',dress_code:'Дресс-код',reservation:'Бронирование',no_items:'Нет контента.',hero_sub:'Ваш тропический рай ждёт',ev_today:'Сегодня',ev_upcoming:'Ближайшие',ev_all:'Все',ev_none_today:'Сегодня нет мероприятий. Посмотрите ближайшие дни!',rt:'Предложения и жалобы',rd:'Помогите нам улучшить ваш отдых.',rl:'Номер комнаты (необязательно)',rm:'Ваше сообщение',rs:'Отправить',rts:'Спасибо!',rds:'Ваш отзыв отправлен.'},
-  de:{restaurants:'Restaurants & Bars',pools:'Pool & Spa',events:'Veranstaltungen',services:'Dienstleistungen',gallery:'Galerie',request_tab:'Feedback',open:'Geöffnet',closed:'Geschlossen',location:'Ort',phone:'Telefon',hours:'Öffnungszeiten',dress_code:'Kleiderordnung',reservation:'Reservierung',no_items:'Noch kein Inhalt.',hero_sub:'Ihr tropisches Paradies wartet',ev_today:'Heute',ev_upcoming:'Demnächst',ev_all:'Alle',ev_none_today:'Heute keine Veranstaltungen. Schauen Sie sich die nächsten Tage an!',rt:'Vorschläge & Beschwerden',rd:'Helfen Sie uns, Ihren Aufenthalt zu verbessern.',rl:'Zimmernummer (optional)',rm:'Ihre Nachricht',rs:'Senden',rts:'Danke!',rds:'Ihr Feedback wurde übermittelt.'},
-  fr:{restaurants:'Restaurants & Bars',pools:'Piscine & Spa',events:'Événements',services:'Services',gallery:'Galerie',request_tab:'Commentaires',open:'Ouvert',closed:'Fermé',location:'Lieu',phone:'Téléphone',hours:"Heures d'ouverture",dress_code:'Tenue',reservation:'Réservation',no_items:'Aucun contenu.',hero_sub:'Votre évasion tropicale vous attend',ev_today:"Aujourd'hui",ev_upcoming:'À venir',ev_all:'Tous',ev_none_today:"Pas d'événements aujourd'hui. Consultez les prochains jours!",rt:'Suggestions & Réclamations',rd:"Aidez-nous à améliorer votre séjour.",rl:'N° de chambre (optionnel)',rm:'Votre message',rs:'Envoyer',rts:'Merci!',rds:'Votre feedback a été soumis.'},
-  nl:{restaurants:'Restaurants & Bars',pools:'Zwembad & Spa',events:'Evenementen',services:'Diensten',gallery:'Galerij',request_tab:'Feedback',open:'Open',closed:'Gesloten',location:'Locatie',phone:'Telefoon',hours:'Openingstijden',dress_code:'Kledingcode',reservation:'Reservering',no_items:'Nog geen inhoud.',hero_sub:'Uw tropische ontsnapping wacht',ev_today:'Vandaag',ev_upcoming:'Aankomend',ev_all:'Alle',ev_none_today:'Vandaag geen evenementen. Bekijk de komende dagen!',rt:'Suggesties & Klachten',rd:'Help ons uw verblijf te verbeteren.',rl:'Kamernummer (optioneel)',rm:'Uw bericht',rs:'Versturen',rts:'Dank u!',rds:'Uw feedback is ingediend.'},
-  cs:{restaurants:'Restaurace & Bary',pools:'Bazén & Spa',events:'Akce',services:'Služby',gallery:'Galerie',request_tab:'Zpětná vazba',open:'Otevřeno',closed:'Zavřeno',location:'Místo',phone:'Telefon',hours:'Otevírací doba',dress_code:'Dress code',reservation:'Rezervace',no_items:'Zatím žádný obsah.',hero_sub:'Váš tropický ráj čeká',ev_today:'Dnes',ev_upcoming:'Nadcházející',ev_all:'Vše',ev_none_today:'Dnes žádné akce. Podívejte se na nadcházející dny!',rt:'Návrhy a stížnosti',rd:'Pomozte nám zlepšit váš pobyt.',rl:'Číslo pokoje (volitelné)',rm:'Vaše zpráva',rs:'Odeslat',rts:'Děkujeme!',rds:'Vaše zpětná vazba byla odeslána.'},
-  pl:{restaurants:'Restauracje i Bary',pools:'Basen i Spa',events:'Wydarzenia',services:'Usługi',gallery:'Galeria',request_tab:'Opinie',open:'Otwarte',closed:'Zamknięte',location:'Lokalizacja',phone:'Telefon',hours:'Godziny otwarcia',dress_code:'Strój',reservation:'Rezerwacja',no_items:'Brak treści.',hero_sub:'Twój tropikalny raj czeka',ev_today:'Dziś',ev_upcoming:'Nadchodzące',ev_all:'Wszystkie',ev_none_today:'Dziś brak wydarzeń. Sprawdź nadchodzące dni!',rt:'Sugestie i skargi',rd:'Pomóż nam ulepszyć Twój pobyt.',rl:'Numer pokoju (opcjonalnie)',rm:'Twoja wiadomość',rs:'Wyślij',rts:'Dziękujemy!',rds:'Twoja opinia została przesłana.'},
-  ro:{restaurants:'Restaurante & Baruri',pools:'Piscină & Spa',events:'Evenimente',services:'Servicii',gallery:'Galerie',request_tab:'Feedback',open:'Deschis',closed:'Închis',location:'Locație',phone:'Telefon',hours:'Program',dress_code:'Ținută',reservation:'Rezervare',no_items:'Niciun conținut.',hero_sub:'Evadarea ta tropicală te așteaptă',ev_today:'Azi',ev_upcoming:'Viitoare',ev_all:'Toate',ev_none_today:'Niciun eveniment azi. Verificați zilele următoare!',rt:'Sugestii și reclamații',rd:'Ajutați-ne să vă îmbunătățim șederea.',rl:'Nr. camerei (opțional)',rm:'Mesajul dvs.',rs:'Trimite',rts:'Mulțumim!',rds:'Feedback-ul dvs. a fost trimis.'},
-};
-let lang=(()=>{const n=(navigator.language||'en').slice(0,2).toLowerCase();return LANGS.map(l=>l.code).includes(n)?n:'en';})();
-let tab='restaurants',atab='restaurants',evView='list',reqFilter='all',evDateFilter='today';
+  tr:{restaurants:'Restoranlar & Barlar',pools:'Havuz & Spa',events:'Etkinlikler',services:'Genel Hizmetler',gallery:'Galeri',request_tab:'Öneri & Şikayet',info_tab:'Otel Bilgisi',open:'Açık',closed:'Kapalı',location:'Konum',phone:'Telefon',hours:'Çalışma Saatleri',dress_code:'Kıyafet',reservation:'Rezervasyon',no_items:'Henüz içerik eklenmemiş.',hero_sub:'Tropikal kaçamağınız sizi bekliyor',ev_today:'Bugün',ev_upcoming:'Yaklaşan',ev_all:'Tümü',ev_none_today:'Bugün etkinlik yok. Sonraki günlere göz atın!',rt:'Öneri veya Şikayetiniz',rd:'Deneyiminizi geliştirmemize yardımcı olun. Tüm bildirimler değerlendirilir.',rl:'Oda No (isteğe bağlı)',rm:'Mesajınız',rs:'Gönder',rts:'Teşekkürler!',rds:'Geri bildiriminiz iletildi.',checkin:'Check-in',checkout:'Check-out',rules:'Otel Kuralları',contact:'İletişim',call_us:'Bizi Arayın',write_wa:'WhatsApp',ann_info:'BİLGİ',ann_warning:'UYARI',ann_urgent:'ACİL',ann_success:'DUYURU'},
+  en:{restaurants:'Restaurants & Bars',pools:'Pool & Spa',events:'Events',services:'Services',gallery:'Gallery',request_tab:'Feedback',info_tab:'Hotel Info',open:'Open',closed:'Closed',location:'Location',phone:'Phone',hours:'Opening Hours',dress_code:'Dress Code',reservation:'Reservation',no_items:'No content yet.',hero_sub:'Your tropical escape awaits',ev_today:'Today',ev_upcoming:'Upcoming',ev_all:'All',ev_none_today:'No events today. Check upcoming days!',rt:'Suggestions & Complaints',rd:'Help us improve your experience.',rl:'Room Number (optional)',rm:'Your Message',rs:'Send',rts:'Thank you!',rds:'Your feedback has been submitted.',checkin:'Check-in',checkout:'Check-out',rules:'Hotel Rules',contact:'Contact',call_us:'Call Us',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'WARNING',ann_urgent:'URGENT',ann_success:'NOTICE'},
+  ru:{restaurants:'Рестораны и Бары',pools:'Бассейн и Спа',events:'Мероприятия',services:'Услуги',gallery:'Галерея',request_tab:'Отзывы',info_tab:'Об отеле',open:'Открыто',closed:'Закрыто',location:'Место',phone:'Телефон',hours:'Часы работы',dress_code:'Дресс-код',reservation:'Бронирование',no_items:'Нет контента.',hero_sub:'Ваш тропический рай ждёт',ev_today:'Сегодня',ev_upcoming:'Ближайшие',ev_all:'Все',ev_none_today:'Сегодня нет мероприятий. Посмотрите ближайшие дни!',rt:'Предложения и жалобы',rd:'Помогите нам улучшить ваш отдых.',rl:'Номер комнаты (необязательно)',rm:'Ваше сообщение',rs:'Отправить',rts:'Спасибо!',rds:'Ваш отзыв отправлен.',checkin:'Заезд',checkout:'Выезд',rules:'Правила отеля',contact:'Контакты',call_us:'Позвонить',write_wa:'WhatsApp',ann_info:'ИНФО',ann_warning:'ВНИМАНИЕ',ann_urgent:'СРОЧНО',ann_success:'ОБЪЯВЛЕНИЕ'},
+  de:{restaurants:'Restaurants & Bars',pools:'Pool & Spa',events:'Veranstaltungen',services:'Dienstleistungen',gallery:'Galerie',request_tab:'Feedback',info_tab:'Hotel Info',open:'Geöffnet',closed:'Geschlossen',location:'Ort',phone:'Telefon',hours:'Öffnungszeiten',dress_code:'Kleiderordnung',reservation:'Reservierung',no_items:'Noch kein Inhalt.',hero_sub:'Ihr tropisches Paradies wartet',ev_today:'Heute',ev_upcoming:'Demnächst',ev_all:'Alle',ev_none_today:'Heute keine Veranstaltungen. Schauen Sie sich die nächsten Tage an!',rt:'Vorschläge & Beschwerden',rd:'Helfen Sie uns, Ihren Aufenthalt zu verbessern.',rl:'Zimmernummer (optional)',rm:'Ihre Nachricht',rs:'Senden',rts:'Danke!',rds:'Ihr Feedback wurde übermittelt.',checkin:'Check-in',checkout:'Check-out',rules:'Hotelregeln',contact:'Kontakt',call_us:'Anrufen',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'WARNUNG',ann_urgent:'DRINGEND',ann_success:'HINWEIS'},
+  fr:{restaurants:'Restaurants & Bars',pools:'Piscine & Spa',events:'Événements',services:'Services',gallery:'Galerie',request_tab:'Commentaires',info_tab:'Infos Hôtel',open:'Ouvert',closed:'Fermé',location:'Lieu',phone:'Téléphone',hours:"Heures d'ouverture",dress_code:'Tenue',reservation:'Réservation',no_items:'Aucun contenu.',hero_sub:'Votre évasion tropicale vous attend',ev_today:"Aujourd'hui",ev_upcoming:'À venir',ev_all:'Tous',ev_none_today:"Pas d'événements aujourd'hui. Consultez les prochains jours!",rt:'Suggestions & Réclamations',rd:"Aidez-nous à améliorer votre séjour.",rl:'N° de chambre (optionnel)',rm:'Votre message',rs:'Envoyer',rts:'Merci!',rds:'Votre feedback a été soumis.',checkin:'Arrivée',checkout:'Départ',rules:"Règlement de l'hôtel",contact:'Contact',call_us:'Appeler',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'ATTENTION',ann_urgent:'URGENT',ann_success:'AVIS'},
+  nl:{restaurants:'Restaurants & Bars',pools:'Zwembad & Spa',events:'Evenementen',services:'Diensten',gallery:'Galerij',request_tab:'Feedback',info_tab:'Hotel Info',open:'Open',closed:'Gesloten',location:'Locatie',phone:'Telefoon',hours:'Openingstijden',dress_code:'Kledingcode',reservation:'Reservering',no_items:'Nog geen inhoud.',hero_sub:'Uw tropische ontsnapping wacht',ev_today:'Vandaag',ev_upcoming:'Aankomend',ev_all:'Alle',ev_none_today:'Vandaag geen evenementen. Bekijk de komende dagen!',rt:'Suggesties & Klachten',rd:'Help ons uw verblijf te verbeteren.',rl:'Kamernummer (optioneel)',rm:'Uw bericht',rs:'Versturen',rts:'Dank u!',rds:'Uw feedback is ingediend.',checkin:'Check-in',checkout:'Check-out',rules:'Hotelregels',contact:'Contact',call_us:'Bellen',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'WAARSCHUWING',ann_urgent:'DRINGEND',ann_success:'MEDEDELING'},
+  cs:{restaurants:'Restaurace & Bary',pools:'Bazén & Spa',events:'Akce',services:'Služby',gallery:'Galerie',request_tab:'Zpětná vazba',info_tab:'Info o hotelu',open:'Otevřeno',closed:'Zavřeno',location:'Místo',phone:'Telefon',hours:'Otevírací doba',dress_code:'Dress code',reservation:'Rezervace',no_items:'Zatím žádný obsah.',hero_sub:'Váš tropický ráj čeká',ev_today:'Dnes',ev_upcoming:'Nadcházející',ev_all:'Vše',ev_none_today:'Dnes žádné akce. Podívejte se na nadcházející dny!',rt:'Návrhy a stížnosti',rd:'Pomozte nám zlepšit váš pobyt.',rl:'Číslo pokoje (volitelné)',rm:'Vaše zpráva',rs:'Odeslat',rts:'Děkujeme!',rds:'Vaše zpětná vazba byla odeslána.',checkin:'Check-in',checkout:'Check-out',rules:'Hotelový řád',contact:'Kontakt',call_us:'Zavolat',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'VAROVÁNÍ',ann_urgent:'URGENT',ann_success:'OZNÁMENÍ'},
+  pl:{restaurants:'Restauracje i Bary',pools:'Basen i Spa',events:'Wydarzenia',services:'Usługi',gallery:'Galeria',request_tab:'Opinie',info_tab:'Info o hotelu',open:'Otwarte',closed:'Zamknięte',location:'Lokalizacja',phone:'Telefon',hours:'Godziny otwarcia',dress_code:'Strój',reservation:'Rezerwacja',no_items:'Brak treści.',hero_sub:'Twój tropikalny raj czeka',ev_today:'Dziś',ev_upcoming:'Nadchodzące',ev_all:'Wszystkie',ev_none_today:'Dziś brak wydarzeń. Sprawdź nadchodzące dni!',rt:'Sugestie i skargi',rd:'Pomóż nam ulepszyć Twój pobyt.',rl:'Numer pokoju (opcjonalnie)',rm:'Twoja wiadomość',rs:'Wyślij',rts:'Dziękujemy!',rds:'Twoja opinia została przesłana.',checkin:'Check-in',checkout:'Check-out',rules:'Regulamin hotelu',contact:'Kontakt',call_us:'Zadzwoń',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'UWAGA',ann_urgent:'PILNE',ann_success:'OGŁOSZENIE'},
+  ro:{restaurants:'Restaurante & Baruri',pools:'Piscină & Spa',events:'Evenimente',services:'Servicii',gallery:'Galerie',request_tab:'Feedback',info_tab:'Info Hotel',open:'Deschis',closed:'Închis',location:'Locație',phone:'Telefon',hours:'Program',dress_code:'Ținută',reservation:'Rezervare',no_items:'Niciun conținut.',hero_sub:'Evadarea ta tropicală te așteaptă',ev_today:'Azi',ev_upcoming:'Viitoare',ev_all:'Toate',ev_none_today:'Niciun eveniment azi. Verificați zilele următoare!',rt:'Sugestii și reclamații',rd:'Ajutați-ne să vă îmbunătățim șederea.',rl:'Nr. camerei (opțional)',rm:'Mesajul dvs.',rs:'Trimite',rts:'Mulțumim!',rds:'Feedback-ul dvs. a fost trimis.',checkin:'Check-in',checkout:'Check-out',rules:'Regulamentul hotelului',contact:'Contact',call_us:'Sunați',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'ATENȚIE',ann_urgent:'URGENT',ann_success:'ANUNȚ'},
+};let lang=(()=>{const n=(navigator.language||'en').slice(0,2).toLowerCase();return LANGS.map(l=>l.code).includes(n)?n:'en';})();
+let tab='restaurants',atab='dashboard',evView='list',reqFilter='all',evDateFilter='today',pageViews={};
 let editItem=null,editType=null,editCat=null,editAnn=null;
 let isAdmin=false,toastT=null,pendingPhoto=null;
 let calY=new Date().getFullYear(),calM=new Date().getMonth();
-let C={outlets:[],events:[],services:[],hotelName:'Noxinn Deluxe Hotel',announcements:[],requests:[]};
+let C={outlets:[],events:[],services:[],hotelName:'Noxinn Deluxe Hotel',announcements:[],requests:[],config:{}};
 
 const t=k=>(UI[lang]||UI.en)[k]||k;
 const gn=i=>i.names?.[lang]||i.names?.en||i.names?.tr||Object.values(i.names||{})[0]||'';
@@ -301,7 +354,10 @@ async function fetchAll(){
   if(o.data)C.outlets=o.data;
   if(e.data)C.events=e.data;
   if(s.data)C.services=s.data;
-  if(cf.data){const x=cf.data.find(x=>x.key==='hotel_name');if(x)C.hotelName=x.value;}
+  if(cf.data){
+    cf.data.forEach(row=>{C.config[row.key]=row.value;});
+    if(C.config.hotel_name)C.hotelName=C.config.hotel_name;
+  }
   if(a.data)C.announcements=a.data;
   if(r.data)C.requests=r.data;
 }
@@ -312,22 +368,41 @@ function setupRT(){
 async function rt(){await fetchAll();renderG();if(isAdmin)renderA();}
 
 function renderAnn(){
-  const a=C.announcements[0],b=document.getElementById('ann-banner');
-  if(!a){b.classList.remove('show');return;}
+  const a=C.announcements[0];
+  const wrap=document.getElementById('ann-banner-wrap');
+  const banner=document.getElementById('ann-banner');
+  if(!a){wrap.classList.remove('show');return;}
   const msg=a.messages?.[lang]||a.messages?.en||a.messages?.tr||'';
-  if(!msg){b.classList.remove('show');return;}
+  if(!msg){wrap.classList.remove('show');return;}
+  const type=a.type||'info';
+  const badgeLabels={info:t('ann_info'),warning:t('ann_warning'),urgent:t('ann_urgent'),success:t('ann_success')};
+  const titleLabels={info:'ℹ️',warning:'⚠️',urgent:'🚨',success:'✅'};
   document.getElementById('ann-text').textContent=msg;
-  document.getElementById('ann-icon').textContent=ANN_ICONS[a.type]||'ℹ️';
-  b.className=`announcement-banner show ${a.type||'info'}`;
+  const badge=document.getElementById('ann-badge');
+  badge.textContent=badgeLabels[type]||t('ann_info');
+  badge.className=`ann-badge ${type}`;
+  const title=document.getElementById('ann-title');
+  title.textContent=titleLabels[type]||'ℹ️';
+  title.className=`ann-title ${type}`;
+  banner.className=`announcement-banner ${type}`;
+  wrap.classList.add('show');
 }
 
 function renderG(){
   document.getElementById('hnd').textContent=C.hotelName;
+  // Contact FABs
+  const cfabs=document.getElementById('contact-fabs');
+  if(cfabs){
+    const ph=C.config.contact_phone||'';
+    const wa=C.config.contact_whatsapp||'';
+    cfabs.innerHTML=(ph?`<button class="cfab cfab-ph" onclick="window.open('tel:${ph}')" title="${t('call_us')}">📞</button>`:'')+
+      (wa?`<button class="cfab cfab-wa" onclick="window.open('https://wa.me/${wa.replace(/[^0-9]/g,'')}')" title="${t('write_wa')}">💬</button>`:'');
+  }
   document.getElementById('hsub').textContent=t('hero_sub');
   renderAnn();
   document.getElementById('lang-bar').innerHTML=LANGS.map(l=>`<button class="lang-btn ${l.code===lang?'active':''}" onclick="setLang('${l.code}')" title="${l.name}">${l.flag}</button>`).join('');
-  const tabs=[{id:'restaurants',icon:'🍽️'},{id:'pools',icon:'🏊'},{id:'events',icon:'🎉'},{id:'services',icon:'🛎️'},{id:'gallery',icon:'📸'},{id:'request',icon:'💬'}];
-  document.getElementById('nav-tabs').innerHTML=tabs.map(c=>`<button class="nav-tab ${c.id===tab?'active':''}" onclick="setTab('${c.id}')">${c.icon} ${t(c.id==='request'?'request_tab':c.id==='gallery'?'gallery':c.id)}</button>`).join('');
+  const tabs=[{id:'restaurants',icon:'🍽️'},{id:'pools',icon:'🏊'},{id:'events',icon:'🎉'},{id:'services',icon:'🛎️'},{id:'gallery',icon:'📸'},{id:'hotelinfo',icon:'🏨'},{id:'request',icon:'💬'}];
+  document.getElementById('nav-tabs').innerHTML=tabs.map(c=>`<button class="nav-tab ${c.id===tab?'active':''}" onclick="setTab('${c.id}')">${c.icon} ${c.id==='request'?t('request_tab'):c.id==='gallery'?t('gallery'):c.id==='hotelinfo'?t('info_tab'):t(c.id)}</button>`).join('');
   const ca=document.getElementById('content-area');ca.innerHTML='';
 
   if(tab==='restaurants'||tab==='pools'){
@@ -399,10 +474,119 @@ function renderG(){
     all.forEach(p=>{const el=document.createElement('div');el.className='gallery-item';el.innerHTML=`<img src="${p.url}" alt="${p.name}" loading="lazy"><div class="gallery-caption">${p.name}</div>`;el.onclick=()=>lb(p.url);g.appendChild(el);});
     ca.appendChild(g);
   }
+  else if(tab==='hotelinfo'){
+    renderHotelInfo(ca);
+  }
   else if(tab==='request'){
     const f=document.createElement('div');f.className='request-form';f.id='rfw';
     f.innerHTML=`<h3>${t('rt')}</h3><p>${t('rd')}</p><input class="fi" id="req-room" placeholder="${t('rl')}"><textarea class="fi" id="req-msg" placeholder="${t('rm')}"></textarea><button class="btn-submit" id="rsb" onclick="submitReq()">${t('rs')}</button>`;
     ca.appendChild(f);
+  }
+}
+
+
+
+function renderDashboard(ac){
+  const unread=C.requests.filter(r=>r.status==='unread').length;
+  const total=C.requests.length;
+  const resolved=C.requests.filter(r=>r.status==='resolved').length;
+  const annActive=C.announcements.length;
+  const todayStr=new Date().toISOString().split('T')[0];
+  const todayEvs=C.events.filter(e=>e.event_date===todayStr).length;
+  ac.innerHTML=`
+    <div class="dash-grid">
+      <div class="dash-card ${unread>0?'urgent':''}"><div class="dc-icon">📝</div><div class="dc-val">${unread}</div><div class="dc-label">Okunmamış Talep</div></div>
+      <div class="dash-card"><div class="dc-icon">✅</div><div class="dc-val">${resolved}</div><div class="dc-label">Çözülen Talep</div></div>
+      <div class="dash-card"><div class="dc-icon">📢</div><div class="dc-val">${annActive}</div><div class="dc-label">Aktif Duyuru</div></div>
+      <div class="dash-card"><div class="dc-icon">🎉</div><div class="dc-val">${todayEvs}</div><div class="dc-label">Bugünkü Etkinlik</div></div>
+    </div>
+    <div class="dash-grid" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="dash-card"><div class="dc-icon">🍽️</div><div class="dc-val">${C.outlets.filter(o=>o.category==='restaurants').length}</div><div class="dc-label">Restoran</div></div>
+      <div class="dash-card"><div class="dc-icon">🏊</div><div class="dc-val">${C.outlets.filter(o=>o.category==='pools').length}</div><div class="dc-label">Havuz/Spa</div></div>
+      <div class="dash-card"><div class="dc-icon">🛎️</div><div class="dc-val">${C.services.length}</div><div class="dc-label">Hizmet</div></div>
+    </div>
+    <div class="dash-section">Son Talepler</div>
+    <div class="dash-activity">${
+      C.requests.slice(0,5).map(r=>{
+        const d=new Date(r.created_at);
+        const ts=d.toLocaleDateString('tr-TR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+        return `<div class="da-row"><div class="da-dot ${r.status==='unread'?'unread':''}"></div><div class="da-text">${r.message.slice(0,60)}${r.message.length>60?'…':''} ${r.room_number?'<span style="font-size:11px;color:var(--text-soft)">🚪'+r.room_number+'</span>':''}</div><div class="da-time">${ts}</div></div>`;
+      }).join('')||'<div style="padding:20px;text-align:center;color:var(--text-soft);font-size:13px">Henüz talep yok</div>'
+    }</div>
+    <div class="dash-section">Aktif Duyurular</div>
+    <div class="dash-activity">${
+      C.announcements.map(a=>{
+        const msg=(a.messages?.tr||a.messages?.en||'').slice(0,70);
+        return `<div class="da-row"><div class="da-dot ${a.type||'info'}"></div><div class="da-text">${msg}</div><div class="da-time">${a.type?.toUpperCase()}</div></div>`;
+      }).join('')||'<div style="padding:20px;text-align:center;color:var(--text-soft);font-size:13px">Aktif duyuru yok</div>'
+    }</div>`;
+}
+
+function renderHotelInfoAdmin(ac){
+  const fields=[
+    {key:'checkin_time',label:'Check-in Saati',placeholder:'14:00',icon:'🛎️'},
+    {key:'checkout_time',label:'Check-out Saati',placeholder:'12:00',icon:'🏁'},
+    {key:'contact_phone',label:'Telefon',placeholder:'+90 242 000 0000',icon:'📞'},
+    {key:'contact_whatsapp',label:'WhatsApp (rakam, örn: 902420000000)',placeholder:'902420000000',icon:'💬'},
+    {key:'hotel_rules',label:'Otel Kuralları (| ile ayırın)',placeholder:'Kural 1|Kural 2|Kural 3',icon:'📋',textarea:true},
+  ];
+  const form=document.createElement('div');
+  form.innerHTML=`<div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:600;margin-bottom:18px">Otel Bilgileri</div>`;
+  fields.forEach(f=>{
+    const g=document.createElement('div');g.className='fg';g.style.marginBottom='14px';
+    g.innerHTML=`<div class="fl">${f.icon} ${f.label}</div>${
+      f.textarea
+        ?`<textarea class="fi2" id="hf-${f.key}" rows="3" placeholder="${f.placeholder}" style="resize:vertical">${C.config[f.key]||''}</textarea>`
+        :`<input class="fi2" id="hf-${f.key}" value="${C.config[f.key]||''}" placeholder="${f.placeholder}">`
+    }`;
+    form.appendChild(g);
+  });
+  const saveBtn=document.createElement('button');saveBtn.className='btn-save';saveBtn.style.cssText='width:100%;margin-top:8px';saveBtn.textContent='Kaydet';
+  saveBtn.onclick=async()=>{
+    saveBtn.disabled=true;saveBtn.textContent='Kaydediliyor…';
+    const upserts=fields.map(f=>({key:f.key,value:document.getElementById('hf-'+f.key).value.trim()}));
+    const{error}=await sb.from('hotel_config').upsert(upserts);
+    saveBtn.disabled=false;saveBtn.textContent='Kaydet';
+    if(error){showToast('❌ '+error.message);return;}
+    await fetchAll();renderG();showToast('✓ Otel bilgileri kaydedildi');
+  };
+  form.appendChild(saveBtn);
+  ac.appendChild(form);
+}
+
+function renderHotelInfo(ca){
+  ca.innerHTML=`<div class="section-title">${t('info_tab')}</div><div class="section-sub">🏨</div>`;
+  // Check-in / out
+  const ci=C.config.checkin_time||'14:00';
+  const co=C.config.checkout_time||'12:00';
+  const card1=document.createElement('div');card1.className='info-card';
+  card1.innerHTML=`
+    <div class="info-card-header"><div class="info-card-icon">🛎️</div><div class="info-card-title">${t('checkin')} & ${t('checkout')}</div></div>
+    <div class="checkin-grid">
+      <div class="checkin-box"><div class="checkin-label">${t('checkin')}</div><div class="checkin-time">${ci}</div></div>
+      <div class="checkin-box out"><div class="checkin-label">${t('checkout')}</div><div class="checkin-time">${co}</div></div>
+    </div>`;
+  ca.appendChild(card1);
+  // Kurallar
+  const rulesRaw=C.config.hotel_rules||'';
+  if(rulesRaw){
+    const card2=document.createElement('div');card2.className='info-card';
+    const items=rulesRaw.split('|').filter(Boolean);
+    card2.innerHTML=`<div class="info-card-header"><div class="info-card-icon">📋</div><div class="info-card-title">${t('rules')}</div></div>
+      <ul class="rules-list">${items.map(r=>`<li>${r.trim()}</li>`).join('')}</ul>`;
+    ca.appendChild(card2);
+  }
+  // İletişim
+  const ph=C.config.contact_phone||'';
+  const wa=C.config.contact_whatsapp||'';
+  if(ph||wa){
+    const card3=document.createElement('div');card3.className='info-card';
+    card3.innerHTML=`<div class="info-card-header"><div class="info-card-icon">📞</div><div class="info-card-title">${t('contact')}</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${ph?`<a href="tel:${ph}" style="display:flex;align-items:center;gap:12px;padding:14px;background:linear-gradient(90deg,rgba(26,95,122,.08),transparent);border-radius:12px;text-decoration:none;color:var(--text)"><span style="font-size:24px">📞</span><div><div style="font-size:12px;color:var(--text-soft);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:2px">${t('call_us')}</div><div style="font-size:16px;font-weight:600;color:var(--palm)">${ph}</div></div></a>`:''}
+        ${wa?`<a href="https://wa.me/${wa.replace(/[^0-9]/g,'')}" target="_blank" style="display:flex;align-items:center;gap:12px;padding:14px;background:linear-gradient(90deg,rgba(37,211,102,.08),transparent);border-radius:12px;text-decoration:none;color:var(--text)"><span style="font-size:24px">💬</span><div><div style="font-size:12px;color:var(--text-soft);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:2px">${t('write_wa')}</div><div style="font-size:16px;font-weight:600;color:#25d366">${wa}</div></div></a>`:''}
+      </div>`;
+    ca.appendChild(card3);
   }
 }
 
@@ -477,6 +661,8 @@ function renderA(){
   const ac=document.getElementById('admin-content');ac.innerHTML='';
   const addBtn=(lbl,fn)=>{const b=document.createElement('button');b.className='btn-add';b.innerHTML=`<span>+</span> ${lbl}`;b.onclick=fn;ac.appendChild(b);};
   const noItem=()=>{ac.innerHTML+=`<div style="text-align:center;color:#aaa;padding:32px;font-size:14px">Henüz öğe yok</div>`;};
+  if(atab==='dashboard'){renderDashboard(ac);return;}
+  if(atab==='hotelinfo'){renderHotelInfoAdmin(ac);return;}
 
   if(atab==='restaurants'||atab==='pools'){
     addBtn(atab==='restaurants'?'Restoran / Bar Ekle':'Havuz / Spa Ekle',()=>openModal('outlet',atab,null));
