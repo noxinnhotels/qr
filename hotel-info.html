@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Info</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #f5efe6;
+    --sand2: #ede3d4;
+    --palm: #2d5a3d;
+    --palm-light: #3d7a52;
+    --gold: #c4973a;
+    --gold-light: #e8c070;
+    --ocean: #2a6b8a;
+    --white: #fdfaf6;
+    --text: #2c2416;
+    --text-soft: #6b5b45;
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--sand);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ===== GUEST VIEW ===== */
+  #guest-view { display: block; }
+  #admin-view { display: none; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(160deg, var(--palm) 0%, #1a3d2a 60%, var(--ocean) 100%);
+    padding: 48px 24px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-leaves {
+    position: absolute;
+    font-size: 80px;
+    opacity: 0.08;
+    pointer-events: none;
+  }
+  .hero-leaves.l1 { top: -10px; left: -20px; transform: rotate(-30deg); }
+  .hero-leaves.l2 { top: 20px; right: -10px; transform: rotate(20deg); }
+  .hero-leaves.l3 { bottom: -20px; left: 40%; transform: rotate(10deg); }
+
+  .hotel-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .hero-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 1px;
+    font-weight: 300;
+  }
+
+  /* Language selector */
+  .lang-bar {
+    background: var(--white);
+    padding: 10px 20px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--sand2);
+    scrollbar-width: none;
+  }
+  .lang-bar::-webkit-scrollbar { display: none; }
+  .lang-btn {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1.5px solid transparent;
+    background: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-soft);
+    transition: all 0.2s;
+  }
+  .lang-btn.active {
+    background: var(--palm);
+    color: white;
+    border-color: var(--palm);
+  }
+  .lang-btn:hover:not(.active) {
+    border-color: var(--palm-light);
+    color: var(--palm);
+  }
+
+  /* Nav tabs */
+  .nav-tabs {
+    background: var(--white);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    flex-shrink: 0;
+    padding: 14px 20px;
+    border: none;
+    background: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-soft);
+    cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .nav-tab.active {
+    color: var(--palm);
+    border-bottom-color: var(--palm);
+    font-weight: 500;
+  }
+  .nav-tab:hover:not(.active) { color: var(--text); }
+
+  /* Content */
+  .content-area { padding: 20px 16px 80px; max-width: 600px; margin: 0 auto; }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .section-sub {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid rgba(196,151,58,0.12);
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); }
+
+  .card-header {
+    padding: 16px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .icon-restaurant { background: linear-gradient(135deg, #fde8c8, #f5c87a); }
+  .icon-bar { background: linear-gradient(135deg, #c8e0fd, #7ab2f5); }
+  .icon-pool { background: linear-gradient(135deg, #c8f0fd, #7ad4f5); }
+  .icon-spa { background: linear-gradient(135deg, #e8c8fd, #c87af5); }
+  .icon-event { background: linear-gradient(135deg, #c8fde0, #7af5b2); }
+  .icon-service { background: linear-gradient(135deg, #fde8e8, #f5a0a0); }
+
+  .card-info { flex: 1; min-width: 0; }
+  .card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-hours {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-dot.open { background: #4caf7d; }
+  .status-dot.closed { background: #e57373; }
+
+  .card-arrow {
+    color: var(--text-soft);
+    font-size: 18px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .card.expanded .card-arrow { transform: rotate(90deg); }
+
+  .card-body {
+    display: none;
+    padding: 0 18px 16px;
+    border-top: 1px solid var(--sand2);
+  }
+  .card.expanded .card-body { display: block; }
+
+  .card-desc {
+    font-size: 13.5px;
+    color: var(--text-soft);
+    line-height: 1.65;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+
+  .detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--sand2);
+    font-size: 13px;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label {
+    font-weight: 500;
+    color: var(--palm);
+    min-width: 90px;
+    flex-shrink: 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-top: 1px;
+  }
+  .detail-val { color: var(--text); flex: 1; }
+
+  /* Event cards */
+  .event-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(196,151,58,0.12);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .event-date-strip {
+    background: linear-gradient(90deg, var(--palm), var(--palm-light));
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .event-date-box {
+    text-align: center;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 6px 10px;
+    min-width: 44px;
+  }
+  .event-day { font-size: 20px; font-weight: 500; color: white; line-height: 1; }
+  .event-month { font-size: 9px; letter-spacing: 1.5px; color: rgba(255,255,255,0.8); text-transform: uppercase; }
+  .event-title-wrap { flex: 1; }
+  .event-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    line-height: 1.2;
+  }
+  .event-time { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 2px; }
+  .event-body { padding: 12px 16px; }
+  .event-desc { font-size: 13px; color: var(--text-soft); line-height: 1.6; }
+  .event-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--palm);
+    background: rgba(45,90,61,0.08);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* Services */
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .service-item {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 16px;
+    border: 1px solid rgba(196,151,58,0.12);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .service-item .s-icon { font-size: 24px; margin-bottom: 8px; }
+  .service-item .s-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .service-item .s-info { font-size: 12px; color: var(--text-soft); line-height: 1.5; }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-soft);
+  }
+  .empty-state .e-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+  .empty-state p { font-size: 14px; }
+
+  /* Admin FAB */
+  .admin-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: white;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(196,151,58,0.4);
+    z-index: 100;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .admin-fab:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(196,151,58,0.5); }
+
+  /* ===== ADMIN VIEW ===== */
+  .admin-header {
+    background: linear-gradient(135deg, #1a2e22, var(--palm));
+    padding: 20px 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .admin-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: white;
+    flex: 1;
+  }
+  .btn-back {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-back:hover { background: rgba(255,255,255,0.25); }
+
+  .admin-tabs {
+    background: white;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--sand2);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .admin-tabs::-webkit-scrollbar { display: none; }
+  .admin-tab {
+    flex-shrink: 0;
+    padding: 12px 18px;
+    border: none;
+    background: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--text-soft);
+    cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .admin-tab.active { color: var(--palm); border-bottom-color: var(--palm); font-weight: 500; }
+
+  .admin-content { padding: 16px; max-width: 700px; margin: 0 auto; }
+
+  .admin-list-item {
+    background: white;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    border: 1px solid var(--sand2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ali-icon { font-size: 22px; flex-shrink: 0; }
+  .ali-info { flex: 1; min-width: 0; }
+  .ali-name { font-size: 15px; font-weight: 500; color: var(--text); }
+  .ali-sub { font-size: 12px; color: var(--text-soft); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ali-actions { display: flex; gap: 6px; }
+
+  .btn-edit, .btn-del {
+    border: none;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-edit { background: rgba(45,90,61,0.1); color: var(--palm); }
+  .btn-del { background: rgba(229,115,115,0.12); color: #c0392b; }
+  .btn-edit:hover, .btn-del:hover { opacity: 0.75; }
+
+  .btn-add {
+    width: 100%;
+    padding: 13px;
+    background: var(--palm);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 16px;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-add:hover { opacity: 0.88; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 600px;
+    max-height: 92vh;
+    overflow-y: auto;
+    padding: 24px 20px 40px;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .form-group { margin-bottom: 14px; }
+  .form-label { display: block; font-size: 12px; font-weight: 500; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .form-input, .form-textarea, .form-select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--sand2);
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: white;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--palm); }
+  .form-textarea { resize: vertical; min-height: 80px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .lang-fields-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--palm);
+    margin: 16px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .btn-save {
+    flex: 1;
+    padding: 13px;
+    background: var(--palm);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .btn-cancel {
+    padding: 13px 20px;
+    background: var(--sand2);
+    color: var(--text);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* Login */
+  .login-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .login-overlay.open { display: flex; }
+  .login-box {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 32px 28px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+  }
+  .login-icon { font-size: 40px; margin-bottom: 12px; }
+  .login-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; margin-bottom: 6px; }
+  .login-sub { font-size: 13px; color: var(--text-soft); margin-bottom: 24px; }
+  .login-error { font-size: 13px; color: #c0392b; margin-top: 8px; min-height: 20px; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #2c2416;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 24px;
+    font-size: 13px;
+    z-index: 500;
+    opacity: 0;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Hotel name edit in admin */
+  .hotel-name-edit {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .hotel-name-edit:hover { background: rgba(255,255,255,0.2); }
+
+  /* Tabs content visibility */
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--sand2); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ===== GUEST VIEW ===== -->
+<div id="guest-view">
+  <div class="hero">
+    <div class="hero-leaves l1">🌴</div>
+    <div class="hero-leaves l2">🌿</div>
+    <div class="hero-leaves l3">🍃</div>
+    <div class="hotel-name" id="hotel-label">HOTEL</div>
+    <h1 id="hotel-name-display">Paradise Resort</h1>
+    <div class="hero-sub" id="hero-subtitle">Your tropical escape awaits</div>
+  </div>
+
+  <div class="lang-bar" id="lang-bar"></div>
+
+  <div class="nav-tabs" id="nav-tabs"></div>
+
+  <div class="content-area" id="content-area"></div>
+
+  <button class="admin-fab" onclick="openAdminLogin()" title="Admin Panel">⚙️</button>
+</div>
+
+<!-- ===== ADMIN VIEW ===== -->
+<div id="admin-view">
+  <div class="admin-header">
+    <button class="btn-back" onclick="showGuest()">← <span data-i18n="guest_view">Guest View</span></button>
+    <h2 data-i18n="admin_panel">Admin Panel</h2>
+    <button class="hotel-name-edit" onclick="editHotelName()">✏️ <span data-i18n="edit_name">Hotel Name</span></button>
+  </div>
+
+  <div class="admin-tabs" id="admin-tabs"></div>
+
+  <div class="admin-content" id="admin-content"></div>
+</div>
+
+<!-- Login Modal -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-box">
+    <div class="login-icon">🔐</div>
+    <div class="login-title" data-i18n="admin_login">Admin Login</div>
+    <div class="login-sub" data-i18n="enter_password">Enter admin password</div>
+    <input type="password" class="form-input" id="login-pw" placeholder="••••••••" style="text-align:center;margin-bottom:4px;"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-error" id="login-error"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn-cancel" style="flex:1" onclick="closeLogin()">Cancel</button>
+      <button class="btn-save" style="flex:1" onclick="doLogin()">Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- Item Modal -->
+<div class="modal-overlay" id="item-modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Add Item</div>
+    <div id="modal-form-body"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveItem()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ==============================
+// DATA & STATE
+// ==============================
+const ADMIN_PASS = "hotel2024";
+
+const LANGS = [
+  { code: 'tr', label: 'TR', name: 'Türkçe' },
+  { code: 'en', label: 'EN', name: 'English' },
+  { code: 'ru', label: 'RU', name: 'Русский' },
+  { code: 'de', label: 'DE', name: 'Deutsch' },
+  { code: 'fr', label: 'FR', name: 'Français' },
+  { code: 'nl', label: 'NL', name: 'Nederlands' },
+  { code: 'cs', label: 'CS', name: 'Čeština' },
+  { code: 'pl', label: 'PL', name: 'Polski' },
+  { code: 'ro', label: 'RO', name: 'Română' },
+];
+
+const LANG_CODES = LANGS.map(l => l.code);
+
+// UI translations
+const UI_STRINGS = {
+  tr: {
+    restaurants: 'Restoranlar & Barlar', pools: 'Havuz & Spa', events: 'Etkinlikler', services: 'Genel Hizmetler',
+    open: 'Açık', closed: 'Kapalı', location: 'Konum', phone: 'Telefon',
+    hours: 'Çalışma Saatleri', dress_code: 'Kıyafet', reservation: 'Rezervasyon',
+    no_items: 'Henüz içerik eklenmemiş.', admin_panel: 'Yönetim Paneli',
+    guest_view: 'Misafir Görünümü', edit_name: 'Otel Adı',
+    admin_login: 'Admin Girişi', enter_password: 'Admin şifresini girin',
+    hero_sub: 'Tropikal kaçamağınız sizi bekliyor',
+    add: 'Ekle', edit: 'Düzenle', delete: 'Sil',
+    name_field: 'Ad', desc_field: 'Açıklama', hours_field: 'Saatler',
+    date_field: 'Tarih', time_field: 'Saat', loc_field: 'Konum', phone_field: 'Telefon',
+    dress_field: 'Kıyafet Kodu', res_field: 'Rezervasyon', icon_field: 'Emoji / İkon',
+    category_field: 'Kategori', content_field: 'Bilgi', save: 'Kaydet', cancel: 'İptal',
+    saved: 'Kaydedildi ✓', deleted: 'Silindi ✓',
+    wrong_pass: 'Şifre yanlış!', name_required: 'Ad gerekli',
+  },
+  en: {
+    restaurants: 'Restaurants & Bars', pools: 'Pool & Spa', events: 'Events', services: 'Services',
+    open: 'Open', closed: 'Closed', location: 'Location', phone: 'Phone',
+    hours: 'Opening Hours', dress_code: 'Dress Code', reservation: 'Reservation',
+    no_items: 'No content added yet.', admin_panel: 'Admin Panel',
+    guest_view: 'Guest View', edit_name: 'Hotel Name',
+    admin_login: 'Admin Login', enter_password: 'Enter admin password',
+    hero_sub: 'Your tropical escape awaits',
+    add: 'Add', edit: 'Edit', delete: 'Delete',
+    name_field: 'Name', desc_field: 'Description', hours_field: 'Hours',
+    date_field: 'Date', time_field: 'Time', loc_field: 'Location', phone_field: 'Phone',
+    dress_field: 'Dress Code', res_field: 'Reservation', icon_field: 'Emoji / Icon',
+    category_field: 'Category', content_field: 'Info', save: 'Save', cancel: 'Cancel',
+    saved: 'Saved ✓', deleted: 'Deleted ✓',
+    wrong_pass: 'Wrong password!', name_required: 'Name is required',
+  },
+  ru: {
+    restaurants: 'Рестораны и Бары', pools: 'Бассейн и Спа', events: 'Мероприятия', services: 'Услуги',
+    open: 'Открыто', closed: 'Закрыто', location: 'Место', phone: 'Телефон',
+    hours: 'Часы работы', dress_code: 'Дресс-код', reservation: 'Бронирование',
+    no_items: 'Контент пока не добавлен.', admin_panel: 'Панель администратора',
+    guest_view: 'Вид гостя', edit_name: 'Название отеля',
+    admin_login: 'Вход для администратора', enter_password: 'Введите пароль',
+    hero_sub: 'Ваш тропический рай ждёт вас',
+    add: 'Добавить', edit: 'Изменить', delete: 'Удалить',
+    name_field: 'Название', desc_field: 'Описание', hours_field: 'Часы',
+    date_field: 'Дата', time_field: 'Время', loc_field: 'Место', phone_field: 'Телефон',
+    dress_field: 'Дресс-код', res_field: 'Бронирование', icon_field: 'Эмодзи / Иконка',
+    category_field: 'Категория', content_field: 'Информация', save: 'Сохранить', cancel: 'Отмена',
+    saved: 'Сохранено ✓', deleted: 'Удалено ✓',
+    wrong_pass: 'Неверный пароль!', name_required: 'Требуется название',
+  },
+  de: {
+    restaurants: 'Restaurants & Bars', pools: 'Pool & Spa', events: 'Veranstaltungen', services: 'Dienstleistungen',
+    open: 'Geöffnet', closed: 'Geschlossen', location: 'Ort', phone: 'Telefon',
+    hours: 'Öffnungszeiten', dress_code: 'Kleiderordnung', reservation: 'Reservierung',
+    no_items: 'Noch kein Inhalt hinzugefügt.', admin_panel: 'Admin-Panel',
+    guest_view: 'Gästeansicht', edit_name: 'Hotelname',
+    admin_login: 'Admin-Login', enter_password: 'Admin-Passwort eingeben',
+    hero_sub: 'Ihr tropisches Paradies wartet auf Sie',
+    add: 'Hinzufügen', edit: 'Bearbeiten', delete: 'Löschen',
+    name_field: 'Name', desc_field: 'Beschreibung', hours_field: 'Stunden',
+    date_field: 'Datum', time_field: 'Uhrzeit', loc_field: 'Ort', phone_field: 'Telefon',
+    dress_field: 'Kleiderordnung', res_field: 'Reservierung', icon_field: 'Emoji / Symbol',
+    category_field: 'Kategorie', content_field: 'Info', save: 'Speichern', cancel: 'Abbrechen',
+    saved: 'Gespeichert ✓', deleted: 'Gelöscht ✓',
+    wrong_pass: 'Falsches Passwort!', name_required: 'Name erforderlich',
+  },
+  fr: {
+    restaurants: 'Restaurants & Bars', pools: 'Piscine & Spa', events: 'Événements', services: 'Services',
+    open: 'Ouvert', closed: 'Fermé', location: 'Lieu', phone: 'Téléphone',
+    hours: "Heures d'ouverture", dress_code: 'Tenue vestimentaire', reservation: 'Réservation',
+    no_items: 'Aucun contenu ajouté pour le moment.', admin_panel: "Panneau d'administration",
+    guest_view: 'Vue client', edit_name: "Nom de l'hôtel",
+    admin_login: 'Connexion Admin', enter_password: 'Entrez le mot de passe admin',
+    hero_sub: 'Votre évasion tropicale vous attend',
+    add: 'Ajouter', edit: 'Modifier', delete: 'Supprimer',
+    name_field: 'Nom', desc_field: 'Description', hours_field: 'Heures',
+    date_field: 'Date', time_field: 'Heure', loc_field: 'Lieu', phone_field: 'Téléphone',
+    dress_field: 'Tenue', res_field: 'Réservation', icon_field: 'Emoji / Icône',
+    category_field: 'Catégorie', content_field: 'Info', save: 'Enregistrer', cancel: 'Annuler',
+    saved: 'Enregistré ✓', deleted: 'Supprimé ✓',
+    wrong_pass: 'Mot de passe incorrect!', name_required: 'Nom requis',
+  },
+  nl: {
+    restaurants: "Restaurants & Bars", pools: 'Zwembad & Spa', events: 'Evenementen', services: 'Diensten',
+    open: 'Open', closed: 'Gesloten', location: 'Locatie', phone: 'Telefoon',
+    hours: 'Openingstijden', dress_code: 'Kledingvoorschrift', reservation: 'Reservering',
+    no_items: 'Nog geen inhoud toegevoegd.', admin_panel: 'Beheerpaneel',
+    guest_view: 'Gastweergave', edit_name: 'Hotelnaam',
+    admin_login: 'Admin Login', enter_password: 'Voer het beheerderswachtwoord in',
+    hero_sub: 'Uw tropische ontsnapping wacht op u',
+    add: 'Toevoegen', edit: 'Bewerken', delete: 'Verwijderen',
+    name_field: 'Naam', desc_field: 'Beschrijving', hours_field: 'Uren',
+    date_field: 'Datum', time_field: 'Tijd', loc_field: 'Locatie', phone_field: 'Telefoon',
+    dress_field: 'Kledingcode', res_field: 'Reservering', icon_field: 'Emoji / Icoon',
+    category_field: 'Categorie', content_field: 'Info', save: 'Opslaan', cancel: 'Annuleren',
+    saved: 'Opgeslagen ✓', deleted: 'Verwijderd ✓',
+    wrong_pass: 'Verkeerd wachtwoord!', name_required: 'Naam vereist',
+  },
+  cs: {
+    restaurants: 'Restaurace & Bary', pools: 'Bazén & Spa', events: 'Akce', services: 'Služby',
+    open: 'Otevřeno', closed: 'Zavřeno', location: 'Místo', phone: 'Telefon',
+    hours: 'Otevírací doba', dress_code: 'Dress code', reservation: 'Rezervace',
+    no_items: 'Zatím žádný obsah.', admin_panel: 'Admin panel',
+    guest_view: 'Pohled hosta', edit_name: 'Název hotelu',
+    admin_login: 'Admin přihlášení', enter_password: 'Zadejte heslo admina',
+    hero_sub: 'Váš tropický ráj čeká',
+    add: 'Přidat', edit: 'Upravit', delete: 'Smazat',
+    name_field: 'Název', desc_field: 'Popis', hours_field: 'Hodiny',
+    date_field: 'Datum', time_field: 'Čas', loc_field: 'Místo', phone_field: 'Telefon',
+    dress_field: 'Dress code', res_field: 'Rezervace', icon_field: 'Emoji / Ikona',
+    category_field: 'Kategorie', content_field: 'Info', save: 'Uložit', cancel: 'Zrušit',
+    saved: 'Uloženo ✓', deleted: 'Smazáno ✓',
+    wrong_pass: 'Špatné heslo!', name_required: 'Název je povinný',
+  },
+  pl: {
+    restaurants: 'Restauracje i Bary', pools: 'Basen i Spa', events: 'Wydarzenia', services: 'Usługi',
+    open: 'Otwarte', closed: 'Zamknięte', location: 'Lokalizacja', phone: 'Telefon',
+    hours: 'Godziny otwarcia', dress_code: 'Strój', reservation: 'Rezerwacja',
+    no_items: 'Brak treści.', admin_panel: 'Panel administratora',
+    guest_view: 'Widok gościa', edit_name: 'Nazwa hotelu',
+    admin_login: 'Logowanie admina', enter_password: 'Wprowadź hasło admina',
+    hero_sub: 'Twój tropikalny raj czeka',
+    add: 'Dodaj', edit: 'Edytuj', delete: 'Usuń',
+    name_field: 'Nazwa', desc_field: 'Opis', hours_field: 'Godziny',
+    date_field: 'Data', time_field: 'Czas', loc_field: 'Lokalizacja', phone_field: 'Telefon',
+    dress_field: 'Strój', res_field: 'Rezerwacja', icon_field: 'Emoji / Ikona',
+    category_field: 'Kategoria', content_field: 'Info', save: 'Zapisz', cancel: 'Anuluj',
+    saved: 'Zapisano ✓', deleted: 'Usunięto ✓',
+    wrong_pass: 'Złe hasło!', name_required: 'Nazwa jest wymagana',
+  },
+  ro: {
+    restaurants: 'Restaurante & Baruri', pools: 'Piscină & Spa', events: 'Evenimente', services: 'Servicii',
+    open: 'Deschis', closed: 'Închis', location: 'Locație', phone: 'Telefon',
+    hours: 'Program', dress_code: 'Ținută', reservation: 'Rezervare',
+    no_items: 'Niciun conținut adăugat.', admin_panel: 'Panou admin',
+    guest_view: 'Vedere oaspete', edit_name: 'Numele hotelului',
+    admin_login: 'Autentificare Admin', enter_password: 'Introduceți parola admin',
+    hero_sub: 'Evadarea ta tropicală te așteaptă',
+    add: 'Adaugă', edit: 'Editează', delete: 'Șterge',
+    name_field: 'Nume', desc_field: 'Descriere', hours_field: 'Ore',
+    date_field: 'Data', time_field: 'Ora', loc_field: 'Locație', phone_field: 'Telefon',
+    dress_field: 'Ținută', res_field: 'Rezervare', icon_field: 'Emoji / Pictogramă',
+    category_field: 'Categorie', content_field: 'Info', save: 'Salvează', cancel: 'Anulează',
+    saved: 'Salvat ✓', deleted: 'Șters ✓',
+    wrong_pass: 'Parolă greșită!', name_required: 'Numele este obligatoriu',
+  },
+};
+
+const CATEGORIES = [
+  { id: 'restaurants', icon: '🍽️', type: 'outlet' },
+  { id: 'pools', icon: '🏊', type: 'outlet' },
+  { id: 'events', icon: '🎉', type: 'event' },
+  { id: 'services', icon: '🛎️', type: 'service' },
+];
+
+const ICON_OPTIONS = ['🍽️','🍹','🍸','☕','🍕','🥂','🏊','💆','🧖','🛁','🎉','🎶','🎭','🌅','🏄','⛵','🎯','🎪','🛎️','📶','🅿️','🚗','🛁','🏋️','👶','🧹','🏥','💊','🔑','📸','🌿','🌴','🦀','🐠','☀️','🌊'];
+
+// Default demo data
+function getDefaultData() {
+  return {
+    hotelName: 'Paradise Resort',
+    items: [
+      {
+        id: 1, category: 'restaurants', icon: '🍽️',
+        names: { tr: 'Ana Restoran', en: 'Main Restaurant', ru: 'Главный ресторан', de: 'Hauptrestaurant', fr: 'Restaurant Principal', nl: 'Hoofdrestaurant', cs: 'Hlavní restaurace', pl: 'Główna restauracja', ro: 'Restaurant Principal' },
+        descs: { tr: 'Açık büfe kahvaltı, öğle ve akşam yemeği. Tüm ürünler taze ve yerel kaynaklıdır.', en: 'Open buffet breakfast, lunch and dinner. All produce is fresh and locally sourced.', ru: 'Шведский стол: завтрак, обед и ужин. Все продукты свежие и местные.', de: 'Offenes Buffet für Frühstück, Mittag- und Abendessen.', fr: 'Buffet ouvert pour le petit-déjeuner, le déjeuner et le dîner.', nl: 'Open buffet ontbijt, lunch en diner.', cs: 'Otevřený bufet snídaně, oběd a večeře.', pl: 'Otwarty bufet śniadanie, obiad i kolacja.', ro: 'Bufet deschis mic dejun, prânz și cină.' },
+        hours: '07:00 – 22:00',
+        location: 'Zemin Kat / Ground Floor',
+        phone: '1001',
+        dressCode: '',
+        reservation: '',
+      },
+      {
+        id: 2, category: 'restaurants', icon: '🍹',
+        names: { tr: 'Beach Bar', en: 'Beach Bar', ru: 'Пляжный бар', de: 'Strandbar', fr: 'Bar de Plage', nl: 'Strandbar', cs: 'Beach Bar', pl: 'Bar Plażowy', ro: 'Bar de Plajă' },
+        descs: { tr: 'Gün boyunca taze kokteylller, soğuk içecekler ve hafif atıştırmalıklar.', en: 'Fresh cocktails, cold drinks and light snacks throughout the day.', ru: 'Свежие коктейли, холодные напитки и лёгкие закуски.', de: 'Frische Cocktails, kalte Getränke und leichte Snacks.', fr: 'Cocktails frais, boissons fraîches et collations légères.', nl: 'Verse cocktails, koude drankjes en lichte snacks.', cs: 'Čerstvé koktejly, studené nápoje a lehké občerstvení.', pl: 'Świeże koktajle, zimne napoje i lekkie przekąski.', ro: 'Cocktailuri proaspete, băuturi reci și gustări ușoare.' },
+        hours: '10:00 – 00:00',
+        location: 'Sahil / Beach',
+        phone: '1002',
+        dressCode: '',
+        reservation: '',
+      },
+      {
+        id: 3, category: 'pools', icon: '🏊',
+        names: { tr: 'Ana Havuz', en: 'Main Pool', ru: 'Главный бассейн', de: 'Hauptpool', fr: 'Piscine Principale', nl: 'Hoofdzwembad', cs: 'Hlavní bazén', pl: 'Basen Główny', ro: 'Piscina Principală' },
+        descs: { tr: 'Geniş yüzme havuzu ve çevre güvertesi. Şezlong ve şemsiyeler ücretsiz.', en: 'Large swimming pool and surrounding deck. Sun loungers and umbrellas are complimentary.', ru: 'Большой бассейн и палуба вокруг. Шезлонги и зонтики бесплатно.', de: 'Großer Swimmingpool und Sonnendeck. Liegestühle und Sonnenschirme kostenlos.', fr: 'Grande piscine et deck. Chaises longues et parasols gratuits.', nl: 'Groot zwembad en omringend dek. Ligstoelen en parasols zijn gratis.', cs: 'Velký bazén a okolní paluba. Lehátka a slunečníky zdarma.', pl: 'Duży basen i otaczający pokład. Leżaki i parasole bezpłatne.', ro: 'Piscină mare și punte înconjurătoare. Șezlonguri și umbrele gratuite.' },
+        hours: '08:00 – 20:00',
+        location: 'Merkez / Center',
+        phone: '',
+        dressCode: 'Mayo zorunlu',
+        reservation: '',
+      },
+      {
+        id: 4, category: 'pools', icon: '💆',
+        names: { tr: 'Spa & Wellness', en: 'Spa & Wellness', ru: 'Спа и велнес', de: 'Spa & Wellness', fr: 'Spa & Bien-être', nl: 'Spa & Wellness', cs: 'Spa & Wellness', pl: 'Spa i Wellness', ro: 'Spa și Wellness' },
+        descs: { tr: 'Masaj, hamam ve güzellik hizmetleri. Randevu için lütfen resepsiyona başvurun.', en: 'Massage, hammam and beauty services. Please contact reception for appointments.', ru: 'Массаж, хаммам и косметические услуги. Запись через ресепшн.', de: 'Massage, Hammam und Beauty-Angebote. Terminbuchung an der Rezeption.', fr: 'Massage, hammam et soins beauté. Contactez la réception pour les rendez-vous.', nl: 'Massage, hammam en schoonheidsdiensten. Neem contact op met de receptie.', cs: 'Masáž, hammam a kosmetické služby. Rezervace přes recepci.', pl: 'Masaż, hammam i usługi beauty. Rezerwacja przez recepcję.', ro: 'Masaj, hammam și servicii de frumusețe. Contactați recepția.' },
+        hours: '09:00 – 21:00',
+        location: 'B Blok / B Block',
+        phone: '1005',
+        dressCode: '',
+        reservation: 'Zorunlu / Required',
+      },
+    ],
+    events: [
+      {
+        id: 101,
+        date: new Date().toISOString().split('T')[0],
+        time: '21:00',
+        icon: '🎶',
+        names: { tr: 'Canlı Müzik Gecesi', en: 'Live Music Night', ru: 'Живая музыка', de: 'Live-Musik Abend', fr: 'Soirée Musique Live', nl: 'Livemuziekavond', cs: 'Večer živé hudby', pl: 'Wieczór z muzyką na żywo', ro: 'Seară cu muzică live' },
+        descs: { tr: 'Sahil sahnesinde canlı müzik performansı. Tüm misafirler davetlidir.', en: 'Live music performance on the beach stage. All guests are invited.', ru: 'Живое выступление на пляжной сцене. Все гости приглашены.', de: 'Live-Musikauftritt auf der Strandbühne. Alle Gäste sind eingeladen.', fr: 'Performance musicale live sur la scène de plage. Tous les clients sont invités.', nl: 'Live muziekoptreden op het strandpodium.', cs: 'Živé hudební vystoupení na pláži.', pl: 'Występ muzyczny na żywo na plaży.', ro: 'Spectacol de muzică live pe plajă.' },
+        location: 'Beach Stage',
+      },
+    ],
+    services: [
+      { id: 201, icon: '📶', names: { tr: 'WiFi', en: 'WiFi', ru: 'WiFi', de: 'WiFi', fr: 'WiFi', nl: 'WiFi', cs: 'WiFi', pl: 'WiFi', ro: 'WiFi' }, infos: { tr: 'Şifre: resort2024\nTüm alanlarda ücretsiz', en: 'Password: resort2024\nFree throughout the hotel', ru: 'Пароль: resort2024\nБесплатно везде', de: 'Passwort: resort2024\nKostenlos im gesamten Hotel', fr: 'Mot de passe: resort2024\nGratuit partout', nl: 'Wachtwoord: resort2024\nGratis overal', cs: 'Heslo: resort2024\nZdarma všude', pl: 'Hasło: resort2024\nBezpłatne wszędzie', ro: 'Parolă: resort2024\nGratuit în toată unitatea' } },
+      { id: 202, icon: '🅿️', names: { tr: 'Otopark', en: 'Parking', ru: 'Парковка', de: 'Parkplatz', fr: 'Parking', nl: 'Parkeren', cs: 'Parkování', pl: 'Parking', ro: 'Parcare' }, infos: { tr: 'Ücretsiz otopark\n07:00 – 23:00', en: 'Free parking\n07:00 – 23:00', ru: 'Бесплатная парковка\n07:00 – 23:00', de: 'Kostenloser Parkplatz\n07:00 – 23:00', fr: 'Parking gratuit\n07:00 – 23:00', nl: 'Gratis parkeren\n07:00 – 23:00', cs: 'Bezplatné parkování\n07:00 – 23:00', pl: 'Bezpłatny parking\n07:00 – 23:00', ro: 'Parcare gratuită\n07:00 – 23:00' } },
+      { id: 203, icon: '🛎️', names: { tr: 'Resepsiyon', en: 'Reception', ru: 'Ресепшн', de: 'Rezeption', fr: 'Réception', nl: 'Receptie', cs: 'Recepce', pl: 'Recepcja', ro: 'Recepție' }, infos: { tr: '24 saat açık\nDahili: 0', en: '24/7 open\nExt: 0', ru: 'Открыто 24/7\nДоб: 0', de: '24 Stunden geöffnet\nDurchwahl: 0', fr: 'Ouvert 24h/24\nExt: 0', nl: '24/7 open\nToestel: 0', cs: 'Otevřeno 24/7\nLinky: 0', pl: 'Otwarte 24/7\nWew: 0', ro: 'Deschis 24/7\nInt: 0' } },
+    ]
+  };
+}
+
+// ==============================
+// STATE
+// ==============================
+let state = JSON.parse(localStorage.getItem('hotelData') || 'null') || getDefaultData();
+let currentLang = detectLang();
+let activeTab = 'restaurants';
+let adminTab = 'restaurants';
+let editingItem = null;
+let editingType = null;
+let toastTimer = null;
+
+function saveState() {
+  localStorage.setItem('hotelData', JSON.stringify(state));
+}
+
+function detectLang() {
+  const nav = (navigator.language || navigator.userLanguage || 'en').slice(0, 2).toLowerCase();
+  return LANG_CODES.includes(nav) ? nav : 'en';
+}
+
+function t(key) {
+  return (UI_STRINGS[currentLang] || UI_STRINGS['en'])[key] || key;
+}
+
+function getName(item) {
+  return item.names?.[currentLang] || item.names?.en || item.names?.tr || Object.values(item.names||{})[0] || '';
+}
+function getDesc(item) {
+  return item.descs?.[currentLang] || item.descs?.en || item.descs?.tr || '';
+}
+function getInfo(item) {
+  return item.infos?.[currentLang] || item.infos?.en || item.infos?.tr || '';
+}
+
+function isOpen(hoursStr) {
+  if (!hoursStr) return null;
+  const m = hoursStr.match(/(\d{1,2}):(\d{2})\s*[–\-]\s*(\d{1,2}):(\d{2})/);
+  if (!m) return null;
+  const now = new Date();
+  const cur = now.getHours() * 60 + now.getMinutes();
+  const open = parseInt(m[1]) * 60 + parseInt(m[2]);
+  const close = parseInt(m[3]) * 60 + parseInt(m[4]);
+  return close > open ? cur >= open && cur < close : cur >= open || cur < close;
+}
+
+// ==============================
+// RENDER GUEST VIEW
+// ==============================
+function renderGuest() {
+  // Hotel name
+  document.getElementById('hotel-name-display').textContent = state.hotelName;
+  document.getElementById('hero-subtitle').textContent = t('hero_sub');
+
+  // Lang bar
+  const lb = document.getElementById('lang-bar');
+  lb.innerHTML = LANGS.map(l =>
+    `<button class="lang-btn ${l.code === currentLang ? 'active' : ''}" onclick="setLang('${l.code}')">${l.label}</button>`
+  ).join('');
+
+  // Nav tabs
+  const nt = document.getElementById('nav-tabs');
+  const tabIcons = { restaurants: '🍽️', pools: '🏊', events: '🎉', services: '🛎️' };
+  nt.innerHTML = CATEGORIES.map(c =>
+    `<button class="nav-tab ${c.id === activeTab ? 'active' : ''}" onclick="setTab('${c.id}')">${tabIcons[c.id]} ${t(c.id)}</button>`
+  ).join('');
+
+  // Content
+  const ca = document.getElementById('content-area');
+  ca.innerHTML = '';
+
+  if (activeTab === 'restaurants' || activeTab === 'pools') {
+    const items = state.items.filter(i => i.category === activeTab);
+    const title = document.createElement('div');
+    title.innerHTML = `<div class="section-title">${t(activeTab)}</div><div class="section-sub">${items.length} ${activeTab === 'restaurants' ? '🌴' : '🌊'}</div>`;
+    ca.appendChild(title);
+
+    if (items.length === 0) {
+      ca.innerHTML += `<div class="empty-state"><div class="e-icon">🌴</div><p>${t('no_items')}</p></div>`;
+    } else {
+      items.forEach(item => {
+        const openStatus = isOpen(item.hours);
+        const statusHtml = openStatus !== null
+          ? `<span class="status-dot ${openStatus ? 'open' : 'closed'}"></span>${openStatus ? t('open') : t('closed')} · `
+          : '';
+
+        const iconClass = activeTab === 'restaurants'
+          ? (item.icon === '🍹' || item.icon === '🍸' ? 'icon-bar' : 'icon-restaurant')
+          : (item.icon === '💆' || item.icon === '🧖' ? 'icon-spa' : 'icon-pool');
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-header" onclick="toggleCard(this)">
+            <div class="card-icon ${iconClass}">${item.icon}</div>
+            <div class="card-info">
+              <div class="card-name">${getName(item)}</div>
+              <div class="card-hours">${statusHtml}${item.hours || ''}</div>
+            </div>
+            <div class="card-arrow">›</div>
+          </div>
+          <div class="card-body">
+            ${getDesc(item) ? `<div class="card-desc">${getDesc(item)}</div>` : ''}
+            ${item.hours ? `<div class="detail-row"><span class="detail-label">${t('hours')}</span><span class="detail-val">${item.hours}</span></div>` : ''}
+            ${item.location ? `<div class="detail-row"><span class="detail-label">${t('location')}</span><span class="detail-val">${item.location}</span></div>` : ''}
+            ${item.phone ? `<div class="detail-row"><span class="detail-label">${t('phone')}</span><span class="detail-val">📞 ${item.phone}</span></div>` : ''}
+            ${item.dressCode ? `<div class="detail-row"><span class="detail-label">${t('dress_code')}</span><span class="detail-val">${item.dressCode}</span></div>` : ''}
+            ${item.reservation ? `<div class="detail-row"><span class="detail-label">${t('reservation')}</span><span class="detail-val">${item.reservation}</span></div>` : ''}
+          </div>`;
+        ca.appendChild(card);
+      });
+    }
+  }
+
+  else if (activeTab === 'events') {
+    const now = new Date();
+    const events = [...state.events].sort((a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
+    const title = document.createElement('div');
+    title.innerHTML = `<div class="section-title">${t('events')}</div><div class="section-sub">${events.length} 🎉</div>`;
+    ca.appendChild(title);
+
+    if (events.length === 0) {
+      ca.innerHTML += `<div class="empty-state"><div class="e-icon">🎉</div><p>${t('no_items')}</p></div>`;
+    } else {
+      events.forEach(ev => {
+        const d = new Date(ev.date + 'T12:00:00');
+        const day = d.getDate();
+        const month = d.toLocaleString(currentLang, { month: 'short' }).toUpperCase();
+        const card = document.createElement('div');
+        card.className = 'event-card';
+        card.innerHTML = `
+          <div class="event-date-strip">
+            <div class="event-date-box">
+              <div class="event-day">${day}</div>
+              <div class="event-month">${month}</div>
+            </div>
+            <div class="event-title-wrap">
+              <div class="event-title">${ev.icon} ${getName(ev)}</div>
+              <div class="event-time">🕐 ${ev.time}</div>
+            </div>
+          </div>
+          <div class="event-body">
+            ${getDesc(ev) ? `<div class="event-desc">${getDesc(ev)}</div>` : ''}
+            ${ev.location ? `<span class="event-location">📍 ${ev.location}</span>` : ''}
+          </div>`;
+        ca.appendChild(card);
+      });
+    }
+  }
+
+  else if (activeTab === 'services') {
+    const title = document.createElement('div');
+    title.innerHTML = `<div class="section-title">${t('services')}</div><div class="section-sub">${state.services.length} 🛎️</div>`;
+    ca.appendChild(title);
+
+    if (state.services.length === 0) {
+      ca.innerHTML += `<div class="empty-state"><div class="e-icon">🛎️</div><p>${t('no_items')}</p></div>`;
+    } else {
+      const grid = document.createElement('div');
+      grid.className = 'service-grid';
+      state.services.forEach(svc => {
+        const item = document.createElement('div');
+        item.className = 'service-item';
+        item.innerHTML = `
+          <div class="s-icon">${svc.icon}</div>
+          <div class="s-name">${getName(svc)}</div>
+          <div class="s-info">${getInfo(svc)}</div>`;
+        grid.appendChild(item);
+      });
+      ca.appendChild(grid);
+    }
+  }
+}
+
+function setLang(code) {
+  currentLang = code;
+  renderGuest();
+}
+
+function setTab(id) {
+  activeTab = id;
+  renderGuest();
+}
+
+function toggleCard(header) {
+  const card = header.closest('.card');
+  card.classList.toggle('expanded');
+}
+
+// ==============================
+// ADMIN VIEW
+// ==============================
+function renderAdmin() {
+  const tabIcons = { restaurants: '🍽️', pools: '🏊', events: '🎉', services: '🛎️' };
+  const at = document.getElementById('admin-tabs');
+  at.innerHTML = CATEGORIES.map(c =>
+    `<button class="admin-tab ${c.id === adminTab ? 'active' : ''}" onclick="setAdminTab('${c.id}')">${tabIcons[c.id]} ${UI_STRINGS.tr[c.id]}</button>`
+  ).join('');
+
+  const ac = document.getElementById('admin-content');
+  ac.innerHTML = '';
+
+  if (adminTab === 'restaurants' || adminTab === 'pools') {
+    const items = state.items.filter(i => i.category === adminTab);
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-add';
+    addBtn.innerHTML = `<span>+</span> ${UI_STRINGS.tr.add} ${UI_STRINGS.tr[adminTab].split(' ')[0]}`;
+    addBtn.onclick = () => openModal('outlet', adminTab, null);
+    ac.appendChild(addBtn);
+
+    items.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'admin-list-item';
+      el.innerHTML = `
+        <div class="ali-icon">${item.icon}</div>
+        <div class="ali-info">
+          <div class="ali-name">${item.names?.tr || item.names?.en || ''}</div>
+          <div class="ali-sub">${item.hours || '—'} | ${item.location || '—'}</div>
+        </div>
+        <div class="ali-actions">
+          <button class="btn-edit" onclick="openModal('outlet','${adminTab}',${item.id})">✏️</button>
+          <button class="btn-del" onclick="deleteItem('outlet',${item.id})">🗑️</button>
+        </div>`;
+      ac.appendChild(el);
+    });
+
+    if (items.length === 0) {
+      ac.innerHTML += `<div style="text-align:center;color:#999;padding:32px;font-size:14px;">Henüz öğe yok</div>`;
+    }
+  }
+
+  else if (adminTab === 'events') {
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-add';
+    addBtn.innerHTML = `<span>+</span> Etkinlik Ekle`;
+    addBtn.onclick = () => openModal('event', 'events', null);
+    ac.appendChild(addBtn);
+
+    const sorted = [...state.events].sort((a,b) => new Date(a.date+'T'+a.time) - new Date(b.date+'T'+b.time));
+    sorted.forEach(ev => {
+      const el = document.createElement('div');
+      el.className = 'admin-list-item';
+      el.innerHTML = `
+        <div class="ali-icon">${ev.icon}</div>
+        <div class="ali-info">
+          <div class="ali-name">${ev.names?.tr || ev.names?.en || ''}</div>
+          <div class="ali-sub">${ev.date} ${ev.time} | ${ev.location || '—'}</div>
+        </div>
+        <div class="ali-actions">
+          <button class="btn-edit" onclick="openModal('event','events',${ev.id})">✏️</button>
+          <button class="btn-del" onclick="deleteItem('event',${ev.id})">🗑️</button>
+        </div>`;
+      ac.appendChild(el);
+    });
+
+    if (state.events.length === 0) {
+      ac.innerHTML += `<div style="text-align:center;color:#999;padding:32px;font-size:14px;">Henüz etkinlik yok</div>`;
+    }
+  }
+
+  else if (adminTab === 'services') {
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-add';
+    addBtn.innerHTML = `<span>+</span> Hizmet Ekle`;
+    addBtn.onclick = () => openModal('service', 'services', null);
+    ac.appendChild(addBtn);
+
+    state.services.forEach(svc => {
+      const el = document.createElement('div');
+      el.className = 'admin-list-item';
+      el.innerHTML = `
+        <div class="ali-icon">${svc.icon}</div>
+        <div class="ali-info">
+          <div class="ali-name">${svc.names?.tr || svc.names?.en || ''}</div>
+          <div class="ali-sub">${svc.infos?.tr || svc.infos?.en || '—'}</div>
+        </div>
+        <div class="ali-actions">
+          <button class="btn-edit" onclick="openModal('service','services',${svc.id})">✏️</button>
+          <button class="btn-del" onclick="deleteItem('service',${svc.id})">🗑️</button>
+        </div>`;
+      ac.appendChild(el);
+    });
+  }
+}
+
+function setAdminTab(id) {
+  adminTab = id;
+  renderAdmin();
+}
+
+// ==============================
+// MODAL
+// ==============================
+function openModal(type, category, id) {
+  editingType = type;
+  let existing = null;
+
+  if (id !== null) {
+    if (type === 'outlet') existing = state.items.find(i => i.id === id);
+    else if (type === 'event') existing = state.events.find(i => i.id === id);
+    else if (type === 'service') existing = state.services.find(i => i.id === id);
+  }
+  editingItem = existing ? { ...existing, _category: category } : { _category: category, _isNew: true };
+
+  const modal = document.getElementById('item-modal');
+  const titleEl = document.getElementById('modal-title');
+  const formBody = document.getElementById('modal-form-body');
+
+  titleEl.textContent = existing ? (type === 'outlet' ? 'Outlet Düzenle' : type === 'event' ? 'Etkinlik Düzenle' : 'Hizmet Düzenle') : (type === 'outlet' ? 'Outlet Ekle' : type === 'event' ? 'Etkinlik Ekle' : 'Hizmet Ekle');
+
+  // Build icon selector
+  const iconVal = existing?.icon || (type === 'outlet' ? '🍽️' : type === 'event' ? '🎉' : '🛎️');
+  const iconHtml = `
+    <div class="form-group">
+      <label class="form-label">İkon</label>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
+        ${ICON_OPTIONS.map(ic => `<button type="button" onclick="selectIcon('${ic}',this)" style="font-size:22px;padding:4px;border:2px solid ${ic===iconVal?'var(--palm)':'transparent'};border-radius:8px;background:${ic===iconVal?'rgba(45,90,61,0.1)':'none'};cursor:pointer" data-icon="${ic}">${ic}</button>`).join('')}
+      </div>
+      <input type="hidden" id="f-icon" value="${iconVal}">
+    </div>`;
+
+  if (type === 'outlet') {
+    formBody.innerHTML = `
+      ${iconHtml}
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Çalışma Saatleri</label>
+          <input type="text" class="form-input" id="f-hours" value="${existing?.hours||''}" placeholder="09:00 – 22:00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dahili / Telefon</label>
+          <input type="text" class="form-input" id="f-phone" value="${existing?.phone||''}" placeholder="1001">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Konum</label>
+          <input type="text" class="form-input" id="f-location" value="${existing?.location||''}" placeholder="Ground Floor">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Kıyafet Kodu</label>
+          <input type="text" class="form-input" id="f-dress" value="${existing?.dressCode||''}" placeholder="Smart casual">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rezervasyon</label>
+        <input type="text" class="form-input" id="f-reservation" value="${existing?.reservation||''}" placeholder="Zorunlu / Required">
+      </div>
+      <div class="lang-fields-title">🌍 Çok Dilli İçerik</div>
+      ${buildLangFields('names', 'İsim', existing?.names)}
+      <div style="margin-top:10px"></div>
+      ${buildLangFields('descs', 'Açıklama', existing?.descs, true)}`;
+  }
+  else if (type === 'event') {
+    formBody.innerHTML = `
+      ${iconHtml}
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Tarih</label>
+          <input type="date" class="form-input" id="f-date" value="${existing?.date||new Date().toISOString().split('T')[0]}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Saat</label>
+          <input type="time" class="form-input" id="f-time" value="${existing?.time||'20:00'}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Konum</label>
+        <input type="text" class="form-input" id="f-location" value="${existing?.location||''}" placeholder="Beach Stage">
+      </div>
+      <div class="lang-fields-title">🌍 Çok Dilli İçerik</div>
+      ${buildLangFields('names', 'Etkinlik Adı', existing?.names)}
+      <div style="margin-top:10px"></div>
+      ${buildLangFields('descs', 'Açıklama', existing?.descs, true)}`;
+  }
+  else if (type === 'service') {
+    formBody.innerHTML = `
+      ${iconHtml}
+      <div class="lang-fields-title">🌍 Çok Dilli İçerik</div>
+      ${buildLangFields('names', 'Hizmet Adı', existing?.names)}
+      <div style="margin-top:10px"></div>
+      ${buildLangFields('infos', 'Bilgi / Detay', existing?.infos, true)}`;
+  }
+
+  modal.classList.add('open');
+}
+
+function buildLangFields(fieldId, label, values, textarea = false) {
+  return LANGS.map(l => `
+    <div class="form-group" style="margin-bottom:8px">
+      <label class="form-label" style="display:flex;align-items:center;gap:4px">
+        <span style="background:var(--sand2);padding:2px 6px;border-radius:4px;font-size:10px">${l.label}</span>
+        ${label}
+      </label>
+      ${textarea
+        ? `<textarea class="form-textarea" id="f-${fieldId}-${l.code}" rows="2" placeholder="${l.name}...">${(values&&values[l.code])||''}</textarea>`
+        : `<input type="text" class="form-input" id="f-${fieldId}-${l.code}" value="${(values&&values[l.code])||''}" placeholder="${l.name}...">`
+      }
+    </div>`).join('');
+}
+
+function selectIcon(icon, btn) {
+  document.getElementById('f-icon').value = icon;
+  btn.closest('.form-group').querySelectorAll('button').forEach(b => {
+    b.style.borderColor = 'transparent';
+    b.style.background = 'none';
+  });
+  btn.style.borderColor = 'var(--palm)';
+  btn.style.background = 'rgba(45,90,61,0.1)';
+}
+
+function closeModal() {
+  document.getElementById('item-modal').classList.remove('open');
+  editingItem = null;
+  editingType = null;
+}
+
+function saveItem() {
+  const icon = document.getElementById('f-icon').value;
+
+  const names = {};
+  const descs = {};
+  const infos = {};
+
+  LANGS.forEach(l => {
+    const nEl = document.getElementById(`f-names-${l.code}`);
+    if (nEl) names[l.code] = nEl.value;
+    const dEl = document.getElementById(`f-descs-${l.code}`);
+    if (dEl) descs[l.code] = dEl.value;
+    const iEl = document.getElementById(`f-infos-${l.code}`);
+    if (iEl) infos[l.code] = iEl.value;
+  });
+
+  if (!names.tr && !names.en) { showToast('⚠️ En az bir dilde isim girin!'); return; }
+
+  if (editingType === 'outlet') {
+    const obj = {
+      id: editingItem._isNew ? Date.now() : editingItem.id,
+      category: editingItem._category,
+      icon,
+      names,
+      descs,
+      hours: document.getElementById('f-hours')?.value || '',
+      location: document.getElementById('f-location')?.value || '',
+      phone: document.getElementById('f-phone')?.value || '',
+      dressCode: document.getElementById('f-dress')?.value || '',
+      reservation: document.getElementById('f-reservation')?.value || '',
+    };
+    if (editingItem._isNew) state.items.push(obj);
+    else { const idx = state.items.findIndex(i => i.id === editingItem.id); state.items[idx] = obj; }
+  }
+  else if (editingType === 'event') {
+    const obj = {
+      id: editingItem._isNew ? Date.now() : editingItem.id,
+      icon,
+      date: document.getElementById('f-date')?.value || '',
+      time: document.getElementById('f-time')?.value || '',
+      location: document.getElementById('f-location')?.value || '',
+      names,
+      descs,
+    };
+    if (editingItem._isNew) state.events.push(obj);
+    else { const idx = state.events.findIndex(i => i.id === editingItem.id); state.events[idx] = obj; }
+  }
+  else if (editingType === 'service') {
+    const obj = {
+      id: editingItem._isNew ? Date.now() : editingItem.id,
+      icon,
+      names,
+      infos,
+    };
+    if (editingItem._isNew) state.services.push(obj);
+    else { const idx = state.services.findIndex(i => i.id === editingItem.id); state.services[idx] = obj; }
+  }
+
+  saveState();
+  closeModal();
+  renderAdmin();
+  showToast('✓ Kaydedildi');
+}
+
+function deleteItem(type, id) {
+  if (!confirm('Silmek istediğinizden emin misiniz?')) return;
+  if (type === 'outlet') state.items = state.items.filter(i => i.id !== id);
+  else if (type === 'event') state.events = state.events.filter(i => i.id !== id);
+  else if (type === 'service') state.services = state.services.filter(i => i.id !== id);
+  saveState();
+  renderAdmin();
+  showToast('🗑️ Silindi');
+}
+
+// ==============================
+// HOTEL NAME EDIT
+// ==============================
+function editHotelName() {
+  const name = prompt('Otel adını girin:', state.hotelName);
+  if (name && name.trim()) {
+    state.hotelName = name.trim();
+    saveState();
+    renderAdmin();
+    showToast('✓ Otel adı güncellendi');
+  }
+}
+
+// ==============================
+// LOGIN
+// ==============================
+function openAdminLogin() {
+  document.getElementById('login-pw').value = '';
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('login-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('login-pw').focus(), 300);
+}
+function closeLogin() {
+  document.getElementById('login-overlay').classList.remove('open');
+}
+function doLogin() {
+  const pw = document.getElementById('login-pw').value;
+  if (pw === ADMIN_PASS) {
+    closeLogin();
+    document.getElementById('guest-view').style.display = 'none';
+    document.getElementById('admin-view').style.display = 'block';
+    adminTab = 'restaurants';
+    renderAdmin();
+  } else {
+    document.getElementById('login-error').textContent = t('wrong_pass');
+    document.getElementById('login-pw').value = '';
+    document.getElementById('login-pw').focus();
+  }
+}
+function showGuest() {
+  document.getElementById('admin-view').style.display = 'none';
+  document.getElementById('guest-view').style.display = 'block';
+  renderGuest();
+}
+
+// ==============================
+// TOAST
+// ==============================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ==============================
+// INIT
+// ==============================
+renderGuest();
+</script>
+</body>
+</html>
