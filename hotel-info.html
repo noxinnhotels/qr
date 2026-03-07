@@ -266,7 +266,7 @@ let currentLang = (() => { const n=(navigator.language||'en').slice(0,2).toLower
 let activeTab='restaurants', adminTab='restaurants';
 let editingItem=null, editingType=null, editingCategory=null;
 let isAdmin=false, toastTimer=null;
-let cache={outlets:[],events:[],services:[],hotelName:'Paradise Resort'};
+let cache={outlets:[],events:[],services:[],hotelName:'Noxinn Deluxe Hotel'};
 
 const t = k => (UI[currentLang]||UI.en)[k]||k;
 const getName = item => item.names?.[currentLang]||item.names?.en||item.names?.tr||Object.values(item.names||{})[0]||'';
