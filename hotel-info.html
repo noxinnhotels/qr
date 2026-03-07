@@ -31,8 +31,8 @@ body{font-family:'Jost',sans-serif;background:var(--sand);color:var(--text);min-
 .ann-close{background:none;border:none;font-size:18px;color:var(--text-soft);cursor:pointer;padding:0 4px;flex-shrink:0;}
 .lang-bar{background:var(--white);padding:10px 20px;display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--sand2);scrollbar-width:none;}
 .lang-bar::-webkit-scrollbar{display:none;}
-.lang-btn{flex-shrink:0;padding:5px 12px;border-radius:20px;border:1.5px solid transparent;background:none;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;cursor:pointer;color:var(--text-soft);transition:all .2s;}
-.lang-btn.active{background:var(--palm);color:white;border-color:var(--palm);}
+.lang-btn{flex-shrink:0;padding:4px;border-radius:50%;border:2.5px solid transparent;background:none;font-size:22px;cursor:pointer;transition:all .2s;line-height:1;width:36px;height:36px;display:flex;align-items:center;justify-content:center;}
+.lang-btn.active{border-color:var(--palm);background:rgba(26,95,122,.1);}.lang-btn:hover:not(.active){border-color:var(--sand2);background:var(--sand2);}
 .nav-tabs{background:var(--white);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:0;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,.06);}
 .nav-tabs::-webkit-scrollbar{display:none;}
 .nav-tab{flex-shrink:0;padding:13px 14px;border:none;background:none;font-family:'Jost',sans-serif;font-size:12px;font-weight:400;color:var(--text-soft);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:5px;}
@@ -259,7 +259,7 @@ const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const sb=supabase.createClient(SUPA_URL,SUPA_KEY);
 const BUCKET='hotel-media';
 
-const LANGS=[{code:'tr',label:'TR',name:'Türkçe'},{code:'en',label:'EN',name:'English'},{code:'ru',label:'RU',name:'Русский'},{code:'de',label:'DE',name:'Deutsch'},{code:'fr',label:'FR',name:'Français'},{code:'nl',label:'NL',name:'Nederlands'},{code:'cs',label:'CS',name:'Čeština'},{code:'pl',label:'PL',name:'Polski'},{code:'ro',label:'RO',name:'Română'}];
+const LANGS=[{code:'tr',label:'TR',name:'Türkçe',flag:'🇹🇷'},{code:'en',label:'EN',name:'English',flag:'🇬🇧'},{code:'ru',label:'RU',name:'Русский',flag:'🇷🇺'},{code:'de',label:'DE',name:'Deutsch',flag:'🇩🇪'},{code:'fr',label:'FR',name:'Français',flag:'🇫🇷'},{code:'nl',label:'NL',name:'Nederlands',flag:'🇳🇱'},{code:'cs',label:'CS',name:'Čeština',flag:'🇨🇿'},{code:'pl',label:'PL',name:'Polski',flag:'🇵🇱'},{code:'ro',label:'RO',name:'Română',flag:'🇷🇴'}];
 const ADMIN_TABS=[{id:'restaurants',icon:'🍽️',label:'Restoranlar'},{id:'pools',icon:'🏊',label:'Havuz & Spa'},{id:'events',icon:'🎉',label:'Etkinlikler'},{id:'services',icon:'🛎️',label:'Hizmetler'},{id:'requests',icon:'📝',label:'Talepler'},{id:'announcements',icon:'📢',label:'Duyuru'}];
 const ICONS=['🍽️','🍹','🍸','☕','🥂','🍕','🏊','💆','🧖','🛁','🎉','🎶','🎭','🌅','🏄','⛵','🎯','🎪','🛎️','📶','🅿️','🚗','🏋️','👶','🧹','🏥','💊','🔑','📸','🌿','🌴','🦀','🐠','☀️','🌊','🎠','🎨','🎬','🍦','🥤'];
 const ANN_TYPES=[{id:'info',label:'ℹ️ Bilgi'},{id:'warning',label:'⚠️ Uyarı'},{id:'urgent',label:'🚨 Acil'},{id:'success',label:'✅ Başarı'}];
@@ -326,7 +326,7 @@ function renderG(){
   document.getElementById('hnd').textContent=C.hotelName;
   document.getElementById('hsub').textContent=t('hero_sub');
   renderAnn();
-  document.getElementById('lang-bar').innerHTML=LANGS.map(l=>`<button class="lang-btn ${l.code===lang?'active':''}" onclick="setLang('${l.code}')">${l.label}</button>`).join('');
+  document.getElementById('lang-bar').innerHTML=LANGS.map(l=>`<button class="lang-btn ${l.code===lang?'active':''}" onclick="setLang('${l.code}')" title="${l.name}">${l.flag}</button>`).join('');
   const tabs=[{id:'restaurants',icon:'🍽️'},{id:'pools',icon:'🏊'},{id:'events',icon:'🎉'},{id:'services',icon:'🛎️'},{id:'gallery',icon:'📸'},{id:'request',icon:'💬'}];
   document.getElementById('nav-tabs').innerHTML=tabs.map(c=>`<button class="nav-tab ${c.id===tab?'active':''}" onclick="setTab('${c.id}')">${c.icon} ${t(c.id==='request'?'request_tab':c.id==='gallery'?'gallery':c.id)}</button>`).join('');
   const ca=document.getElementById('content-area');ca.innerHTML='';
