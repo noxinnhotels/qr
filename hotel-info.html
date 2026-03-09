@@ -696,7 +696,7 @@ function renderA(){
   document.getElementById('admin-tabs').innerHTML=ADMIN_TABS.map(c=>`<button class="admin-tab ${c.id===atab?'active':''}" onclick="setAtab('${c.id}')">${c.icon} ${c.label}${c.id==='requests'&&unread>0?`<span class="unread-badge">${unread}</span>`:''}</button>`).join('');
   const ac=document.getElementById('admin-content');ac.innerHTML='';
   const addBtn=(lbl,fn)=>{const b=document.createElement('button');b.className='btn-add';b.innerHTML=`<span>+</span> ${lbl}`;b.onclick=fn;ac.appendChild(b);};
-  const noItem=()=>{ac.innerHTML+=`<div style="text-align:center;color:#aaa;padding:32px;font-size:14px">Henüz öğe yok</div>`;};
+  const noItem=()=>{const d=document.createElement("div");d.style.cssText="text-align:center;color:#aaa;padding:32px;font-size:14px";d.textContent="Henüz öğe yok";ac.appendChild(d);};
   if(atab==='dashboard'){renderDashboard(ac);return;}
   if(atab==='hotelinfo'){renderHotelInfoAdmin(ac);return;}
 
