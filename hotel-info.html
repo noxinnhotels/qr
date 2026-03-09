@@ -955,11 +955,27 @@ function showToast(msg){const el=document.getElementById('toast');el.textContent
 
 (async()=>{
   const{data:{session}}=await sb.auth.getSession();
-  if(session)isAdmin=true;
   await fetchAll();
-  renderG();
+  if(session){
+    isAdmin=true;
+    document.getElementById('guest-view').style.display='none';
+    document.getElementById('admin-view').style.display='block';
+    atab='dashboard';
+    renderA();
+  } else {
+    renderG();
+  }
   setupRT();
 })();
+
+sb.auth.onAuthStateChange((event,session)=>{
+  if(event==='SIGNED_OUT'){
+    isAdmin=false;
+    document.getElementById('admin-view').style.display='none';
+    document.getElementById('guest-view').style.display='block';
+    renderG();
+  }
+});
 </script>
 </body>
 </html>
