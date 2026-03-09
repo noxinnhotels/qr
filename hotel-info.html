@@ -2,12 +2,44 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Hotel Info</title>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hotel Info">
+<meta name="theme-color" content="#0d3d52" id="theme-meta">
+<link rel="manifest" href="data:application/json,{%22name%22:%22Hotel%20Info%22,%22short_name%22:%22Hotel%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%230d3d52%22,%22theme_color%22:%22%230d3d52%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20192%20192'%3E%3Crect%20width='192'%20height='192'%20fill='%230d3d52'/%3E%3Ctext%20y='140'%20x='96'%20text-anchor='middle'%20font-size='120'%3E%F0%9F%8F%A8%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]}">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 :root{--sand:#f0f6f9;--sand2:#d6e8f0;--palm:#1a5f7a;--palm-light:#2a85a8;--gold:#c4973a;--gold-light:#e8c070;--ocean:#0d3d52;--white:#f8fcfe;--text:#0d2b38;--text-soft:#3d6a7f;--radius:16px;}
+[data-theme="dark"]{--sand:#0f1f2a;--sand2:#1a3040;--palm:#4ab3d4;--palm-light:#5ec8e8;--gold:#e8c070;--gold-light:#f0d090;--ocean:#060e14;--white:#101e28;--text:#e0f0f8;--text-soft:#7ab8cc;--radius:16px;}
+[data-theme="dark"] .hero{background:linear-gradient(160deg,#040c12 0%,#0a2030 45%,#0d3d52 100%);}
+[data-theme="dark"] .nav-tabs{box-shadow:0 2px 12px rgba(0,0,0,.4);}
+[data-theme="dark"] body{background:#0a1a24;}
+
+/* Weather widget */
+.weather-bar{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);border-radius:30px;margin:10px auto 0;width:fit-content;color:rgba(255,255,255,.9);font-size:13px;font-weight:500;letter-spacing:.3px;cursor:pointer;transition:background .2s;}
+.weather-bar:hover{background:rgba(255,255,255,.14);}
+.weather-icon{font-size:20px;line-height:1;}
+.weather-temp{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;}
+.weather-desc{font-size:12px;opacity:.8;text-transform:capitalize;}
+
+/* Dark mode toggle */
+.dark-toggle{position:fixed;top:12px;right:12px;z-index:200;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.2);}
+.dark-toggle:hover{background:rgba(255,255,255,.25);transform:scale(1.1);}
+[data-theme="dark"] .dark-toggle{background:rgba(0,0,0,.3);border-color:rgba(255,255,255,.15);}
+
+/* PWA install banner */
+.pwa-banner{display:none;position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,var(--ocean),var(--palm));padding:14px 16px;z-index:300;box-shadow:0 -4px 20px rgba(0,0,0,.2);}
+.pwa-banner.show{display:flex;align-items:center;gap:12px;}
+.pwa-banner-icon{font-size:32px;flex-shrink:0;}
+.pwa-banner-text{flex:1;}
+.pwa-banner-title{color:white;font-weight:600;font-size:14px;margin-bottom:2px;}
+.pwa-banner-sub{color:rgba(255,255,255,.7);font-size:12px;}
+.pwa-banner-btn{background:var(--gold);color:white;border:none;padding:9px 16px;border-radius:20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.pwa-banner-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;}
 #guest-view{display:block;}#admin-view{display:none;}
@@ -240,6 +272,7 @@ textarea.fi2{resize:vertical;min-height:70px;}
 </head>
 <body>
 <div id="guest-view">
+  <button class="dark-toggle" id="dark-toggle" onclick="toggleDark()" title="Karanlık mod">🌙</button>
   <div class="hero">
     <div class="hero-leaves l1">🌴</div><div class="hero-leaves l2">🌿</div><div class="hero-leaves l3">🍃</div>
     <div id="hero-logo-wrap" style="margin-bottom:12px;display:none">
@@ -248,6 +281,11 @@ textarea.fi2{resize:vertical;min-height:70px;}
     <div class="hotel-label" id="hlabel">HOTEL</div>
     <h1 id="hnd">Noxinn Deluxe Hotel</h1>
     <div class="hero-sub" id="hsub">Your tropical escape awaits</div>
+    <div class="weather-bar" id="weather-bar" style="display:none" onclick="refreshWeather()">
+      <span class="weather-icon" id="w-icon">🌤️</span>
+      <span class="weather-temp" id="w-temp">--°</span>
+      <span class="weather-desc" id="w-desc"></span>
+    </div>
   </div>
   <div class="ann-banner-wrap" id="ann-banner-wrap">
     <div class="announcement-banner" id="ann-banner">
@@ -335,7 +373,7 @@ const UI={
 };let lang=(()=>{const n=(navigator.language||'en').slice(0,2).toLowerCase();return LANGS.map(l=>l.code).includes(n)?n:'en';})();
 let tab='restaurants',atab='dashboard',evView='list',reqFilter='all',evDateFilter='today',pageViews={};
 let editItem=null,editType=null,editCat=null,editAnn=null;
-let isAdmin=false,toastT=null,pendingPhoto=null;
+let isAdmin=false,toastT=null,pendingPhoto=null,darkMode=false,deferredPWA=null;
 let calY=new Date().getFullYear(),calM=new Date().getMonth();
 let C={outlets:[],events:[],services:[],hotelName:'Noxinn Deluxe Hotel',announcements:[],requests:[],config:{}};
 
@@ -569,6 +607,8 @@ function renderHotelInfoAdmin(ac){
     {key:'contact_phone',label:'Telefon',placeholder:'+90 242 000 0000',icon:'📞',textarea:false},
     {key:'contact_whatsapp',label:'WhatsApp (sadece rakam, örn: 902420000000)',placeholder:'902420000000',icon:'💬',textarea:false},
     {key:'hotel_rules',label:'Otel Kuralları (| ile ayırın)',placeholder:'Kural 1|Kural 2|Kural 3',icon:'📋',textarea:true},
+    {key:'hotel_lat',label:'Otel Konumu - Enlem (hava durumu için)',placeholder:'36.8969',icon:'📍',textarea:false},
+    {key:'hotel_lon',label:'Otel Konumu - Boylam (hava durumu için)',placeholder:'30.7133',icon:'📍',textarea:false},
   ];
   const title=document.createElement('div');
   title.style.cssText='font-family:"Playfair Display",serif;font-size:22px;font-weight:600;margin-bottom:18px';
@@ -750,6 +790,77 @@ async function submitReq(){
 }
 
 const emp=()=>`<div class="empty-state"><div class="e-icon">🌴</div><p>${t('no_items')}</p></div>`;
+
+/* ── DARK MODE ── */
+function toggleDark(){
+  darkMode=!darkMode;
+  document.documentElement.setAttribute('data-theme', darkMode?'dark':'');
+  document.getElementById('dark-toggle').textContent=darkMode?'☀️':'🌙';
+  const meta=document.getElementById('theme-meta');
+  if(meta)meta.content=darkMode?'#060e14':'#0d3d52';
+  try{localStorage.setItem('hd',darkMode?'1':'');}catch(e){}
+}
+function initDark(){
+  try{if(localStorage.getItem('hd')==='1'){darkMode=true;document.documentElement.setAttribute('data-theme','dark');document.getElementById('dark-toggle').textContent='☀️';const m=document.getElementById('theme-meta');if(m)m.content='#060e14';}}catch(e){}
+}
+
+/* ── WEATHER ── */
+const WX_CODES={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'🌨️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};
+async function fetchWeather(lat,lon){
+  try{
+    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current=temperature_2m,weathercode,windspeed_10m&timezone=auto');
+    const d=await r.json();
+    const c=d.current;
+    const icon=WX_CODES[c.weathercode]||'🌡️';
+    const temp=Math.round(c.temperature_2m);
+    document.getElementById('w-icon').textContent=icon;
+    document.getElementById('w-temp').textContent=temp+'°C';
+    document.getElementById('weather-bar').style.display='flex';
+  }catch(e){console.log('Weather error:',e);}
+}
+function initWeather(){
+  if(!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(
+    pos=>fetchWeather(pos.coords.latitude,pos.coords.longitude),
+    ()=>{
+      // Konum reddedilirse otelin konumunu kullan (Antalya varsayılan)
+      const lat=C.config.hotel_lat||36.8969;
+      const lon=C.config.hotel_lon||30.7133;
+      fetchWeather(lat,lon);
+    },
+    {timeout:5000}
+  );
+}
+function refreshWeather(){
+  document.getElementById('w-icon').textContent='⏳';
+  initWeather();
+}
+
+/* ── PWA ── */
+let pwaInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  pwaInstallPrompt=e;
+  const dismissed=localStorage.getItem('pwa-dismissed');
+  if(!dismissed){
+    setTimeout(()=>document.getElementById('pwa-banner').classList.add('show'),3000);
+  }
+});
+window.addEventListener('appinstalled',()=>{
+  document.getElementById('pwa-banner').classList.remove('show');
+  pwaInstallPrompt=null;
+});
+async function installPWA(){
+  if(!pwaInstallPrompt)return;
+  pwaInstallPrompt.prompt();
+  const{outcome}=await pwaInstallPrompt.userChoice;
+  if(outcome==='accepted'){document.getElementById('pwa-banner').classList.remove('show');pwaInstallPrompt=null;}
+}
+function dismissPWA(){
+  document.getElementById('pwa-banner').classList.remove('show');
+  try{localStorage.setItem('pwa-dismissed','1');}catch(e){}
+}
+
 function setLang(c){lang=c;renderG();}
 function setTab(id){tab=id;renderG();}
 function lb(url){document.getElementById('lb-img').src=url;document.getElementById('lightbox').classList.add('open');}
@@ -1017,6 +1128,8 @@ function showGuest(){document.getElementById('admin-view').style.display='none';
 
 function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2500);}
 
+initDark();
+
 (async()=>{
   const{data:{session}}=await sb.auth.getSession();
   await fetchAll();
@@ -1030,6 +1143,7 @@ function showToast(msg){const el=document.getElementById('toast');el.textContent
     renderG();
   }
   setupRT();
+  initWeather();
 })();
 
 sb.auth.onAuthStateChange((event,session)=>{
@@ -1041,5 +1155,14 @@ sb.auth.onAuthStateChange((event,session)=>{
   }
 });
 </script>
+  <div class="pwa-banner" id="pwa-banner">
+    <div class="pwa-banner-icon">🏨</div>
+    <div class="pwa-banner-text">
+      <div class="pwa-banner-title" id="pwa-title">Ana Ekrana Ekle</div>
+      <div class="pwa-banner-sub" id="pwa-sub">Hızlı erişim için ekranınıza ekleyin</div>
+    </div>
+    <button class="pwa-banner-btn" id="pwa-install-btn" onclick="installPWA()">Ekle</button>
+    <button class="pwa-banner-close" onclick="dismissPWA()">×</button>
+  </div>
 </body>
 </html>
