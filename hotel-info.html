@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 :root{--sand:#f0f6f9;--sand2:#d6e8f0;--palm:#1a5f7a;--palm-light:#2a85a8;--gold:#c4973a;--gold-light:#e8c070;--ocean:#0d3d52;--white:#f8fcfe;--text:#0d2b38;--text-soft:#3d6a7f;--radius:16px;}
-[data-theme="dark"]{--sand:#0f1f2a;--sand2:#1a3040;--palm:#ecca55;--palm-light:#5ec8e8;--gold:#e8c070;--gold-light:#f0d090;--ocean:#060e14;--white:#5e591ce0;--text:#ff4a00f5;--text-soft:#ebebeb;--radius:16px;}
+[data-theme="dark"]{--sand:#0f1f2a;--sand2:#1a3040;--palm:#4ab3d4;--palm-light:#5ec8e8;--gold:#e8c070;--gold-light:#f0d090;--ocean:#060e14;--white:#101e28;--text:#e0f0f8;--text-soft:#7ab8cc;--radius:16px;}
 [data-theme="dark"] .hero{background:linear-gradient(160deg,#040c12 0%,#0a2030 45%,#0d3d52 100%);}
 [data-theme="dark"] .nav-tabs{box-shadow:0 2px 12px rgba(0,0,0,.4);}
 [data-theme="dark"] body{background:#0a1a24;}
@@ -268,6 +268,17 @@ textarea.fi2{resize:vertical;min-height:70px;}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#2c2416;color:white;padding:10px 22px;border-radius:24px;font-size:14px;z-index:500;opacity:0;transition:all .3s;white-space:nowrap;pointer-events:none;font-weight:500;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:var(--sand2);border-radius:4px;}
+
+/* ── MAP TAB ── */
+.map-container{position:relative;overflow:hidden;border-radius:var(--radius);background:#1a1a2e;touch-action:none;cursor:grab;user-select:none;}
+.map-container:active{cursor:grabbing;}
+.map-container img{display:block;width:100%;transform-origin:0 0;transition:transform .05s linear;pointer-events:none;}
+.map-controls{display:flex;gap:8px;margin-top:10px;justify-content:center;}
+.map-ctrl-btn{width:40px;height:40px;border-radius:50%;background:var(--white);border:1.5px solid var(--sand2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:transform .15s;}
+.map-ctrl-btn:hover{transform:scale(1.1);background:var(--sand);}
+.map-empty{text-align:center;padding:48px 24px;color:var(--text-soft);}
+.map-empty-icon{font-size:48px;margin-bottom:12px;}
+.map-empty-text{font-size:15px;}
 </style>
 </head>
 <body>
@@ -361,15 +372,15 @@ const ANN_TYPES=[{id:'info',label:'ℹ️ Bilgi'},{id:'warning',label:'⚠️ Uy
 const ANN_ICONS={info:'ℹ️',warning:'⚠️',urgent:'🚨',success:'✅'};
 
 const UI={
-  tr:{restaurants:'Restoranlar & Barlar',pools:'Havuz & Spa',events:'Etkinlikler',services:'Genel Hizmetler',gallery:'Galeri',request_tab:'Feedback',info_tab:'Otel Bilgisi',open:'Acik',closed:'Kapali',location:'Konum',phone:'Telefon',hours:'Calisma Saatleri',dress_code:'Kiyafet',reservation:'Rezervasyon',no_items:'Henuz icerik eklenmemis.',hero_sub:'Noxinn Deluxe Hotel',ev_today:'Bugun',ev_upcoming:'Yaklasan',ev_all:'Tumu',ev_none_today:'Bugun etkinlik yok.',rt:'Oneri veya Sikayetiniz',rd:'Geri bildiriminiz degerlendirilecektir.',rl:'Oda No',rm:'Mesajiniz',rs:'Gonder',rts:'Tesekkurler!',rds:'Mesajiniz iletildi.',checkin:'Check-in',checkout:'Check-out',rules:'Otel Kurallari',contact:'Iletisim',call_us:'Arayin',write_wa:'WhatsApp',ann_info:'BILGI',ann_warning:'UYARI',ann_urgent:'ACIL',ann_success:'DUYURU'},
-  en:{restaurants:'Restaurants & Bars',pools:'Pool & Spa',events:'Events',services:'Services',gallery:'Gallery',request_tab:'Feedback',info_tab:'Hotel Info',open:'Open',closed:'Closed',location:'Location',phone:'Phone',hours:'Opening Hours',dress_code:'Dress Code',reservation:'Reservation',no_items:'No content yet.',hero_sub:'Your tropical escape awaits',ev_today:'Today',ev_upcoming:'Upcoming',ev_all:'All',ev_none_today:'No events today.',rt:'Suggestions & Complaints',rd:'Your feedback is appreciated.',rl:'Room Number',rm:'Your Message',rs:'Send',rts:'Thank you!',rds:'Your message has been sent.',checkin:'Check-in',checkout:'Check-out',rules:'Hotel Rules',contact:'Contact',call_us:'Call Us',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'WARNING',ann_urgent:'URGENT',ann_success:'NOTICE'},
-  ru:{restaurants:'Рестораны и Бары',pools:'Бассейн и Спа',events:'Мероприятия',services:'Услуги',gallery:'Галерея',request_tab:'Отзывы',info_tab:'Об отеле',open:'Открыто',closed:'Закрыто',location:'Место',phone:'Телефон',hours:'Часы работы',dress_code:'Дресс-код',reservation:'Бронирование',no_items:'Нет контента.',hero_sub:'Ваш рай ждёт',ev_today:'Сегодня',ev_upcoming:'Ближайшие',ev_all:'Все',ev_none_today:'Сегодня нет мероприятий.',rt:'Предложения',rd:'Отзыв принят.',rl:'Номер комнаты',rm:'Сообщение',rs:'Отправить',rts:'Спасибо!',rds:'Сообщение отправлено.',checkin:'Заезд',checkout:'Выезд',rules:'Правила',contact:'Контакты',call_us:'Позвонить',write_wa:'WhatsApp',ann_info:'ИНФО',ann_warning:'ВНИМАНИЕ',ann_urgent:'СРОЧНО',ann_success:'ОБЪЯВЛЕНИЕ'},
-  de:{restaurants:'Restaurants & Bars',pools:'Pool & Spa',events:'Veranstaltungen',services:'Dienstleistungen',gallery:'Galerie',request_tab:'Feedback',info_tab:'Hotel Info',open:'Geöffnet',closed:'Geschlossen',location:'Ort',phone:'Telefon',hours:'Öffnungszeiten',dress_code:'Kleiderordnung',reservation:'Reservierung',no_items:'Noch kein Inhalt.',hero_sub:'Ihr tropisches Paradies wartet',ev_today:'Heute',ev_upcoming:'Demnächst',ev_all:'Alle',ev_none_today:'Heute keine Veranstaltungen.',rt:'Vorschläge & Beschwerden',rd:'Ihr Feedback wird geschätzt.',rl:'Zimmernummer',rm:'Ihre Nachricht',rs:'Senden',rts:'Danke!',rds:'Ihre Nachricht wurde gesendet.',checkin:'Check-in',checkout:'Check-out',rules:'Hotelregeln',contact:'Kontakt',call_us:'Anrufen',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'WARNUNG',ann_urgent:'DRINGEND',ann_success:'HINWEIS'},
-  fr:{restaurants:'Restaurants & Bars',pools:'Piscine & Spa',events:'Evénements',services:'Services',gallery:'Galerie',request_tab:'Commentaires',info_tab:'Infos Hotel',open:'Ouvert',closed:'Fermé',location:'Lieu',phone:'Téléphone',hours:'Horaires',dress_code:'Tenue',reservation:'Réservation',no_items:'Aucun contenu.',hero_sub:'Votre évasion vous attend',ev_today:'Aujourd’hui',ev_upcoming:'À venir',ev_all:'Tous',ev_none_today:'Pas d’événements aujourd’hui.',rt:'Suggestions',rd:'Votre avis compte.',rl:'N° de chambre',rm:'Votre message',rs:'Envoyer',rts:'Merci!',rds:'Message envoyé.',checkin:'Arrivée',checkout:'Départ',rules:'Règlement',contact:'Contact',call_us:'Appeler',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'ATTENTION',ann_urgent:'URGENT',ann_success:'AVIS'},
-  nl:{restaurants:'Restaurants & Bars',pools:'Zwembad & Spa',events:'Evenementen',services:'Diensten',gallery:'Galerij',request_tab:'Feedback',info_tab:'Hotel Info',open:'Open',closed:'Gesloten',location:'Locatie',phone:'Telefoon',hours:'Openingstijden',dress_code:'Kledingcode',reservation:'Reservering',no_items:'Nog geen inhoud.',hero_sub:'Uw tropische ontsnapping wacht',ev_today:'Vandaag',ev_upcoming:'Aankomend',ev_all:'Alle',ev_none_today:'Vandaag geen evenementen.',rt:'Suggesties',rd:'Uw feedback wordt gewaardeerd.',rl:'Kamernummer',rm:'Uw bericht',rs:'Versturen',rts:'Dank u!',rds:'Bericht verzonden.',checkin:'Check-in',checkout:'Check-out',rules:'Hotelregels',contact:'Contact',call_us:'Bellen',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'WAARSCHUWING',ann_urgent:'DRINGEND',ann_success:'MEDEDELING'},
-  cs:{restaurants:'Restaurace & Bary',pools:'Bazén & Spa',events:'Akce',services:'Služby',gallery:'Galerie',request_tab:'Zpětná vazba',info_tab:'Info o hotelu',open:'Otevřeno',closed:'Zavřeno',location:'Místo',phone:'Telefon',hours:'Otevírací doba',dress_code:'Dress code',reservation:'Rezervace',no_items:'Zatím prázdné.',hero_sub:'Váš ráj vás čeká',ev_today:'Dnes',ev_upcoming:'Nadcházející',ev_all:'Vše',ev_none_today:'Dnes žádné akce.',rt:'Návrhy',rd:'Váš názor je důležitý.',rl:'Číslo pokoje',rm:'Zpráva',rs:'Odeslat',rts:'Děkujeme!',rds:'Zpráva odeslána.',checkin:'Check-in',checkout:'Check-out',rules:'Hotlový řád',contact:'Kontakt',call_us:'Zavolat',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'VAROVÁNÍ',ann_urgent:'URGENT',ann_success:'OZNAM'},
-  pl:{restaurants:'Restauracje i Bary',pools:'Basen i Spa',events:'Wydarzenia',services:'Usługi',gallery:'Galeria',request_tab:'Opinie',info_tab:'Info',open:'Otwarte',closed:'Zamknięte',location:'Lokalizacja',phone:'Telefon',hours:'Godziny otwarcia',dress_code:'Strój',reservation:'Rezerwacja',no_items:'Brak treści.',hero_sub:'Twój raj czeka',ev_today:'Dziś',ev_upcoming:'Nadchodzące',ev_all:'Wszystkie',ev_none_today:'Dziś brak wydarzeń.',rt:'Sugestie',rd:'Twoja opinia jest ważna.',rl:'Numer pokoju',rm:'Wiadomość',rs:'Wyślij',rts:'Dziękujemy!',rds:'Wiadomość wysłana.',checkin:'Check-in',checkout:'Check-out',rules:'Regulamin',contact:'Kontakt',call_us:'Zadzwoń',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'UWAGA',ann_urgent:'PILNE',ann_success:'OGŁOSZENIE'},
-  ro:{restaurants:'Restaurante & Baruri',pools:'Piscină & Spa',events:'Evenimente',services:'Servicii',gallery:'Galerie',request_tab:'Feedback',info_tab:'Info Hotel',open:'Deschis',closed:'Închis',location:'Locație',phone:'Telefon',hours:'Program',dress_code:'Ȟinută',reservation:'Rezervare',no_items:'Niciun conținut.',hero_sub:'Paradisul te așteaptă',ev_today:'Azi',ev_upcoming:'Viitoare',ev_all:'Toate',ev_none_today:'Niciun eveniment azi.',rt:'Sugestii',rd:'Părerea dvs. contează.',rl:'Nr. camerei',rm:'Mesajul dvs.',rs:'Trimite',rts:'Mulțumim!',rds:'Mesaj trimis.',checkin:'Check-in',checkout:'Check-out',rules:'Regulament',contact:'Contact',call_us:'Sunați',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'ATENȞIE',ann_urgent:'URGENT',ann_success:'ANUNȞ'},
+  tr:{restaurants:'Restoranlar & Barlar',map_tab:'Harita',pools:'Havuz & Spa',events:'Etkinlikler',services:'Genel Hizmetler',gallery:'Galeri',request_tab:'Feedback',info_tab:'Otel Bilgisi',open:'Acik',closed:'Kapali',location:'Konum',phone:'Telefon',hours:'Calisma Saatleri',dress_code:'Kiyafet',reservation:'Rezervasyon',no_items:'Henuz icerik eklenmemis.',hero_sub:'Noxinn Deluxe Hotel',ev_today:'Bugun',ev_upcoming:'Yaklasan',ev_all:'Tumu',ev_none_today:'Bugun etkinlik yok.',rt:'Oneri veya Sikayetiniz',rd:'Geri bildiriminiz degerlendirilecektir.',rl:'Oda No',rm:'Mesajiniz',rs:'Gonder',rts:'Tesekkurler!',rds:'Mesajiniz iletildi.',checkin:'Check-in',checkout:'Check-out',rules:'Otel Kurallari',contact:'Iletisim',call_us:'Arayin',write_wa:'WhatsApp',ann_info:'BILGI',ann_warning:'UYARI',ann_urgent:'ACIL',ann_success:'DUYURU'},
+  en:{restaurants:'Restaurants & Bars',map_tab:'Map',pools:'Pool & Spa',events:'Events',services:'Services',gallery:'Gallery',request_tab:'Feedback',info_tab:'Hotel Info',open:'Open',closed:'Closed',location:'Location',phone:'Phone',hours:'Opening Hours',dress_code:'Dress Code',reservation:'Reservation',no_items:'No content yet.',hero_sub:'Your tropical escape awaits',ev_today:'Today',ev_upcoming:'Upcoming',ev_all:'All',ev_none_today:'No events today.',rt:'Suggestions & Complaints',rd:'Your feedback is appreciated.',rl:'Room Number',rm:'Your Message',rs:'Send',rts:'Thank you!',rds:'Your message has been sent.',checkin:'Check-in',checkout:'Check-out',rules:'Hotel Rules',contact:'Contact',call_us:'Call Us',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'WARNING',ann_urgent:'URGENT',ann_success:'NOTICE'},
+  ru:{restaurants:'Рестораны и Бары',map_tab:'Карта',pools:'Бассейн и Спа',events:'Мероприятия',services:'Услуги',gallery:'Галерея',request_tab:'Отзывы',info_tab:'Об отеле',open:'Открыто',closed:'Закрыто',location:'Место',phone:'Телефон',hours:'Часы работы',dress_code:'Дресс-код',reservation:'Бронирование',no_items:'Нет контента.',hero_sub:'Ваш рай ждёт',ev_today:'Сегодня',ev_upcoming:'Ближайшие',ev_all:'Все',ev_none_today:'Сегодня нет мероприятий.',rt:'Предложения',rd:'Отзыв принят.',rl:'Номер комнаты',rm:'Сообщение',rs:'Отправить',rts:'Спасибо!',rds:'Сообщение отправлено.',checkin:'Заезд',checkout:'Выезд',rules:'Правила',contact:'Контакты',call_us:'Позвонить',write_wa:'WhatsApp',ann_info:'ИНФО',ann_warning:'ВНИМАНИЕ',ann_urgent:'СРОЧНО',ann_success:'ОБЪЯВЛЕНИЕ'},
+  de:{restaurants:'Restaurants & Bars',map_tab:'Karte',pools:'Pool & Spa',events:'Veranstaltungen',services:'Dienstleistungen',gallery:'Galerie',request_tab:'Feedback',info_tab:'Hotel Info',open:'Geöffnet',closed:'Geschlossen',location:'Ort',phone:'Telefon',hours:'Öffnungszeiten',dress_code:'Kleiderordnung',reservation:'Reservierung',no_items:'Noch kein Inhalt.',hero_sub:'Ihr tropisches Paradies wartet',ev_today:'Heute',ev_upcoming:'Demnächst',ev_all:'Alle',ev_none_today:'Heute keine Veranstaltungen.',rt:'Vorschläge & Beschwerden',rd:'Ihr Feedback wird geschätzt.',rl:'Zimmernummer',rm:'Ihre Nachricht',rs:'Senden',rts:'Danke!',rds:'Ihre Nachricht wurde gesendet.',checkin:'Check-in',checkout:'Check-out',rules:'Hotelregeln',contact:'Kontakt',call_us:'Anrufen',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'WARNUNG',ann_urgent:'DRINGEND',ann_success:'HINWEIS'},
+  fr:{restaurants:'Restaurants & Bars',map_tab:'Plan',pools:'Piscine & Spa',events:'Evénements',services:'Services',gallery:'Galerie',request_tab:'Commentaires',info_tab:'Infos Hotel',open:'Ouvert',closed:'Fermé',location:'Lieu',phone:'Téléphone',hours:'Horaires',dress_code:'Tenue',reservation:'Réservation',no_items:'Aucun contenu.',hero_sub:'Votre évasion vous attend',ev_today:'Aujourd’hui',ev_upcoming:'À venir',ev_all:'Tous',ev_none_today:'Pas d’événements aujourd’hui.',rt:'Suggestions',rd:'Votre avis compte.',rl:'N° de chambre',rm:'Votre message',rs:'Envoyer',rts:'Merci!',rds:'Message envoyé.',checkin:'Arrivée',checkout:'Départ',rules:'Règlement',contact:'Contact',call_us:'Appeler',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'ATTENTION',ann_urgent:'URGENT',ann_success:'AVIS'},
+  nl:{restaurants:'Restaurants & Bars',map_tab:'Kaart',pools:'Zwembad & Spa',events:'Evenementen',services:'Diensten',gallery:'Galerij',request_tab:'Feedback',info_tab:'Hotel Info',open:'Open',closed:'Gesloten',location:'Locatie',phone:'Telefoon',hours:'Openingstijden',dress_code:'Kledingcode',reservation:'Reservering',no_items:'Nog geen inhoud.',hero_sub:'Uw tropische ontsnapping wacht',ev_today:'Vandaag',ev_upcoming:'Aankomend',ev_all:'Alle',ev_none_today:'Vandaag geen evenementen.',rt:'Suggesties',rd:'Uw feedback wordt gewaardeerd.',rl:'Kamernummer',rm:'Uw bericht',rs:'Versturen',rts:'Dank u!',rds:'Bericht verzonden.',checkin:'Check-in',checkout:'Check-out',rules:'Hotelregels',contact:'Contact',call_us:'Bellen',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'WAARSCHUWING',ann_urgent:'DRINGEND',ann_success:'MEDEDELING'},
+  cs:{restaurants:'Restaurace & Bary',map_tab:'Mapa',pools:'Bazén & Spa',events:'Akce',services:'Služby',gallery:'Galerie',request_tab:'Zpětná vazba',info_tab:'Info o hotelu',open:'Otevřeno',closed:'Zavřeno',location:'Místo',phone:'Telefon',hours:'Otevírací doba',dress_code:'Dress code',reservation:'Rezervace',no_items:'Zatím prázdné.',hero_sub:'Váš ráj vás čeká',ev_today:'Dnes',ev_upcoming:'Nadcházející',ev_all:'Vše',ev_none_today:'Dnes žádné akce.',rt:'Návrhy',rd:'Váš názor je důležitý.',rl:'Číslo pokoje',rm:'Zpráva',rs:'Odeslat',rts:'Děkujeme!',rds:'Zpráva odeslána.',checkin:'Check-in',checkout:'Check-out',rules:'Hotlový řád',contact:'Kontakt',call_us:'Zavolat',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'VAROVÁNÍ',ann_urgent:'URGENT',ann_success:'OZNAM'},
+  pl:{restaurants:'Restauracje i Bary',map_tab:'Mapa',pools:'Basen i Spa',events:'Wydarzenia',services:'Usługi',gallery:'Galeria',request_tab:'Opinie',info_tab:'Info',open:'Otwarte',closed:'Zamknięte',location:'Lokalizacja',phone:'Telefon',hours:'Godziny otwarcia',dress_code:'Strój',reservation:'Rezerwacja',no_items:'Brak treści.',hero_sub:'Twój raj czeka',ev_today:'Dziś',ev_upcoming:'Nadchodzące',ev_all:'Wszystkie',ev_none_today:'Dziś brak wydarzeń.',rt:'Sugestie',rd:'Twoja opinia jest ważna.',rl:'Numer pokoju',rm:'Wiadomość',rs:'Wyślij',rts:'Dziękujemy!',rds:'Wiadomość wysłana.',checkin:'Check-in',checkout:'Check-out',rules:'Regulamin',contact:'Kontakt',call_us:'Zadzwoń',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'UWAGA',ann_urgent:'PILNE',ann_success:'OGŁOSZENIE'},
+  ro:{restaurants:'Restaurante & Baruri',map_tab:'Hartă',pools:'Piscină & Spa',events:'Evenimente',services:'Servicii',gallery:'Galerie',request_tab:'Feedback',info_tab:'Info Hotel',open:'Deschis',closed:'Închis',location:'Locație',phone:'Telefon',hours:'Program',dress_code:'Ȟinută',reservation:'Rezervare',no_items:'Niciun conținut.',hero_sub:'Paradisul te așteaptă',ev_today:'Azi',ev_upcoming:'Viitoare',ev_all:'Toate',ev_none_today:'Niciun eveniment azi.',rt:'Sugestii',rd:'Părerea dvs. contează.',rl:'Nr. camerei',rm:'Mesajul dvs.',rs:'Trimite',rts:'Mulțumim!',rds:'Mesaj trimis.',checkin:'Check-in',checkout:'Check-out',rules:'Regulament',contact:'Contact',call_us:'Sunați',write_wa:'WhatsApp',ann_info:'INFO',ann_warning:'ATENȞIE',ann_urgent:'URGENT',ann_success:'ANUNȞ'},
 };let lang=(()=>{const n=(navigator.language||'en').slice(0,2).toLowerCase();return LANGS.map(l=>l.code).includes(n)?n:'en';})();
 let tab='restaurants',atab='dashboard',evView='list',reqFilter='all',evDateFilter='today',pageViews={};
 let editItem=null,editType=null,editCat=null,editAnn=null;
@@ -455,8 +466,8 @@ function renderG(){
   }
   renderAnn();
   document.getElementById('lang-bar').innerHTML=LANGS.map(l=>`<button class="lang-btn ${l.code===lang?'active':''}" onclick="setLang('${l.code}')" title="${l.name}">${l.flag}</button>`).join('');
-  const tabs=[{id:'restaurants',icon:'🍽️'},{id:'pools',icon:'🏊'},{id:'events',icon:'🎉'},{id:'services',icon:'🛎️'},{id:'gallery',icon:'📸'},{id:'hotelinfo',icon:'🏨'},{id:'request',icon:'💬'}];
-  document.getElementById('nav-tabs').innerHTML=tabs.map(c=>`<button class="nav-tab ${c.id===tab?'active':''}" onclick="setTab('${c.id}')">${c.icon} ${c.id==='request'?t('request_tab'):c.id==='gallery'?t('gallery'):c.id==='hotelinfo'?t('info_tab'):t(c.id)}</button>`).join('');
+  const tabs=[{id:'restaurants',icon:'🍽️'},{id:'pools',icon:'🏊'},{id:'events',icon:'🎉'},{id:'services',icon:'🛎️'},{id:'gallery',icon:'📸'},{id:'hotelmap',icon:'🗺️'},{id:'hotelinfo',icon:'🏨'},{id:'request',icon:'💬'}];
+  document.getElementById('nav-tabs').innerHTML=tabs.map(c=>`<button class="nav-tab ${c.id===tab?'active':''}" onclick="setTab('${c.id}')">${c.icon} ${c.id==='request'?t('request_tab'):c.id==='gallery'?t('gallery'):c.id==='hotelinfo'?t('info_tab'):c.id==='hotelmap'?t('map_tab'):t(c.id)}</button>`).join('');
   const ca=document.getElementById('content-area');ca.innerHTML='';
 
   if(tab==='restaurants'||tab==='pools'){
@@ -527,6 +538,9 @@ function renderG(){
     const g=document.createElement('div');g.className='gallery-grid';
     all.forEach(p=>{const el=document.createElement('div');el.className='gallery-item';el.innerHTML=`<img src="${p.url}" alt="${p.name}" loading="lazy"><div class="gallery-caption">${p.name}</div>`;el.onclick=()=>lb(p.url);g.appendChild(el);});
     ca.appendChild(g);
+  }
+  else if(tab==='hotelmap'){
+    renderHotelMap(ca);
   }
   else if(tab==='hotelinfo'){
     renderHotelInfo(ca);
@@ -661,6 +675,52 @@ function renderHotelInfoAdmin(ac){
   logoSection.appendChild(logoPreviewWrap);
   ac.appendChild(logoSection);
 
+  // Harita upload
+  const mapSection=document.createElement('div');
+  mapSection.className='fg';mapSection.style.cssText='margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--sand2)';
+  const mapLbl=document.createElement('div');mapLbl.className='fl';mapLbl.textContent='🗺️ Otel Haritası (resim dosyası)';
+  mapSection.appendChild(mapLbl);
+  const mapPreviewWrap=document.createElement('div');
+  mapPreviewWrap.style.cssText='display:flex;align-items:flex-start;gap:12px;margin-top:8px;flex-wrap:wrap';
+  const mapPreview=document.createElement('img');
+  mapPreview.style.cssText='max-height:100px;max-width:180px;object-fit:contain;border-radius:8px;background:#f0f6f9;padding:6px;border:1px solid var(--sand2);'+(C.config.hotel_map_url?'':'display:none');
+  if(C.config.hotel_map_url)mapPreview.src=C.config.hotel_map_url;
+  const mapFileBtn=document.createElement('label');
+  mapFileBtn.className='btn-save';mapFileBtn.style.cssText='padding:8px 16px;font-size:13px;cursor:pointer;margin:0';
+  mapFileBtn.textContent='📁 Harita Yükle';
+  const mapInput=document.createElement('input');
+  mapInput.type='file';mapInput.accept='image/*';mapInput.style.display='none';
+  mapInput.onchange=async function(){
+    const file=mapInput.files[0];if(!file)return;
+    mapFileBtn.textContent='Yükleniyor…';
+    const url=await uploadPhoto(file,'hotel','map');
+    if(url){
+      C.config.hotel_map_url=url;
+      await sb.from('hotel_config').upsert({key:'hotel_map_url',value:url});
+      mapPreview.src=url;mapPreview.style.display='';
+      mapRemoveBtn.style.display='';
+      showToast('✓ Harita yüklendi');
+    } else {showToast('❌ Yükleme başarısız');}
+    mapFileBtn.textContent='📁 Harita Yükle';
+  };
+  mapFileBtn.appendChild(mapInput);
+  const mapRemoveBtn=document.createElement('button');
+  mapRemoveBtn.className='bd';mapRemoveBtn.style.cssText='padding:8px 12px;font-size:13px';
+  mapRemoveBtn.textContent='🗑️ Kaldır';
+  mapRemoveBtn.style.display=C.config.hotel_map_url?'':'none';
+  mapRemoveBtn.onclick=async function(){
+    await sb.from('hotel_config').delete().eq('key','hotel_map_url');
+    C.config.hotel_map_url='';
+    mapPreview.style.display='none';
+    mapRemoveBtn.style.display='none';
+    showToast('Harita kaldırıldı');
+  };
+  mapPreviewWrap.appendChild(mapPreview);
+  mapPreviewWrap.appendChild(mapFileBtn);
+  mapPreviewWrap.appendChild(mapRemoveBtn);
+  mapSection.appendChild(mapPreviewWrap);
+  ac.appendChild(mapSection);
+
   fields.forEach(function(f){
     const g=document.createElement('div');g.className='fg';g.style.marginBottom='14px';
     const lbl=document.createElement('div');lbl.className='fl';lbl.textContent=f.icon+' '+f.label;
@@ -692,6 +752,97 @@ function renderHotelInfoAdmin(ac){
     await fetchAll();renderG();showToast('✓ Otel bilgileri kaydedildi');
   };
   ac.appendChild(saveBtn);
+}
+
+
+function renderHotelMap(ca){
+  ca.innerHTML='';
+  const title=document.createElement('div');title.className='section-title';title.textContent=t('map_tab');
+  const sub=document.createElement('div');sub.className='section-sub';sub.textContent='🗺️';
+  ca.appendChild(title);ca.appendChild(sub);
+
+  const mapUrl=C.config.hotel_map_url||'';
+  if(!mapUrl){
+    const empty=document.createElement('div');empty.className='map-empty';
+    empty.innerHTML='<div class="map-empty-icon">🗺️</div><div class="map-empty-text">Harita henüz yüklenmemiş</div>';
+    ca.appendChild(empty);
+    return;
+  }
+
+  // Pinch-zoom + pan container
+  const wrap=document.createElement('div');wrap.className='map-container';
+  wrap.style.height='65vh';
+  const img=document.createElement('img');img.src=mapUrl;img.alt='Otel Haritası';
+  img.style.cssText='width:100%;height:100%;object-fit:contain;transform-origin:center center;';
+  wrap.appendChild(img);
+  ca.appendChild(wrap);
+
+  // Zoom kontrolleri
+  const ctrl=document.createElement('div');ctrl.className='map-controls';
+  const btnIn=document.createElement('button');btnIn.className='map-ctrl-btn';btnIn.textContent='＋';btnIn.title='Yakınlaştır';
+  const btnOut=document.createElement('button');btnOut.className='map-ctrl-btn';btnOut.textContent='－';btnOut.title='Uzaklaştır';
+  const btnReset=document.createElement('button');btnReset.className='map-ctrl-btn';btnReset.textContent='⊙';btnReset.title='Sıfırla';
+  ctrl.appendChild(btnOut);ctrl.appendChild(btnReset);ctrl.appendChild(btnIn);
+  ca.appendChild(ctrl);
+
+  // Zoom/pan state
+  let scale=1,tx=0,ty=0;
+  const MIN=1,MAX=5;
+
+  function applyTransform(){
+    img.style.transform='translate('+tx+'px,'+ty+'px) scale('+scale+')';
+  }
+  function clampTranslate(){
+    const ww=wrap.offsetWidth,wh=wrap.offsetHeight;
+    const maxX=ww*(scale-1)/2,maxY=wh*(scale-1)/2;
+    tx=Math.max(-maxX,Math.min(maxX,tx));
+    ty=Math.max(-maxY,Math.min(maxY,ty));
+  }
+
+  btnIn.onclick=function(){scale=Math.min(MAX,scale+0.5);clampTranslate();applyTransform();};
+  btnOut.onclick=function(){scale=Math.max(MIN,scale-0.5);if(scale===1){tx=0;ty=0;}clampTranslate();applyTransform();};
+  btnReset.onclick=function(){scale=1;tx=0;ty=0;applyTransform();};
+
+  // Mouse drag
+  let dragging=false,startX=0,startY=0,startTx=0,startTy=0;
+  wrap.addEventListener('mousedown',function(e){if(scale<=1)return;dragging=true;startX=e.clientX;startY=e.clientY;startTx=tx;startTy=ty;e.preventDefault();});
+  window.addEventListener('mousemove',function(e){if(!dragging)return;tx=startTx+(e.clientX-startX);ty=startTy+(e.clientY-startY);clampTranslate();applyTransform();});
+  window.addEventListener('mouseup',function(){dragging=false;});
+
+  // Touch drag + pinch zoom
+  let lastDist=0,lastMidX=0,lastMidY=0,touchDragging=false,touchStartX=0,touchStartY=0;
+  wrap.addEventListener('touchstart',function(e){
+    if(e.touches.length===2){
+      const t1=e.touches[0],t2=e.touches[1];
+      lastDist=Math.hypot(t2.clientX-t1.clientX,t2.clientY-t1.clientY);
+      lastMidX=(t1.clientX+t2.clientX)/2;lastMidY=(t1.clientY+t2.clientY)/2;
+    } else if(e.touches.length===1&&scale>1){
+      touchDragging=true;touchStartX=e.touches[0].clientX-tx;touchStartY=e.touches[0].clientY-ty;
+    }
+    e.preventDefault();
+  },{passive:false});
+  wrap.addEventListener('touchmove',function(e){
+    if(e.touches.length===2){
+      const t1=e.touches[0],t2=e.touches[1];
+      const dist=Math.hypot(t2.clientX-t1.clientX,t2.clientY-t1.clientY);
+      const ds=dist/lastDist;
+      scale=Math.max(MIN,Math.min(MAX,scale*ds));
+      lastDist=dist;clampTranslate();applyTransform();
+    } else if(touchDragging&&e.touches.length===1){
+      tx=e.touches[0].clientX-touchStartX;ty=e.touches[0].clientY-touchStartY;clampTranslate();applyTransform();
+    }
+    e.preventDefault();
+  },{passive:false});
+  wrap.addEventListener('touchend',function(){touchDragging=false;});
+
+  // Mouse wheel zoom
+  wrap.addEventListener('wheel',function(e){
+    e.preventDefault();
+    const delta=e.deltaY>0?-0.2:0.2;
+    scale=Math.max(MIN,Math.min(MAX,scale+delta));
+    if(scale===1){tx=0;ty=0;}
+    clampTranslate();applyTransform();
+  },{passive:false});
 }
 
 function renderHotelInfo(ca){
