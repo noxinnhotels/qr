@@ -607,8 +607,8 @@ function renderHotelInfoAdmin(ac){
     {key:'contact_phone',label:'Telefon',placeholder:'+90 242 000 0000',icon:'📞',textarea:false},
     {key:'contact_whatsapp',label:'WhatsApp (sadece rakam, örn: 902420000000)',placeholder:'902420000000',icon:'💬',textarea:false},
     {key:'hotel_rules',label:'Otel Kuralları (| ile ayırın)',placeholder:'Kural 1|Kural 2|Kural 3',icon:'📋',textarea:true},
-    {key:'hotel_lat',label:'Otel Konumu - Enlem (hava durumu için)',placeholder:'36.8969',icon:'📍',textarea:false},
-    {key:'hotel_lon',label:'Otel Konumu - Boylam (hava durumu için)',placeholder:'30.7133',icon:'📍',textarea:false},
+    {key:'hotel_lat',label:'Otel Konumu - Enlem (hava durumu için)',placeholder:'36.5436',icon:'📍',textarea:false},
+    {key:'hotel_lon',label:'Otel Konumu - Boylam (hava durumu için)',placeholder:'32.0057',icon:'📍',textarea:false},
   ];
   const title=document.createElement('div');
   title.style.cssText='font-family:"Playfair Display",serif;font-size:22px;font-weight:600;margin-bottom:18px';
@@ -824,8 +824,8 @@ function initWeather(){
     pos=>fetchWeather(pos.coords.latitude,pos.coords.longitude),
     ()=>{
       // Konum reddedilirse otelin konumunu kullan (Antalya varsayılan)
-      const lat=C.config.hotel_lat||36.8969;
-      const lon=C.config.hotel_lon||30.7133;
+      const lat=C.config.hotel_lat||36.5436;
+      const lon=C.config.hotel_lon||32.0057;
       fetchWeather(lat,lon);
     },
     {timeout:5000}
