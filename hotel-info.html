@@ -242,7 +242,10 @@ textarea.fi2{resize:vertical;min-height:70px;}
 <div id="guest-view">
   <div class="hero">
     <div class="hero-leaves l1">🌴</div><div class="hero-leaves l2">🌿</div><div class="hero-leaves l3">🍃</div>
-    <div class="hotel-label">HOTEL</div>
+    <div id="hero-logo-wrap" style="margin-bottom:12px;display:none">
+      <img id="hero-logo" src="" alt="logo" style="max-height:80px;max-width:180px;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,.3))">
+    </div>
+    <div class="hotel-label" id="hlabel">HOTEL</div>
     <h1 id="hnd">Noxinn Deluxe Hotel</h1>
     <div class="hero-sub" id="hsub">Your tropical escape awaits</div>
   </div>
@@ -399,7 +402,19 @@ function renderG(){
     cfabs.innerHTML=(ph?'<button class="cfab cfab-ph" onclick="window.open(\'tel:'+ph+'\')" title="'+t('call_us')+'">📞</button>':'')+
       (wa?'<button class="cfab cfab-wa" onclick="window.open(\'https://wa.me/'+waNum+'\')" title="'+t('write_wa')+'">💬</button>':'');
   }
-  document.getElementById('hsub').textContent=t('hero_sub');
+  document.getElementById('hsub').textContent=C.config.hero_subtitle||t('hero_sub');
+  const hlabel=document.getElementById('hlabel');
+  if(hlabel)hlabel.textContent=C.config.hotel_label||'HOTEL';
+  const logoWrap=document.getElementById('hero-logo-wrap');
+  const logoImg=document.getElementById('hero-logo');
+  if(logoWrap&&logoImg){
+    if(C.config.hotel_logo){
+      logoImg.src=C.config.hotel_logo;
+      logoWrap.style.display='block';
+    } else {
+      logoWrap.style.display='none';
+    }
+  }
   renderAnn();
   document.getElementById('lang-bar').innerHTML=LANGS.map(l=>`<button class="lang-btn ${l.code===lang?'active':''}" onclick="setLang('${l.code}')" title="${l.name}">${l.flag}</button>`).join('');
   const tabs=[{id:'restaurants',icon:'🍽️'},{id:'pools',icon:'🏊'},{id:'events',icon:'🎉'},{id:'services',icon:'🛎️'},{id:'gallery',icon:'📸'},{id:'hotelinfo',icon:'🏨'},{id:'request',icon:'💬'}];
@@ -546,6 +561,9 @@ function renderDashboard(ac){
 
 function renderHotelInfoAdmin(ac){
   const fields=[
+    {key:'hotel_label',label:'Banner Üst Etiket (örn: HOTEL)',placeholder:'HOTEL',icon:'🏷️',textarea:false},
+    {key:'hotel_name',label:'Otel Adı (ana başlık)',placeholder:'Noxinn Deluxe Hotel',icon:'🏨',textarea:false},
+    {key:'hero_subtitle',label:'Alt Yazı (banner)',placeholder:'Your tropical escape awaits',icon:'✨',textarea:false},
     {key:'checkin_time',label:'Check-in Saati',placeholder:'14:00',icon:'🛎️',textarea:false},
     {key:'checkout_time',label:'Check-out Saati',placeholder:'12:00',icon:'🏁',textarea:false},
     {key:'contact_phone',label:'Telefon',placeholder:'+90 242 000 0000',icon:'📞',textarea:false},
@@ -556,6 +574,52 @@ function renderHotelInfoAdmin(ac){
   title.style.cssText='font-family:"Playfair Display",serif;font-size:22px;font-weight:600;margin-bottom:18px';
   title.textContent='Otel Bilgileri';
   ac.appendChild(title);
+
+  // Logo upload
+  const logoSection=document.createElement('div');
+  logoSection.className='fg';logoSection.style.marginBottom='18px';
+  const logoLbl=document.createElement('div');logoLbl.className='fl';logoLbl.textContent='🖼️ Logo (PNG/JPG, şeffaf arka plan önerilir)';
+  logoSection.appendChild(logoLbl);
+  const logoPreviewWrap=document.createElement('div');
+  logoPreviewWrap.style.cssText='display:flex;align-items:center;gap:12px;margin-top:6px;flex-wrap:wrap';
+  const logoPreview=document.createElement('img');
+  logoPreview.id='admin-logo-preview';
+  logoPreview.style.cssText='max-height:60px;max-width:140px;object-fit:contain;border-radius:8px;background:#f0f6f9;padding:6px;border:1px solid var(--sand2);'+(C.config.hotel_logo?'':'display:none');
+  if(C.config.hotel_logo)logoPreview.src=C.config.hotel_logo;
+  const logoFileBtn=document.createElement('label');
+  logoFileBtn.className='btn-save';logoFileBtn.style.cssText='padding:8px 16px;font-size:13px;cursor:pointer;margin:0';
+  logoFileBtn.textContent='📁 Seç';
+  const logoInput=document.createElement('input');
+  logoInput.type='file';logoInput.accept='image/*';logoInput.style.display='none';
+  logoInput.onchange=async function(){
+    const file=logoInput.files[0];if(!file)return;
+    logoFileBtn.textContent='Yükleniyor…';
+    const url=await uploadPhoto(file,'hotel','logo');
+    if(url){
+      C.config.hotel_logo=url;
+      await sb.from('hotel_config').upsert({key:'hotel_logo',value:url});
+      logoPreview.src=url;logoPreview.style.display='';
+      renderG();showToast('✓ Logo yüklendi');
+    } else {showToast('❌ Yükleme başarısız');}
+    logoFileBtn.textContent='📁 Seç';
+  };
+  logoFileBtn.appendChild(logoInput);
+  const logoRemoveBtn=document.createElement('button');
+  logoRemoveBtn.className='bd';logoRemoveBtn.style.cssText='padding:8px 12px;font-size:13px';
+  logoRemoveBtn.textContent='🗑️ Kaldır';
+  logoRemoveBtn.style.display=C.config.hotel_logo?'':'none';
+  logoRemoveBtn.onclick=async function(){
+    await sb.from('hotel_config').delete().eq('key','hotel_logo');
+    C.config.hotel_logo='';
+    logoPreview.style.display='none';
+    logoRemoveBtn.style.display='none';
+    renderG();showToast('Logo kaldırıldı');
+  };
+  logoPreviewWrap.appendChild(logoPreview);
+  logoPreviewWrap.appendChild(logoFileBtn);
+  logoPreviewWrap.appendChild(logoRemoveBtn);
+  logoSection.appendChild(logoPreviewWrap);
+  ac.appendChild(logoSection);
 
   fields.forEach(function(f){
     const g=document.createElement('div');g.className='fg';g.style.marginBottom='14px';
@@ -930,7 +994,7 @@ async function delItem(type,id){
 async function editHotelName(){
   const name=prompt('Otel adını girin:',C.hotelName);
   if(!name?.trim())return;
-  const{error}=await sb.from('hotel_config').upsert({key:'hotel_name',value:name.trim()});
+  const{error}=await sb.from('hotel_config').upsert({key:'hotel_name',value:name.trim()});if(!error){C.config.hotel_name=name.trim();}
   if(error){showToast('❌ '+error.message);return;}
   C.hotelName=name.trim();renderG();showToast('✓ Güncellendi');
 }
