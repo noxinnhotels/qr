@@ -13,7 +13,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--sand:#f0f6f9;--sand2:#d6e8f0;--palm:#1a5f7a;--palm-light:#2a85a8;--gold:#c4973a;--gold-light:#e8c070;--ocean:#0d3d52;--white:#f8fcfe;--text:#0d2b38;--text-soft:#3d6a7f;--radius:16px;}
+:root{--sand:#f0f6f9;--sand2:#d6e8f0;--palm:#1a5f7a;--palm-light:#2a85a8;--gold:#c4973a;--gold-light:#e8c070;--ocean:#0d3d52;--white:#ffffff;--text:#0d2b38;--text-soft:#3d6a7f;--radius:18px;--shadow:0 4px 20px rgba(13,61,82,.1);}
 [data-theme="dark"]{--sand:#0f1f2a;--sand2:#1a3040;--palm:#4ab3d4;--palm-light:#5ec8e8;--gold:#e8c070;--gold-light:#f0d090;--ocean:#060e14;--white:#101e28;--text:#e0f0f8;--text-soft:#7ab8cc;--radius:16px;}
 [data-theme="dark"] .hero{background:linear-gradient(160deg,#040c12 0%,#0a2030 45%,#0d3d52 100%);}
 [data-theme="dark"] .nav-tabs{box-shadow:0 2px 12px rgba(0,0,0,.4);}
@@ -43,14 +43,14 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;}
 #guest-view{display:block;}#admin-view{display:none;}
-.hero{background:linear-gradient(160deg,#0d3d52 0%,#1a5f7a 45%,#2a9bbf 100%);padding:48px 24px 56px;text-align:center;position:relative;overflow:hidden;}
+.hero{background:linear-gradient(160deg,#071e2a 0%,#0d3d52 40%,#1a6b8a 75%,#1e8aaa 100%);padding:52px 24px 60px;text-align:center;position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
 .hero-leaves{position:absolute;font-size:80px;opacity:.08;pointer-events:none;}
 .hero-leaves.l1{top:-10px;left:-20px;transform:rotate(-30deg);}
 .hero-leaves.l2{top:20px;right:-10px;transform:rotate(20deg);}
 .hero-leaves.l3{bottom:-20px;left:40%;transform:rotate(10deg);}
 .hotel-label{font-family:'Playfair Display',serif;font-size:14px;font-weight:400;letter-spacing:5px;text-transform:uppercase;color:var(--gold-light);margin-bottom:10px;}
-.hero h1{font-family:'Playfair Display',serif;font-size:44px;font-weight:600;color:var(--white);line-height:1.1;margin-bottom:10px;}
+.hero h1{font-family:'Playfair Display',serif;font-size:46px;font-weight:700;color:var(--white);line-height:1.1;margin-bottom:12px;letter-spacing:-.5px;text-shadow:0 2px 20px rgba(0,0,0,.3);}
 .hero-sub{font-size:15px;color:rgba(255,255,255,.6);letter-spacing:1.5px;font-weight:300;}
 /* ── CONTACT FAB ── */
 .contact-fabs{position:fixed;bottom:24px;left:24px;display:flex;flex-direction:column;gap:10px;z-index:100;}
@@ -95,20 +95,62 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--text);m
 
 /* ── ADMIN DASHBOARD ── */
 .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
-.dash-card{background:white;border-radius:14px;padding:16px;border:1px solid var(--sand2);text-align:center;}
+.dash-card{background:white;border-radius:16px;padding:18px 14px;border:1px solid var(--sand2);text-align:center;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:transform .2s;}
 .dash-card .dc-icon{font-size:28px;margin-bottom:6px;}
-.dash-card .dc-val{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--palm);line-height:1;}
+.dash-card .dc-val{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--palm);line-height:1;}
 .dash-card .dc-label{font-size:12px;color:var(--text-soft);margin-top:4px;}
 .dash-card.urgent .dc-val{color:#e53935;}
-.dash-section{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;margin:18px 0 10px;color:var(--text);}
-.dash-activity{background:white;border-radius:12px;border:1px solid var(--sand2);}
-.da-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--sand2);font-size:13.5px;}
+.dash-section{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;margin:20px 0 10px;color:var(--text);display:flex;align-items:center;justify-content:space-between;}
+.dash-section-action{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--palm);cursor:pointer;text-decoration:none;padding:4px 10px;border-radius:20px;background:rgba(26,95,122,.08);border:none;}
+.dash-activity{background:var(--white);border-radius:14px;border:1px solid var(--sand2);overflow:hidden;}
+.da-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--sand2);font-size:13.5px;cursor:pointer;transition:background .15s;}
+.da-row:hover{background:var(--sand);}
 .da-row:last-child{border-bottom:none;}
 .da-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .da-dot.unread{background:var(--gold);}
 .da-dot.info{background:#2a9bbf;}.da-dot.warning{background:#f9a825;}.da-dot.urgent{background:#e53935;}
 .da-text{flex:1;}
 .da-time{font-size:11px;color:var(--text-soft);}
+
+/* Dashboard gelişmiş stiller */
+.dash-filter-bar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.dash-filter-btn{padding:5px 14px;border-radius:20px;border:1.5px solid var(--sand2);background:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;color:var(--text-soft);transition:all .2s;}
+.dash-filter-btn.active{background:var(--palm);color:white;border-color:var(--palm);}
+.dash-card{background:var(--white);border-radius:18px;padding:18px 14px;border:1px solid var(--sand2);text-align:center;box-shadow:0 2px 16px rgba(0,0,0,.06);transition:all .25s;position:relative;overflow:hidden;}
+.dash-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.5),transparent);pointer-events:none;}
+.dash-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.1);}
+.dash-card .dc-icon{font-size:28px;margin-bottom:6px;}
+.dash-card .dc-val{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;color:var(--palm);line-height:1;}
+.dash-card .dc-label{font-size:11.5px;color:var(--text-soft);margin-top:5px;text-transform:uppercase;letter-spacing:.8px;}
+.dash-card.urgent{background:linear-gradient(135deg,#fff5f5,#ffecec);border-color:#ffcdd2;}
+.dash-card.urgent .dc-val{color:#e53935;}
+.dash-card.success-card{background:linear-gradient(135deg,#f1f8f4,#e8f5ec);border-color:#c8e6c9;}
+.dash-card.success-card .dc-val{color:#388e3c;}
+
+/* Dil dağılımı */
+.lang-dist-wrap{display:flex;gap:6px;padding:14px;flex-wrap:wrap;}
+.lang-dist-item{display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--sand);border-radius:20px;font-size:13px;}
+.lang-dist-flag{font-size:18px;line-height:1;}
+.lang-dist-count{font-weight:600;color:var(--palm);}
+
+/* Hızlı aksiyon butonları */
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;}
+.quick-action-btn{padding:12px;border-radius:14px;border:1.5px solid var(--sand2);background:var(--white);cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s;text-align:left;}
+.quick-action-btn:hover{border-color:var(--palm);background:rgba(26,95,122,.04);}
+.qa-icon{font-size:22px;flex-shrink:0;}
+.qa-label{font-size:12.5px;font-weight:500;color:var(--text);line-height:1.3;}
+.qa-sub{font-size:11px;color:var(--text-soft);}
+
+/* Misafir tasarım iyileştirmeleri */
+.card{background:var(--white);border-radius:20px;margin-bottom:14px;overflow:hidden;box-shadow:0 2px 16px rgba(13,61,82,.08);border:1px solid rgba(196,151,58,.08);transition:all .25s;}
+.card:hover{box-shadow:0 6px 28px rgba(13,61,82,.12);transform:translateY(-1px);}
+.nav-tab{flex-shrink:0;padding:14px 16px;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;color:var(--text-soft);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+.nav-tab.active{color:var(--palm);border-bottom-color:var(--palm);font-weight:600;}
+.section-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:-.3px;}
+.event-card{background:var(--white);border-radius:20px;margin-bottom:14px;overflow:hidden;border:1px solid rgba(196,151,58,.1);box-shadow:0 2px 16px rgba(13,61,82,.07);transition:all .25s;}
+.event-card:hover{box-shadow:0 6px 28px rgba(13,61,82,.12);transform:translateY(-1px);}
+.service-item{background:var(--white);border-radius:18px;padding:18px;border:1px solid rgba(196,151,58,.1);box-shadow:0 2px 10px rgba(13,61,82,.05);transition:all .2s;}
+.service-item:hover{box-shadow:0 4px 16px rgba(13,61,82,.1);transform:translateY(-1px);}
 .lang-bar{background:var(--white);padding:10px 20px;display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--sand2);scrollbar-width:none;}
 .lang-bar::-webkit-scrollbar{display:none;}
 .lang-btn{flex-shrink:0;padding:4px;border-radius:50%;border:2.5px solid transparent;background:none;font-size:22px;cursor:pointer;transition:all .2s;line-height:1;width:36px;height:36px;display:flex;align-items:center;justify-content:center;}
@@ -120,7 +162,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--text);m
 .content-area{padding:16px 16px 80px;max-width:620px;margin:0 auto;}
 .section-title{font-family:'Playfair Display',serif;font-size:32px;font-weight:600;color:var(--text);margin-bottom:6px;}
 .section-sub{font-size:13px;color:var(--text-soft);margin-bottom:20px;letter-spacing:.5px;}
-.card{background:var(--white);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);border:1px solid rgba(196,151,58,.12);transition:box-shadow .2s;}
+.card{background:var(--white);border-radius:var(--radius);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(196,151,58,.1);transition:all .25s;}
 .card:hover{box-shadow:0 4px 16px rgba(0,0,0,.09);}
 .card-photo{width:100%;height:160px;object-fit:cover;display:block;cursor:pointer;}
 .card-header{padding:16px 18px;cursor:pointer;display:flex;align-items:center;gap:14px;}
@@ -268,6 +310,22 @@ textarea.fi2{resize:vertical;min-height:70px;}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#2c2416;color:white;padding:10px 22px;border-radius:24px;font-size:14px;z-index:500;opacity:0;transition:all .3s;white-space:nowrap;pointer-events:none;font-weight:500;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:var(--sand2);border-radius:4px;}
+
+/* ── TAB STATS BAR ── */
+.stat-bar-wrap{background:var(--white);border-radius:14px;border:1px solid var(--sand2);overflow:hidden;margin-bottom:8px;}
+.stat-bar-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--sand2);}
+.stat-bar-row:last-child{border-bottom:none;}
+.stat-bar-label{font-size:13px;color:var(--text);width:130px;flex-shrink:0;display:flex;align-items:center;gap:6px;}
+.stat-bar-track{flex:1;height:8px;background:var(--sand2);border-radius:4px;overflow:hidden;}
+.stat-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--palm),var(--palm-light));transition:width .6s ease;}
+.stat-bar-count{font-size:12px;color:var(--text-soft);width:32px;text-align:right;font-weight:600;flex-shrink:0;}
+
+/* ── DASHBOARD GELIŞMIŞ ── */
+.dash-period{display:flex;gap:6px;margin-bottom:14px;}
+.dash-period-btn{padding:5px 12px;border-radius:20px;border:1.5px solid var(--sand2);background:none;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;color:var(--text-soft);transition:all .2s;}
+.dash-period-btn.active{background:var(--palm);color:white;border-color:var(--palm);}
+.dash-trend{font-size:11px;margin-top:3px;font-weight:500;}
+.dash-trend.up{color:#2e7d32;}.dash-trend.down{color:#c62828;}.dash-trend.flat{color:var(--text-soft);}
 
 /* ── MAP TAB ── */
 .map-container{position:relative;overflow:hidden;border-radius:var(--radius);background:#1a1a2e;touch-action:none;cursor:grab;user-select:none;}
@@ -556,59 +614,193 @@ function renderG(){
 
 function renderDashboard(ac){
   const unread=C.requests.filter(r=>r.status==='unread').length;
+  const read=C.requests.filter(r=>r.status==='read').length;
   const resolved=C.requests.filter(r=>r.status==='resolved').length;
+  const total=C.requests.length;
   const annActive=C.announcements.length;
   const todayStr=new Date().toISOString().split('T')[0];
   const todayEvs=C.events.filter(e=>e.event_date===todayStr).length;
+  const upcomingEvs=C.events.filter(e=>e.event_date>todayStr).length;
 
-  // Stat kartları
+  // Başlık
+  const hdr=document.createElement('div');
+  hdr.style.cssText='font-family:"Playfair Display",serif;font-size:26px;font-weight:700;margin-bottom:2px;color:var(--text)';
+  hdr.textContent='Dashboard';
+  const sub=document.createElement('div');
+  sub.style.cssText='font-size:12px;color:var(--text-soft);margin-bottom:16px';
+  sub.textContent=new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  ac.appendChild(hdr);ac.appendChild(sub);
+
+  // Ana stat kartları
   const grid1=document.createElement('div');grid1.className='dash-grid';
-  grid1.innerHTML=
-    '<div class="dash-card '+(unread>0?'urgent':'')+'"><div class="dc-icon">📝</div><div class="dc-val">'+unread+'</div><div class="dc-label">Okunmamış Talep</div></div>'+
-    '<div class="dash-card"><div class="dc-icon">✅</div><div class="dc-val">'+resolved+'</div><div class="dc-label">Çözülen Talep</div></div>'+
-    '<div class="dash-card"><div class="dc-icon">📢</div><div class="dc-val">'+annActive+'</div><div class="dc-label">Aktif Duyuru</div></div>'+
-    '<div class="dash-card"><div class="dc-icon">🎉</div><div class="dc-val">'+todayEvs+'</div><div class="dc-label">Bugünkü Etkinlik</div></div>';
+  [
+    {icon:'📝',val:unread,label:'Okunmamış Talep',cls:unread>0?'urgent':''},
+    {icon:'✅',val:resolved,label:'Çözülen Talep',cls:resolved>0?'success-card':''},
+    {icon:'📢',val:annActive,label:'Aktif Duyuru',cls:''},
+    {icon:'🎉',val:todayEvs+(upcomingEvs>0?' +'+upcomingEvs:''),label:'Bugün / Yaklaşan',cls:''},
+  ].forEach(function(s){
+    const c=document.createElement('div');c.className='dash-card '+(s.cls||'');
+    c.innerHTML='<div class="dc-icon">'+s.icon+'</div><div class="dc-val">'+s.val+'</div><div class="dc-label">'+s.label+'</div>';
+    grid1.appendChild(c);
+  });
   ac.appendChild(grid1);
 
+  // İçerik özet
   const grid2=document.createElement('div');grid2.className='dash-grid';grid2.style.gridTemplateColumns='1fr 1fr 1fr';
-  grid2.innerHTML=
-    '<div class="dash-card"><div class="dc-icon">🍽️</div><div class="dc-val">'+C.outlets.filter(o=>o.category==='restaurants').length+'</div><div class="dc-label">Restoran</div></div>'+
-    '<div class="dash-card"><div class="dc-icon">🏊</div><div class="dc-val">'+C.outlets.filter(o=>o.category==='pools').length+'</div><div class="dc-label">Havuz/Spa</div></div>'+
-    '<div class="dash-card"><div class="dc-icon">🛎️</div><div class="dc-val">'+C.services.length+'</div><div class="dc-label">Hizmet</div></div>';
+  [{icon:'🍽️',val:C.outlets.filter(o=>o.category==='restaurants').length,label:'Restoran'},
+   {icon:'🏊',val:C.outlets.filter(o=>o.category==='pools').length,label:'Havuz/Spa'},
+   {icon:'🛎️',val:C.services.length,label:'Hizmet'},
+  ].forEach(function(s){
+    const c=document.createElement('div');c.className='dash-card';
+    c.innerHTML='<div class="dc-icon">'+s.icon+'</div><div class="dc-val">'+s.val+'</div><div class="dc-label">'+s.label+'</div>';
+    grid2.appendChild(c);
+  });
   ac.appendChild(grid2);
 
-  // Son Talepler
-  const sec1=document.createElement('div');sec1.className='dash-section';sec1.textContent='Son Talepler';ac.appendChild(sec1);
+  // Hızlı aksiyonlar
+  const secQA=document.createElement('div');secQA.className='dash-section';
+  secQA.innerHTML='<span>Hızlı İşlemler</span>';
+  ac.appendChild(secQA);
+  const qaWrap=document.createElement('div');qaWrap.className='quick-actions';
+  [
+    {icon:'📢',label:'Yeni Duyuru',sub:'Misafirlere bildirim gönder',action:function(){atab='announcements';renderA();openAnnModal(null);}},
+    {icon:'📝',label:'Talepler',sub:unread>0?(unread+' okunmamış bekliyor'):'Tümü okundu',action:function(){atab='requests';renderA();}},
+    {icon:'🎉',label:'Etkinlik Ekle',sub:'Yeni etkinlik oluştur',action:function(){atab='events';renderA();}},
+    {icon:'🏨',label:'Otel Bilgisi',sub:'Harita, logo, kurallar',action:function(){atab='hotelinfo';renderA();}},
+  ].forEach(function(q){
+    const btn=document.createElement('button');btn.className='quick-action-btn';
+    btn.innerHTML='<div class="qa-icon">'+q.icon+'</div><div><div class="qa-label">'+q.label+'</div><div class="qa-sub">'+q.sub+'</div></div>';
+    btn.onclick=q.action;
+    qaWrap.appendChild(btn);
+  });
+  ac.appendChild(qaWrap);
+
+  // Talep durumu
+  if(total>0){
+    const secR=document.createElement('div');secR.className='dash-section';
+    const goReq=document.createElement('button');goReq.className='dash-section-action';goReq.textContent='Tümünü Gör →';
+    goReq.onclick=function(){atab='requests';renderA();};
+    secR.innerHTML='<span>Talep Durumu</span>';secR.appendChild(goReq);
+    ac.appendChild(secR);
+    const reqWrap=document.createElement('div');reqWrap.className='dash-activity';
+    const pct=function(n){return total>0?Math.round(n/total*100):0;};
+    [{label:'📥 Okunmamış',count:unread,p:pct(unread),color:'var(--gold)'},
+     {label:'👁️ Okundu',count:read,p:pct(read),color:'var(--palm-light)'},
+     {label:'✅ Çözüldü',count:resolved,p:pct(resolved),color:'#4caf50'},
+    ].forEach(function(r){
+      const row=document.createElement('div');row.className='stat-bar-row';
+      row.innerHTML='<div class="stat-bar-label">'+r.label+'</div>'
+        +'<div class="stat-bar-track"><div class="stat-bar-fill" style="width:'+r.p+'%;background:'+r.color+'"></div></div>'
+        +'<div class="stat-bar-count">'+r.count+'</div>';
+      reqWrap.appendChild(row);
+    });
+    ac.appendChild(reqWrap);
+  }
+
+  // Sekme istatistikleri — zaman filtreli
+  const secV=document.createElement('div');secV.className='dash-section';
+  secV.innerHTML='<span>Sekme İstatistikleri</span>';
+  ac.appendChild(secV);
+
+  // Filtre butonları
+  const filterBar=document.createElement('div');filterBar.className='dash-filter-bar';
+  const filters=[{label:'Son 7 Gün',days:7},{label:'Son 30 Gün',days:30},{label:'Tüm Zamanlar',days:3650}];
+  let activeDays=30;
+  const viewsWrap=document.createElement('div');viewsWrap.className='dash-activity';
+
+  function loadViews(days){
+    activeDays=days;
+    filterBar.querySelectorAll('.dash-filter-btn').forEach(function(b){
+      b.classList.toggle('active',parseInt(b.dataset.days)===days);
+    });
+    viewsWrap.innerHTML='<div style="padding:16px;text-align:center;color:var(--text-soft);font-size:13px">Yükleniyor…</div>';
+    const since=new Date();since.setDate(since.getDate()-days);
+    sb.from('page_views').select('page,lang').gte('viewed_at',since.toISOString()).then(function(res){
+      viewsWrap.innerHTML='';
+      if(!res.data||!res.data.length){
+        viewsWrap.innerHTML='<div style="padding:20px;text-align:center;color:var(--text-soft);font-size:13px">Henüz veri yok</div>';
+        return;
+      }
+      const counts={};const langCounts={};
+      res.data.forEach(function(r){
+        counts[r.page]=(counts[r.page]||0)+1;
+        if(r.lang)langCounts[r.lang]=(langCounts[r.lang]||0)+1;
+      });
+      const TAB_LABELS={restaurants:'🍽️ Restoranlar',pools:'🏊 Havuz & Spa',events:'🎉 Etkinlikler',services:'🛎️ Hizmetler',gallery:'📸 Galeri',hotelmap:'🗺️ Harita',hotelinfo:'🏨 Otel Bilgisi',request:'💬 Feedback'};
+      const sorted=Object.entries(counts).sort(function(a,b){return b[1]-a[1];});
+      const maxVal=sorted[0][1];
+      const totalViews=res.data.length;
+
+      // Toplam görüntülenme badge
+      const totalRow=document.createElement('div');
+      totalRow.style.cssText='padding:10px 14px;background:linear-gradient(90deg,rgba(26,95,122,.06),transparent);border-bottom:1px solid var(--sand2);display:flex;align-items:center;justify-content:space-between;';
+      totalRow.innerHTML='<span style="font-size:12px;color:var(--text-soft);text-transform:uppercase;letter-spacing:.8px;font-weight:600">Toplam Görüntülenme</span>'
+        +'<span style="font-family:\'Playfair Display\',serif;font-size:22px;font-weight:700;color:var(--palm)">'+totalViews+'</span>';
+      viewsWrap.appendChild(totalRow);
+
+      sorted.forEach(function(entry){
+        const row=document.createElement('div');row.className='stat-bar-row';
+        const pct=Math.round(entry[1]/maxVal*100);
+        const label=TAB_LABELS[entry[0]]||entry[0];
+        row.innerHTML='<div class="stat-bar-label">'+label+'</div>'
+          +'<div class="stat-bar-track"><div class="stat-bar-fill" style="width:'+pct+'%"></div></div>'
+          +'<div class="stat-bar-count">'+entry[1]+'</div>';
+        viewsWrap.appendChild(row);
+      });
+
+      // Dil dağılımı
+      const langEntries=Object.entries(langCounts).sort(function(a,b){return b[1]-a[1];});
+      if(langEntries.length>1){
+        const langSec=document.createElement('div');
+        langSec.style.cssText='padding:10px 14px;border-top:1px solid var(--sand2);';
+        langSec.innerHTML='<div style="font-size:11px;color:var(--text-soft);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:8px">Dil Dağılımı</div>';
+        const langRow=document.createElement('div');langRow.className='lang-dist-wrap';langRow.style.padding='0';
+        const FLAG_MAP={tr:'🇹🇷',en:'🇬🇧',ru:'🇷🇺',de:'🇩🇪',fr:'🇫🇷',nl:'🇳🇱',cs:'🇨🇿',pl:'🇵🇱',ro:'🇷🇴'};
+        langEntries.forEach(function(l){
+          const item=document.createElement('div');item.className='lang-dist-item';
+          item.innerHTML='<span class="lang-dist-flag">'+(FLAG_MAP[l[0]]||'🌐')+'</span><span style="font-size:12px;color:var(--text-soft)">'+l[0].toUpperCase()+'</span><span class="lang-dist-count">'+l[1]+'</span>';
+          langRow.appendChild(item);
+        });
+        langSec.appendChild(langRow);
+        viewsWrap.appendChild(langSec);
+      }
+    });
+  }
+
+  filters.forEach(function(f){
+    const btn=document.createElement('button');btn.className='dash-filter-btn'+(f.days===activeDays?' active':'');
+    btn.dataset.days=f.days;btn.textContent=f.label;
+    btn.onclick=function(){loadViews(f.days);};
+    filterBar.appendChild(btn);
+  });
+  ac.appendChild(filterBar);
+  ac.appendChild(viewsWrap);
+  loadViews(30);
+
+  // Son talepler
+  const secReq=document.createElement('div');secReq.className='dash-section';
+  const goReq2=document.createElement('button');goReq2.className='dash-section-action';goReq2.textContent='Tümünü Gör →';
+  goReq2.onclick=function(){atab='requests';renderA();};
+  secReq.innerHTML='<span>Son Talepler</span>';secReq.appendChild(goReq2);
+  ac.appendChild(secReq);
   const act1=document.createElement('div');act1.className='dash-activity';
   if(!C.requests.length){
     act1.innerHTML='<div style="padding:20px;text-align:center;color:var(--text-soft);font-size:13px">Henüz talep yok</div>';
   } else {
-    C.requests.slice(0,5).forEach(r=>{
+    C.requests.slice(0,5).forEach(function(r){
       const d=new Date(r.created_at);
       const ts=d.toLocaleDateString('tr-TR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-      const msg=r.message.length>60?r.message.slice(0,60)+'…':r.message;
-      const room=r.room_number?'<span style="font-size:11px;color:var(--text-soft)">🚪'+r.room_number+'</span>':'';
+      const msg=r.message.length>55?r.message.slice(0,55)+'…':r.message;
+      const statusColors={unread:'var(--gold)',read:'var(--palm-light)',resolved:'#4caf50'};
       const row=document.createElement('div');row.className='da-row';
-      row.innerHTML='<div class="da-dot '+(r.status==='unread'?'unread':'')+'"></div><div class="da-text">'+msg+' '+room+'</div><div class="da-time">'+ts+'</div>';
+      row.onclick=function(){atab='requests';renderA();};
+      row.innerHTML='<div class="da-dot" style="background:'+(statusColors[r.status]||'var(--sand2)')+'"></div>'
+        +'<div class="da-text">'+msg+(r.room_number?' <span style="font-size:11px;color:var(--text-soft)">🚪'+r.room_number+'</span>':'')+'</div>'
+        +'<div class="da-time">'+ts+'</div>';
       act1.appendChild(row);
     });
   }
   ac.appendChild(act1);
-
-  // Aktif Duyurular
-  const sec2=document.createElement('div');sec2.className='dash-section';sec2.textContent='Aktif Duyurular';ac.appendChild(sec2);
-  const act2=document.createElement('div');act2.className='dash-activity';
-  if(!C.announcements.length){
-    act2.innerHTML='<div style="padding:20px;text-align:center;color:var(--text-soft);font-size:13px">Aktif duyuru yok</div>';
-  } else {
-    C.announcements.forEach(a=>{
-      const msg=(a.messages&&(a.messages.tr||a.messages.en)||'').slice(0,70);
-      const row=document.createElement('div');row.className='da-row';
-      row.innerHTML='<div class="da-dot '+(a.type||'info')+'"></div><div class="da-text">'+msg+'</div><div class="da-time">'+((a.type||'').toUpperCase())+'</div>';
-      act2.appendChild(row);
-    });
-  }
-  ac.appendChild(act2);
 }
 
 function renderHotelInfoAdmin(ac){
@@ -1013,7 +1205,14 @@ function dismissPWA(){
 }
 
 function setLang(c){lang=c;renderG();}
-function setTab(id){tab=id;renderG();}
+function setTab(id){
+  tab=id;
+  renderG();
+  // Sekme izleme - arka planda kaydet, hata olursa sessizce geç
+  try{
+    sb.from('page_views').insert({page:id,lang:lang}).then(()=>{});
+  }catch(e){}
+}
 function lb(url){document.getElementById('lb-img').src=url;document.getElementById('lightbox').classList.add('open');}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
 
