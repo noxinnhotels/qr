@@ -424,7 +424,7 @@ const sb=supabase.createClient(SUPA_URL,SUPA_KEY);
 const BUCKET='hotel-media';
 
 const LANGS=[{code:'tr',label:'TR',name:'Türkçe',flag:'🇹🇷'},{code:'en',label:'EN',name:'English',flag:'🇬🇧'},{code:'ru',label:'RU',name:'Русский',flag:'🇷🇺'},{code:'de',label:'DE',name:'Deutsch',flag:'🇩🇪'},{code:'fr',label:'FR',name:'Français',flag:'🇫🇷'},{code:'nl',label:'NL',name:'Nederlands',flag:'🇳🇱'},{code:'cs',label:'CS',name:'Čeština',flag:'🇨🇿'},{code:'pl',label:'PL',name:'Polski',flag:'🇵🇱'},{code:'ro',label:'RO',name:'Română',flag:'🇷🇴'}];
-const ADMIN_TABS=[{id:'dashboard',icon:'📊',label:'Dashboard'},{id:'restaurants',icon:'🍽️',label:'Restoranlar'},{id:'pools',icon:'🏊',label:'Havuz & Spa'},{id:'events',icon:'🎉',label:'Etkinlikler'},{id:'services',icon:'🛎️',label:'Hizmetler'},{id:'requests',icon:'📝',label:'Talepler'},{id:'announcements',icon:'📢',label:'Duyuru'},{id:'hotelinfo',icon:'🏨',label:'Otel Bilgisi'}];
+const ADMIN_TABS=[{id:'dashboard',icon:'📊',label:'Dashboard'},{id:'restaurants',icon:'🍽️',label:'Restoranlar'},{id:'pools',icon:'🏊',label:'Havuz & Spa'},{id:'events',icon:'🎉',label:'Etkinlikler'},{id:'services',icon:'🛎️',label:'Hizmetler'},{id:'requests',icon:'📝',label:'Talepler'},{id:'announcements',icon:'📢',label:'Duyuru'},{id:'hotelinfo',icon:'🏨',label:'Otel Bilgisi'},{id:'tabsettings',icon:'🔧',label:'Sekmeler'}];
 const ICONS=['🍽️','🍹','🍸','☕','🥂','🍕','🏊','💆','🧖','🛁','🎉','🎶','🎭','🌅','🏄','⛵','🎯','🎪','🛎️','📶','🅿️','🚗','🏋️','👶','🧹','🏥','💊','🔑','📸','🌿','🌴','🦀','🐠','☀️','🌊','🎠','🎨','🎬','🍦','🥤'];
 const ANN_TYPES=[{id:'info',label:'ℹ️ Bilgi'},{id:'warning',label:'⚠️ Uyarı'},{id:'urgent',label:'🚨 Acil'},{id:'success',label:'✅ Başarı'}];
 const ANN_ICONS={info:'ℹ️',warning:'⚠️',urgent:'🚨',success:'✅'};
@@ -524,7 +524,11 @@ function renderG(){
   }
   renderAnn();
   document.getElementById('lang-bar').innerHTML=LANGS.map(l=>`<button class="lang-btn ${l.code===lang?'active':''}" onclick="setLang('${l.code}')" title="${l.name}">${l.flag}</button>`).join('');
-  const tabs=[{id:'restaurants',icon:'🍽️'},{id:'pools',icon:'🏊'},{id:'events',icon:'🎉'},{id:'services',icon:'🛎️'},{id:'gallery',icon:'📸'},{id:'hotelmap',icon:'🗺️'},{id:'hotelinfo',icon:'🏨'},{id:'request',icon:'💬'}];
+  const ALL_GUEST_TABS=[{id:'restaurants',icon:'🍽️'},{id:'pools',icon:'🏊'},{id:'events',icon:'🎉'},{id:'services',icon:'🛎️'},{id:'gallery',icon:'📸'},{id:'hotelmap',icon:'🗺️'},{id:'hotelinfo',icon:'🏨'},{id:'request',icon:'💬'}];
+  const hiddenTabs=(C.config.hidden_tabs||'').split(',').filter(Boolean);
+  const tabs=ALL_GUEST_TABS.filter(t=>!hiddenTabs.includes(t.id));
+  // Gizli sekmedeyken başka sekmeye geç
+  if(hiddenTabs.includes(tab)&&tabs.length){tab=tabs[0].id;}
   document.getElementById('nav-tabs').innerHTML=tabs.map(c=>`<button class="nav-tab ${c.id===tab?'active':''}" onclick="setTab('${c.id}')">${c.icon} ${c.id==='request'?t('request_tab'):c.id==='gallery'?t('gallery'):c.id==='hotelinfo'?t('info_tab'):c.id==='hotelmap'?t('map_tab'):t(c.id)}</button>`).join('');
   const ca=document.getElementById('content-area');ca.innerHTML='';
 
@@ -801,6 +805,84 @@ function renderDashboard(ac){
     });
   }
   ac.appendChild(act1);
+}
+
+
+function renderTabSettings(ac){
+  const MANAGEABLE_TABS=[
+    {id:'restaurants',icon:'🍽️',label:'Restoranlar & Barlar'},
+    {id:'pools',icon:'🏊',label:'Havuz & Spa'},
+    {id:'events',icon:'🎉',label:'Etkinlikler'},
+    {id:'services',icon:'🛎️',label:'Genel Hizmetler'},
+    {id:'gallery',icon:'📸',label:'Galeri'},
+    {id:'hotelmap',icon:'🗺️',label:'Harita'},
+    {id:'hotelinfo',icon:'🏨',label:'Otel Bilgisi'},
+    {id:'request',icon:'💬',label:'Öneri & Şikayet'},
+  ];
+  const hidden=(C.config.hidden_tabs||'').split(',').filter(Boolean);
+
+  const title=document.createElement('div');
+  title.style.cssText='font-family:"Playfair Display",serif;font-size:22px;font-weight:700;margin-bottom:6px;color:var(--text)';
+  title.textContent='Sekme Yönetimi';
+  const sub=document.createElement('div');
+  sub.style.cssText='font-size:13px;color:var(--text-soft);margin-bottom:20px';
+  sub.textContent='Misafir arayüzünde hangi sekmelerin görüneceğini seçin.';
+  ac.appendChild(title);ac.appendChild(sub);
+
+  const list=document.createElement('div');
+  list.style.cssText='background:var(--white);border-radius:16px;border:1px solid var(--sand2);overflow:hidden;box-shadow:var(--shadow)';
+
+  MANAGEABLE_TABS.forEach(function(t,i){
+    const isVisible=!hidden.includes(t.id);
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:14px;padding:14px 16px;'+(i<MANAGEABLE_TABS.length-1?'border-bottom:1px solid var(--sand2)':'');
+
+    const icon=document.createElement('div');
+    icon.style.cssText='font-size:22px;width:36px;text-align:center;flex-shrink:0';
+    icon.textContent=t.icon;
+
+    const lbl=document.createElement('div');
+    lbl.style.cssText='flex:1;font-size:15px;font-weight:500;color:var(--text)';
+    lbl.textContent=t.label;
+
+    // Toggle switch
+    const toggleWrap=document.createElement('label');
+    toggleWrap.style.cssText='position:relative;width:48px;height:26px;flex-shrink:0;cursor:pointer';
+    const inp=document.createElement('input');
+    inp.type='checkbox';inp.style.display='none';inp.checked=isVisible;
+    const slider=document.createElement('div');
+    slider.style.cssText='position:absolute;inset:0;border-radius:13px;background:'+(isVisible?'var(--palm)':'var(--sand2)')+';transition:background .2s';
+    const knob=document.createElement('div');
+    knob.style.cssText='position:absolute;top:3px;left:'+(isVisible?'25px':'3px')+';width:20px;height:20px;border-radius:50%;background:white;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:left .2s';
+    slider.appendChild(knob);toggleWrap.appendChild(inp);toggleWrap.appendChild(slider);
+
+    inp.onchange=async function(){
+      const checked=inp.checked;
+      slider.style.background=checked?'var(--palm)':'var(--sand2)';
+      knob.style.left=checked?'25px':'3px';
+      // hidden_tabs güncelle
+      const cur=(C.config.hidden_tabs||'').split(',').filter(Boolean);
+      let newHidden;
+      if(checked){newHidden=cur.filter(function(x){return x!==t.id;});}
+      else{if(!cur.includes(t.id))cur.push(t.id);newHidden=cur;}
+      const val=newHidden.join(',');
+      C.config.hidden_tabs=val;
+      await sb.from('hotel_config').upsert({key:'hidden_tabs',value:val});
+      renderG();
+      showToast(checked?t.icon+' '+t.label+' gösterildi':t.icon+' '+t.label+' gizlendi');
+    };
+
+    row.appendChild(icon);row.appendChild(lbl);row.appendChild(toggleWrap);
+    list.appendChild(row);
+  });
+
+  ac.appendChild(list);
+
+  // Bilgi notu
+  const note=document.createElement('div');
+  note.style.cssText='margin-top:14px;padding:12px 14px;background:rgba(26,95,122,.06);border-radius:12px;font-size:12px;color:var(--text-soft);line-height:1.6';
+  note.innerHTML='💡 <strong>Not:</strong> Kapatılan sekmeler misafir arayüzünden gizlenir. İçerik silinmez, istediğiniz zaman tekrar açabilirsiniz.';
+  ac.appendChild(note);
 }
 
 function renderHotelInfoAdmin(ac){
@@ -1224,6 +1306,7 @@ function renderA(){
   const noItem=()=>{const d=document.createElement("div");d.style.cssText="text-align:center;color:#aaa;padding:32px;font-size:14px";d.textContent="Henüz öğe yok";ac.appendChild(d);};
   if(atab==='dashboard'){renderDashboard(ac);return;}
   if(atab==='hotelinfo'){renderHotelInfoAdmin(ac);return;}
+  if(atab==='tabsettings'){renderTabSettings(ac);return;}
 
   if(atab==='restaurants'||atab==='pools'){
     addBtn(atab==='restaurants'?'Restoran / Bar Ekle':'Havuz / Spa Ekle',()=>openModal('outlet',atab,null));
