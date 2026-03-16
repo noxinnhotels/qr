@@ -20,7 +20,7 @@
 [data-theme="dark"] body{background:#0a1a24;}
 
 /* Weather widget */
-.weather-bar{display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);border-radius:30px;margin:10px auto 0;width:fit-content;color:rgba(255,255,255,.9);font-size:13px;font-weight:500;letter-spacing:.3px;cursor:pointer;transition:background .2s;}
+.weather-bar{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);border-radius:30px;margin:12px auto 0;color:rgba(255,255,255,.9);font-size:13px;font-weight:500;letter-spacing:.3px;cursor:pointer;transition:background .2s;white-space:nowrap;}
 .weather-bar:hover{background:rgba(255,255,255,.14);}
 .weather-icon{font-size:20px;line-height:1;}
 .weather-temp{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;}
@@ -355,12 +355,11 @@ textarea.fi2{resize:vertical;min-height:70px;}
     <div class="hotel-label" id="hlabel">HOTEL</div>
     <h1 id="hnd">Noxinn Deluxe Hotel</h1>
     <div class="hero-sub" id="hsub">Your tropical escape awaits</div>
-    </div>
-    <div class="weather-bar" id="weather-bar" style="display:none" onclick="refreshWeather()">
+    <div style="text-align:center"><div class="weather-bar" id="weather-bar" style="display:none" onclick="refreshWeather()">
       <span class="weather-icon" id="w-icon">🌤️</span>
       <span class="weather-temp" id="w-temp">--°</span>
       <span class="weather-desc" id="w-desc"></span>
-    </div>
+    </div></div>
   </div>
   <div class="ann-banner-wrap" id="ann-banner-wrap">
     <div class="announcement-banner" id="ann-banner">
@@ -1249,7 +1248,7 @@ async function fetchWeather(lat,lon){
     const temp=Math.round(c.temperature_2m);
     document.getElementById('w-icon').textContent=icon;
     document.getElementById('w-temp').textContent=temp+'°C';
-    document.getElementById('weather-bar').style.display='flex';
+    document.getElementById('weather-bar').style.display='';
   }catch(e){console.log('Weather error:',e);}
 }
 function initWeather(){
