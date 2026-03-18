@@ -16,6 +16,7 @@
 :root{--sand:#f0f6f9;--sand2:#d6e8f0;--palm:#1a5f7a;--palm-light:#2a85a8;--gold:#c4973a;--gold-light:#e8c070;--ocean:#0d3d52;--white:#ffffff;--text:#0d2b38;--text-soft:#3d6a7f;--radius:18px;--shadow:0 4px 20px rgba(13,61,82,.1);}
 [data-theme="dark"]{--sand:#0f1f2a;--sand2:#1a3040;--palm:#4ab3d4;--palm-light:#5ec8e8;--gold:#e8c070;--gold-light:#f0d090;--ocean:#060e14;--white:#101e28;--text:#e0f0f8;--text-soft:#7ab8cc;--radius:16px;}
 [data-theme="dark"] .hero{background:linear-gradient(160deg,#040c12 0%,#0a2030 45%,#0d3d52 100%);}
+[data-theme="dark"] .hero h1{color:#ffffff;text-shadow:0 2px 24px rgba(0,0,0,.8),0 0 40px rgba(74,179,212,.3);}
 [data-theme="dark"] .nav-tabs{box-shadow:0 2px 12px rgba(0,0,0,.4);}
 [data-theme="dark"] body{background:#0a1a24;}
 
@@ -1234,7 +1235,20 @@ function toggleDark(){
   try{localStorage.setItem('hd',darkMode?'1':'');}catch(e){}
 }
 function initDark(){
-  try{if(localStorage.getItem('hd')==='1'){darkMode=true;document.documentElement.setAttribute('data-theme','dark');document.getElementById('dark-toggle').textContent='☀️';const m=document.getElementById('theme-meta');if(m)m.content='#060e14';}}catch(e){}
+  try{
+    const saved=localStorage.getItem('hd');
+    const hour=new Date().getHours();
+    const isNight=(hour>=19||hour<7);
+    // Kullanıcı daha önce manuel seçtiyse ona uymaya çalış,
+    // ama hiç seçmediyse (null) saate göre karar ver
+    const shouldDark = saved!==null ? saved==='1' : isNight;
+    if(shouldDark){
+      darkMode=true;
+      document.documentElement.setAttribute('data-theme','dark');
+      document.getElementById('dark-toggle').textContent='☀️';
+      const m=document.getElementById('theme-meta');if(m)m.content='#060e14';
+    }
+  }catch(e){}
 }
 
 /* ── WEATHER ── */
