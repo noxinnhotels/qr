@@ -540,7 +540,7 @@ function renderG(){
   const ca=document.getElementById('content-area');ca.innerHTML='';
 
   if(tab==='restaurants'||tab==='bars'||tab==='pools'){
-    const items=C.outlets.filter(i=>i.category===tab);
+    const items=C.outlets.filter(i=>i.category===tab).sort((a,b)=>{const oa=isOpen(a.hours),ob=isOpen(b.hours);if(oa===ob)return 0;if(oa===true)return -1;if(ob===true)return 1;return 0;});
     ca.innerHTML=`<div class="section-title">${t(tab)}</div><div class="section-sub">${items.length} ${tab==='restaurants'?'🌴':tab==='bars'?'🍹':'🌊'}</div>`;
     if(!items.length){ca.innerHTML+=emp();return;}
     items.forEach(item=>{
