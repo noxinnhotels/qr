@@ -489,7 +489,7 @@ function renderAnn(){
   const wrap=document.getElementById('ann-banner-wrap');
   const banner=document.getElementById('ann-banner');
   if(!a){wrap.classList.remove('show');return;}
-  const msg=a.messages?.[lang]||a.messages?.en||a.messages?.tr||'';
+  const msg=a.messages?.[lang]||(lang!=='en'?a.messages?.en:'')||a.messages?.tr||a.messages?.[Object.keys(a.messages||{}).find(k=>a.messages[k])]||'';
   if(!msg){wrap.classList.remove('show');return;}
   const type=a.type||'info';
   const badgeLabels={info:t('ann_info'),warning:t('ann_warning'),urgent:t('ann_urgent'),success:t('ann_success')};
@@ -1311,7 +1311,13 @@ function dismissPWA(){
   try{localStorage.setItem('pwa-dismissed','1');}catch(e){}
 }
 
-function setLang(c){lang=c;renderG();}
+function setLang(c){
+  lang=c;
+  // Dil değişince duyuru banner'ını sıfırla — yeni dilde tekrar göster
+  const annWrap=document.getElementById('ann-banner-wrap');
+  if(annWrap)annWrap.classList.remove('show');
+  renderG();
+}
 function setTab(id){
   tab=id;
   renderG();
