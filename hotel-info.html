@@ -737,6 +737,7 @@ function renderG(){
     const todayStr=new Date().toISOString().split('T')[0];
     const todayEvs=C.events.filter(ev=>ev.event_date===todayStr);
     const upcomingEvs=C.events.filter(ev=>ev.event_date>todayStr);
+    const futureTotal=C.events.filter(ev=>ev.event_date>=todayStr).length;
     const hdr=document.createElement('div');
     const fBtnStyle=(active)=>`padding:7px 14px;border-radius:20px;border:1.5px solid var(--palm);background:${active?'var(--palm)':'none'};color:${active?'white':'var(--palm)'};font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;cursor:pointer;transition:all .2s`;
     hdr.innerHTML=`
@@ -1558,9 +1559,10 @@ function renderHotelInfo(ca){
 
 function renderEvList(ca){
   const todayStr=new Date().toISOString().split('T')[0];
-  let evs=C.events;
-  if(evDateFilter==='today') evs=C.events.filter(ev=>ev.event_date===todayStr);
-  else if(evDateFilter==='upcoming') evs=C.events.filter(ev=>ev.event_date>todayStr);
+  const futureEvs=C.events.filter(ev=>ev.event_date>=todayStr); // geçmişi gizle
+  let evs=futureEvs;
+  if(evDateFilter==='today') evs=futureEvs.filter(ev=>ev.event_date===todayStr);
+  else if(evDateFilter==='upcoming') evs=futureEvs.filter(ev=>ev.event_date>todayStr);
   if(!evs.length){
     const msg=evDateFilter==='today'?'<div class="empty-state"><div class="e-icon">🌴</div><p>'+t('ev_none_today')+'</p></div>':emp();
     ca.innerHTML+=msg;return;
