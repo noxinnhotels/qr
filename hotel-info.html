@@ -615,7 +615,10 @@ function renderLiveEvents(){
     item.innerHTML='<div class="live-event-icon">'+(ev.icon||'🎉')+'</div>'
       +'<div class="live-event-text">'
         +'<div class="live-event-name">'+name+'</div>'
-        +(time?'<div class="live-event-time">🕐 '+time+' · Devam ediyor</div>':'')
+        +(time?(function(){
+      const endT=ev.event_end_time?ev.event_end_time.slice(0,5):'';
+      return '<div class="live-event-time">🕐 '+time+(endT?' – '+endT:'')+' · Devam ediyor</div>';
+    })():'')
       +'</div>'
       +'<div class="live-event-dot"></div>';
     item.onclick=function(){setTab('events');};
@@ -1554,7 +1557,7 @@ function renderEvList(ca){
     c.innerHTML=`${ev.photo_url?`<img class="event-photo" src="${ev.photo_url}" alt="" onclick="lb('${ev.photo_url}')">`:''}
       <div class="event-date-strip">
         <div class="event-date-box"><div class="event-day">${d.getDate()}</div><div class="event-month">${d.toLocaleString(lang,{month:'short'}).toUpperCase()}</div></div>
-        <div class="event-title-wrap"><div class="event-title">${ev.icon} ${gn(ev)}</div><div class="event-time">🕐 ${(ev.event_time||'').slice(0,5)}</div></div>
+        <div class="event-title-wrap"><div class="event-title">${ev.icon} ${gn(ev)}</div><div class="event-time">🕐 ${(ev.event_time||'').slice(0,5)}${ev.event_end_time?' – '+(ev.event_end_time||'').slice(0,5):''}</div></div>
       </div>
       <div class="event-body">${gd(ev)?`<div class="event-desc">${gd(ev)}</div>`:''}</div>`;
     ca.appendChild(c);
@@ -1861,7 +1864,7 @@ function openModal(type,cat,id){
   if(type==='outlet'){
     html+=`<div class="fr"><div class="fg"><div class="fl">Çalışma Saatleri</div><input class="fi2" id="f-hours" value="${ex?.hours||''}" placeholder="09:00 – 22:00"></div><div class="fg"><div class="fl">Dahili / Tel</div><input class="fi2" id="f-phone" value="${ex?.phone||''}" placeholder="1001"></div></div><div class="fr"><div class="fg"><div class="fl">Kıyafet Kodu</div><input class="fi2" id="f-dress" value="${ex?.dress_code||''}" placeholder="Smart casual"></div><div class="fg"><div class="fl">Rezervasyon</div><input class="fi2" id="f-reservation" value="${ex?.reservation||''}" placeholder="Zorunlu"></div></div>`;
   }else if(type==='event'){
-    html+=`<div class="fr"><div class="fg"><div class="fl">Tarih</div><input type="date" class="fi2" id="f-date" value="${ex?.event_date||new Date().toISOString().split('T')[0]}"></div><div class="fg"><div class="fl">Saat</div><input type="time" class="fi2" id="f-time" value="${(ex?.event_time||'20:00').slice(0,5)}"></div></div>`;
+    html+=`<div class="fr"><div class="fg"><div class="fl">Tarih</div><input type="date" class="fi2" id="f-date" value="${ex?.event_date||new Date().toISOString().split('T')[0]}"></div><div class="fg"><div class="fl">Başlangıç</div><input type="time" class="fi2" id="f-time" value="${(ex?.event_time||'20:00').slice(0,5)}"></div></div><div class="fr"><div class="fg"><div class="fl">Bitiş Saati</div><input type="time" class="fi2" id="f-end-time" value="${(ex?.event_end_time||'22:00').slice(0,5)}"></div><div class="fg"></div></div>`;
   }
   const dk=type==='service'?'infos':'descs';
   html+=`<div class="lst">🌍 İsimler</div>`;
@@ -1923,7 +1926,7 @@ async function saveItem(){
 
   let error;
   if(editType==='outlet'){const obj={category:editCat,icon,names,descs,photo_url:photoUrl,hours:document.getElementById('f-hours')?.value||'',phone:document.getElementById('f-phone')?.value||'',dress_code:document.getElementById('f-dress')?.value||'',reservation:document.getElementById('f-reservation')?.value||''};({error}=editItem?await sb.from('outlets').update(obj).eq('id',editItem.id):await sb.from('outlets').insert({...obj,id:tmpId}));}
-  else if(editType==='event'){const obj={icon,names,descs,photo_url:photoUrl,event_date:document.getElementById('f-date')?.value,event_time:document.getElementById('f-time')?.value};({error}=editItem?await sb.from('events').update(obj).eq('id',editItem.id):await sb.from('events').insert({...obj,id:tmpId}));}
+  else if(editType==='event'){const obj={icon,names,descs,photo_url:photoUrl,event_date:document.getElementById('f-date')?.value,event_time:document.getElementById('f-time')?.value,event_end_time:document.getElementById('f-end-time')?.value||null};({error}=editItem?await sb.from('events').update(obj).eq('id',editItem.id):await sb.from('events').insert({...obj,id:tmpId}));}
   else if(editType==='service'){const obj={icon,names,infos:descs};({error}=editItem?await sb.from('services').update(obj).eq('id',editItem.id):await sb.from('services').insert(obj));}
 
   btn.disabled=false;btn.textContent='Kaydet';
