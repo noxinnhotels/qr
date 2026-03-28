@@ -635,6 +635,14 @@ function renderAnn(){
   if(!a){wrap.classList.remove('show');return;}
   const msg=a.messages?.[lang]||(lang!=='en'?a.messages?.en:'')||a.messages?.tr||a.messages?.[Object.keys(a.messages||{}).find(k=>a.messages[k])]||'';
   if(!msg){wrap.classList.remove('show');return;}
+  // Saat kontrolü: başlangıç/bitiş varsa kontrol et
+  if(a.start_time||a.end_time){
+    const now=new Date();const cur=now.getHours()*60+now.getMinutes();
+    const toMin=function(t){if(!t)return null;const m=t.match(/(\d{1,2}):(\d{2})/);return m?+m[1]*60+ +m[2]:null;};
+    const st=toMin(a.start_time),et=toMin(a.end_time);
+    if(st!==null&&cur<st){wrap.classList.remove('show');return;}
+    if(et!==null&&cur>=et){wrap.classList.remove('show');return;}
+  }
   const type=a.type||'info';
   const badgeLabels={info:t('ann_info'),warning:t('ann_warning'),urgent:t('ann_urgent'),success:t('ann_success')};
   const titleLabels={info:'ℹ️',warning:'⚠️',urgent:'🚨',success:'✅'};
@@ -964,7 +972,7 @@ function renderDashboard(ac){
       const typeColors={info:'#4ab3d4',warning:'#f9a825',urgent:'#ef9a9a',success:'#81c784'};
       const row=document.createElement('div');row.className='da-row';
       row.innerHTML='<div class="da-dot" style="background:'+(typeColors[a.type]||'#4ab3d4')+'"></div>'
-        +'<div class="da-text">'+msg+'</div>'
+        +'<div class="da-text">'+msg+'<span style=\"font-size:11px;color:rgba(255,255,255,.35)\">'+timeRange+'</span></div>'
         +'<div class="da-time" style="font-size:10px;font-weight:700;color:'+(typeColors[a.type]||'#4ab3d4')+'">'+((a.type||'').toUpperCase())+'</div>';
       act2.appendChild(row);
     });
@@ -1793,6 +1801,7 @@ function renderAnnAdmin(ac){
     data.forEach(function(ann){
       const el=document.createElement('div');el.className='ali';
       const msg=(ann.messages&&(ann.messages.tr||ann.messages.en)||'').slice(0,50);
+      const timeRange=ann.start_time||ann.end_time?(' · '+(ann.start_time||'--:--')+' – '+(ann.end_time||'--:--')):'';      
       const activeBg=ann.is_active?'#e8f5e9':'var(--sand2)';
       const activeColor=ann.is_active?'#2e7d32':'var(--text-soft)';
       const activeLabel=ann.is_active?'Aktif':'Pasif';
@@ -1839,7 +1848,10 @@ function openAnnModal(id){
 }
 function showAnnModal(ann){
   document.getElementById('modal-title').textContent=ann?'Duyuru Düzenle':'Yeni Duyuru';
-  let html=`<div class="fg"><div class="fl">Tür</div><div class="ann-type-row">${ANN_TYPES.map(at=>`<button type="button" class="ann-type-btn ${(ann?.type||'info')===at.id?'sel':''}" onclick="selAnnType('${at.id}',this)">${at.label}</button>`).join('')}</div><input type="hidden" id="f-ann-type" value="${ann?.type||'info'}"></div><div class="lst">🌍 Mesaj (dil başına)</div>`;
+  let html=`<div class="fg"><div class="fl">Tür</div><div class="ann-type-row">${ANN_TYPES.map(at=>`<button type="button" class="ann-type-btn ${(ann?.type||'info')===at.id?'sel':''}" onclick="selAnnType('${at.id}',this)">${at.label}</button>`).join('')}</div><input type="hidden" id="f-ann-type" value="${ann?.type||'info'}"></div>`;
+  html+=`<div class="fr"><div class="fg"><div class="fl">Başlangıç Saati</div><input type="time" class="fi2" id="f-ann-start" value="${ann?.start_time||''}"></div><div class="fg"><div class="fl">Bitiş Saati</div><input type="time" class="fi2" id="f-ann-end" value="${ann?.end_time||''}"></div></div>`;
+  html+=`<div style="font-size:11px;color:rgba(255,255,255,.35);margin:-8px 0 14px;padding:0 2px">⏰ Boş bırakılırsa tüm gün aktif</div>`;
+  html+=`<div class="lst">🌍 Mesaj (dil başına)</div>`;
   LANGS.forEach(l=>{html+=`<div class="fg" style="margin-bottom:8px"><div class="fl"><span class="ltag">${l.label}</span>${l.name}</div><input class="fi2" id="fann-${l.code}" value="${ann?.messages?.[l.code]||''}" placeholder="${l.name}..."></div>`;});
   document.getElementById('modal-form-body').innerHTML=html;
   document.getElementById('item-modal').classList.add('open');
@@ -1900,12 +1912,14 @@ async function saveItem(){
     });
     console.log('Saving announcement:',{type,messages,editAnn});
     if(!Object.keys(messages).length){showToast('⚠️ En az bir dilde mesaj girin!');return;}
+    const annStart=document.getElementById('f-ann-start')?.value||null;
+    const annEnd=document.getElementById('f-ann-end')?.value||null;
     const btn=document.getElementById('save-btn');btn.disabled=true;btn.textContent='Kaydediliyor…';
     let res;
     if(editAnn){
-      res=await sb.from('announcements').update({type,messages,updated_at:new Date().toISOString()}).eq('id',editAnn.id);
+      res=await sb.from('announcements').update({type,messages,start_time:annStart,end_time:annEnd,updated_at:new Date().toISOString()}).eq('id',editAnn.id);
     } else {
-      res=await sb.from('announcements').insert([{type,messages,is_active:true}]);
+      res=await sb.from('announcements').insert([{type,messages,is_active:true,start_time:annStart,end_time:annEnd}]);
     }
     console.log('Save result:',res);
     btn.disabled=false;btn.textContent='Kaydet';
