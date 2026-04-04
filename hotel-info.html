@@ -360,6 +360,18 @@ textarea.fi{resize:vertical;min-height:100px;margin-bottom:10px;}
 .upload-btn:hover{border-color:var(--palm);color:var(--palm);}
 .photo-prev{width:100%;max-height:160px;object-fit:cover;border-radius:10px;display:none;margin-bottom:8px;}
 .photo-prev.show{display:block;}
+/* Modal */
+#item-modal{display:none;}
+#item-modal.open{display:flex;}
+/* Login overlay */
+.login-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:flex-end;justify-content:center;}
+.login-overlay.open{display:flex;}
+.login-box{background:white;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:28px 20px 36px;}
+.modal{background:white;border-radius:20px 20px 0 0;width:100%;max-width:720px;max-height:90vh;overflow-y:auto;padding:20px 16px 32px;}
+.modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:16px;}
+.modal-actions{display:flex;gap:10px;margin-top:16px;}
+.btn-cancel{flex:1;padding:13px;border:1.5px solid var(--sand2);border-radius:12px;background:none;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text-soft);cursor:pointer;}
+.btn-cancel:hover{background:var(--sand);}
 </style>
 </head>
 <body>
@@ -903,8 +915,10 @@ function renderDashboard(ac){
       const msg=(a.messages&&(a.messages.tr||a.messages.en)||'').slice(0,70);
       const typeColors={info:'var(--palm)',warning:'#f9a825',urgent:'#ef9a9a',success:'#4caf50'};
       const row=document.createElement('div');row.className='da-row';
+      const annTimeInfo=(a.start_time||a.end_time)?' · '+(a.start_time||'')+(a.end_time?' – '+a.end_time:''):'';
+      const annDateInfo=(a.start_date||a.end_date)?' 📅 '+(a.start_date||'')+(a.end_date?' – '+a.end_date:''):'';
       row.innerHTML='<div class="da-dot" style="background:'+(typeColors[a.type]||'var(--palm)')+'"></div>'
-        +'<div class="da-text">'+msg+'<span style=\"font-size:11px;color:var(--text-soft)\">'+timeRange+dateRange+'</span></div>'
+        +'<div class="da-text">'+msg+'<span style="font-size:11px;color:var(--text-soft)">'+annTimeInfo+annDateInfo+'</span></div>'
         +'<div class="da-time" style="font-size:10px;font-weight:700;color:'+(typeColors[a.type]||'var(--palm)')+'">'+((a.type||'').toUpperCase())+'</div>';
       act2.appendChild(row);
     });
@@ -1865,7 +1879,8 @@ async function saveItem(){
   }
 
   const btn=document.getElementById('save-btn');btn.disabled=true;btn.textContent='Kaydediliyor…';
-  const icon=document.getElementById('f-icon').value;
+  const iconEl=document.getElementById('f-icon');if(!iconEl){btn.disabled=false;btn.textContent='Kaydet';return;}
+  const icon=iconEl.value;
   const names={},descs={};
   LANGS.forEach(l=>{names[l.code]=document.getElementById(`fn-${l.code}`)?.value||'';descs[l.code]=document.getElementById(`fd-${l.code}`)?.value||'';});
   if(!names.tr&&!names.en){showToast('⚠️ TR veya EN isim girin!');btn.disabled=false;btn.textContent='Kaydet';return;}
