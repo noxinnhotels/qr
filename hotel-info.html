@@ -183,7 +183,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--text);m
 .section-sub{font-size:13px;color:var(--text-soft);margin-bottom:20px;letter-spacing:.5px;}
 .card{background:var(--white);border-radius:var(--radius);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(196,151,58,.1);transition:all .25s;}
 .card:hover{box-shadow:0 4px 16px rgba(0,0,0,.09);}
-.card-photo{width:100%;height:160px;object-fit:cover;display:block;cursor:pointer;}
+.card-photo{width:100%;height:180px;object-fit:cover;display:block;cursor:pointer;transition:transform .3s;}
+.card:hover .card-photo{transform:scale(1.02);}
+.card-photo-wrap{overflow:hidden;border-radius:var(--radius) var(--radius) 0 0;position:relative;}
+.card-photo-overlay{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,rgba(0,0,0,.35));}
 .card-header{padding:16px 18px;cursor:pointer;display:flex;align-items:center;gap:14px;}
 .card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
 .icon-restaurant{background:linear-gradient(135deg,#fde8c8,#f5c87a);}
@@ -654,19 +657,33 @@ function renderG(){
       const st=os!==null?`<span class="status-dot ${os?'open':'closed'}"></span>${os?t('open'):t('closed')} · `:'';
       const ic=(tab==='restaurants'||tab==='bars'||tab==='alacarte')?(['🍹','🍸','🥂','🍺','🥃'].includes(item.icon)?'icon-bar':'icon-restaurant'):(['💆','🧖','🛁'].includes(item.icon)?'icon-spa':'icon-pool');
       const d=document.createElement('div');d.className='card';
-      d.innerHTML=`${item.photo_url?`<img class="card-photo" src="${item.photo_url}" alt="" onclick="lb('${item.photo_url}')">`:''}
-        <div class="card-header" onclick="this.closest('.card').classList.toggle('expanded')">
-          <div class="card-icon ${ic}">${item.icon}</div>
-          <div class="card-info"><div class="card-name">${gn(item)}</div><div class="card-hours">${st}${item.hours||''}</div></div>
-          <div class="card-arrow">›</div>
-        </div>
-        <div class="card-body">
-          ${gd(item)?`<div class="card-desc">${gd(item)}</div>`:''}
-          ${item.hours?`<div class="detail-row"><span class="detail-label">${t('hours')}</span><span class="detail-val">${item.hours}</span></div>`:''}
-          ${item.phone?`<div class="detail-row"><span class="detail-label">${t('phone')}</span><span class="detail-val">📞 ${item.phone}</span></div>`:''}
-          ${item.dress_code?`<div class="detail-row"><span class="detail-label">${t('dress_code')}</span><span class="detail-val">${item.dress_code}</span></div>`:''}
-          ${item.reservation?`<div class="detail-row"><span class="detail-label">${t('reservation')}</span><span class="detail-val">${item.reservation}</span></div>`:''}
-        </div>`;
+      // Fotoğraf ve ikon
+      if(item.photo_url){
+        const pw=document.createElement('div');pw.className='card-photo-wrap';
+        const pi=document.createElement('img');pi.className='card-photo';pi.src=item.photo_url;pi.alt='';
+        pi.onclick=function(e){e.stopPropagation();lb(item.photo_url);};
+        const po=document.createElement('div');po.className='card-photo-overlay';
+        pw.appendChild(pi);pw.appendChild(po);d.appendChild(pw);
+      }
+      const hdr=document.createElement('div');hdr.className='card-header';
+      hdr.onclick=function(){d.classList.toggle('expanded');};
+      const iconDiv=document.createElement('div');iconDiv.className='card-icon '+ic;
+      if(item.photo_url){
+        const ti=document.createElement('img');ti.src=item.photo_url;
+        ti.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:10px;';
+        iconDiv.appendChild(ti);
+      } else {iconDiv.textContent=item.icon;}
+      const infoDiv=document.createElement('div');infoDiv.className='card-info';
+      infoDiv.innerHTML='<div class="card-name">'+gn(item)+'</div><div class="card-hours">'+st+(item.hours||'')+'</div>';
+      const arrDiv=document.createElement('div');arrDiv.className='card-arrow';arrDiv.textContent='›';
+      hdr.appendChild(iconDiv);hdr.appendChild(infoDiv);hdr.appendChild(arrDiv);d.appendChild(hdr);
+      const body=document.createElement('div');body.className='card-body';
+      body.innerHTML=(gd(item)?'<div class="card-desc">'+gd(item)+'</div>':'')
+        +(item.hours?'<div class="detail-row"><span class="detail-label">'+t('hours')+'</span><span class="detail-val">'+item.hours+'</span></div>':'')
+        +(item.phone?'<div class="detail-row"><span class="detail-label">'+t('phone')+'</span><span class="detail-val">📞 '+item.phone+'</span></div>':'')
+        +(item.dress_code?'<div class="detail-row"><span class="detail-label">'+t('dress_code')+'</span><span class="detail-val">'+item.dress_code+'</span></div>':'')
+        +(item.reservation?'<div class="detail-row"><span class="detail-label">'+t('reservation')+'</span><span class="detail-val">'+item.reservation+'</span></div>':'');
+      d.appendChild(body);
       ca.appendChild(d);
     });
   }
