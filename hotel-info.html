@@ -2027,7 +2027,7 @@ function renderA(){
     if(!sList.length)noItem();
     sList.forEach(svc=>{
       const el=document.createElement('div');el.className='ali';
-      el.innerHTML=`<div class="ali-ph">${svc.icon}</div><div class="ali-info"><div class="ali-name">${svc.names?.tr||svc.names?.en||'—'}</div><div class="ali-sub">${(svc.infos?.tr||svc.infos?.en||'—').replace(/\n/g,' ')}</div></div><div class="ali-act"><button class="be" onclick="openModal('service','services','${svc.id}')">✏️</button><button class="bd" onclick="delItem('service','${svc.id}')">🗑️</button></div>`;
+      el.innerHTML=`<div class="ali-ph">${svc.icon}</div><div class="ali-info"><div class="ali-name">${svc.names?.tr||svc.names?.en||'—'}</div><div class="ali-sub">${(svc.infos?.tr||svc.infos?.en||'—').replace(/\n/g,' ')}</div></div><div class="ali-act"><button class="be" onclick="openModal('service','${atab}','${svc.id}')">✏️</button><button class="bd" onclick="delItem('service','${svc.id}')">🗑️</button></div>`;
       ac.appendChild(el);
     });
   }
