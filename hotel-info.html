@@ -2150,7 +2150,9 @@ function showAnnModal(ann){
   html+=`<div style="font-size:11px;color:var(--text-soft);margin:-8px 0 14px;padding:0 2px">📅 Tarih/saat boş bırakılırsa her zaman aktif</div>`;
   html+=`<div class="lst">🌍 Mesaj (dil başına)</div>`;
   LANGS.forEach(l=>{html+=`<div class="fg" style="margin-bottom:8px"><div class="fl"><span class="ltag">${l.label}</span>${l.name}</div><input class="fi2" id="fann-${l.code}" value="${ann?.messages?.[l.code]||''}" placeholder="${l.name}..."></div>`;});
-  document.getElementById('modal-form-body').innerHTML=html;
+  const formBody=document.getElementById('modal-form-body');
+  formBody.innerHTML=html;
+  formBody.insertBefore(photoSection, formBody.children[1]||null);
   document.getElementById('item-modal').classList.add('open');
 }
 function selAnnType(type,btn){document.getElementById('f-ann-type').value=type;document.querySelectorAll('.ann-type-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');}
@@ -2167,7 +2169,26 @@ function openModal(type,cat,id){
 
   let html=`<div class="fg"><div class="fl">İkon</div><div class="icon-picker">${ICONS.map(ic=>`<button type="button" class="icon-btn${ic===iv?' sel':''}" onclick="pickIcon('${ic}',this)">${ic}</button>`).join('')}</div><input type="hidden" id="f-icon" value="${iv}"></div>`;
 
-  html+=`<div class="fg"><div class="fl">📸 Fotoğraf</div>${ex?.photo_url?`<img class="photo-prev show" id="photo-prev" src="${ex.photo_url}">`:`<img class="photo-prev" id="photo-prev" src="">`}<button type="button" class="upload-btn" onclick="document.getElementById('pf').click()">📁 Fotoğraf Seç</button><input type="file" id="pf" accept="image/*" style="display:none" onchange="handlePhoto(this)">${ex?.photo_url?`<button type="button" style="width:100%;margin-top:6px;padding:8px;border:none;background:none;color:#c0392b;font-family:var(--font-sans);font-size:12px;cursor:pointer" onclick="removePhoto()">🗑️ Fotoğrafı Kaldır</button>`:''}</div>`;
+  // Fotoğraf alanı — DOM tabanlı
+  const photoSection=document.createElement('div');photoSection.className='fg';
+  const photoLbl=document.createElement('div');photoLbl.className='fl';photoLbl.textContent='📸 Fotoğraf';
+  const photoPreview=document.createElement('img');photoPreview.className='photo-prev'+(ex?.photo_url?' show':'');
+  photoPreview.id='photo-prev';photoPreview.src=ex?.photo_url||'';
+  const photoFileInput=document.createElement('input');photoFileInput.type='file';photoFileInput.id='pf';
+  photoFileInput.accept='image/*';photoFileInput.style.display='none';
+  photoFileInput.onchange=function(){handlePhoto(photoFileInput);};
+  const photoSelectBtn=document.createElement('button');photoSelectBtn.type='button';
+  photoSelectBtn.className='upload-btn';photoSelectBtn.textContent='📁 Fotoğraf Seç';
+  photoSelectBtn.onclick=function(){photoFileInput.click();};
+  const photoRemoveBtn=document.createElement('button');photoRemoveBtn.type='button';
+  photoRemoveBtn.style.cssText='width:100%;margin-top:6px;padding:8px;border:none;background:none;color:#c0392b;font-family:var(--font-sans);font-size:12px;cursor:pointer;';
+  photoRemoveBtn.textContent='🗑️ Fotoğrafı Kaldır';
+  photoRemoveBtn.style.display=ex?.photo_url?'block':'none';
+  photoRemoveBtn.onclick=function(){pendingPhoto='REMOVE';photoPreview.src='';photoPreview.classList.remove('show');photoRemoveBtn.style.display='none';};
+  photoSection.appendChild(photoLbl);photoSection.appendChild(photoPreview);
+  photoSection.appendChild(photoSelectBtn);photoSection.appendChild(photoFileInput);photoSection.appendChild(photoRemoveBtn);
+  // Yeni fotoğraf seçince kaldır butonunu göster
+  photoFileInput.addEventListener('change',function(){if(photoFileInput.files[0])photoRemoveBtn.style.display='block';});
   if(type==='outlet'){
     html+=`<div class="fr"><div class="fg"><div class="fl">Çalışma Saatleri</div><input class="fi2" id="f-hours" value="${ex?.hours||''}" placeholder="09:00 – 22:00"></div><div class="fg"><div class="fl">Dahili / Tel</div><input class="fi2" id="f-phone" value="${ex?.phone||''}" placeholder="1001"></div></div><div class="fr"><div class="fg"><div class="fl">Kıyafet Kodu</div><input class="fi2" id="f-dress" value="${ex?.dress_code||''}" placeholder="Smart casual"></div><div class="fg"><div class="fl">Rezervasyon</div><input class="fi2" id="f-reservation" value="${ex?.reservation||''}" placeholder="Zorunlu"></div></div>`;
   if(cat==='alacarte'){html+=`<div class="fg"><div class="fl">🍽️ Menü İçeriği</div><textarea class="fi2" id="f-menu" rows="5" placeholder="Menü içeriğini buraya girin...">${ex?.menu_text||''}</textarea></div>`;}
@@ -2180,7 +2201,9 @@ function openModal(type,cat,id){
   html+=`<div class="lst">🌍 ${type==='service'?'Bilgi':'Açıklama'}</div>`;
   LANGS.forEach(l=>{html+=`<div class="fg" style="margin-bottom:8px"><div class="fl"><span class="ltag">${l.label}</span>${l.name}</div><textarea class="fi2" id="fd-${l.code}" rows="2" placeholder="${l.name}...">${ex?.[dk]?.[l.code]||''}</textarea></div>`;});
 
-  document.getElementById('modal-form-body').innerHTML=html;
+  const formBody=document.getElementById('modal-form-body');
+  formBody.innerHTML=html;
+  formBody.insertBefore(photoSection, formBody.children[1]||null);
   document.getElementById('item-modal').classList.add('open');
 }
 
