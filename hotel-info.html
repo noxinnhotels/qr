@@ -2225,7 +2225,7 @@ async function saveItem(){
   let error;
   if(editType==='outlet'){const menuEl=document.getElementById('f-menu');const obj={category:editCat,icon,names,descs,photo_url:photoUrl,hours:document.getElementById('f-hours')?.value||'',phone:document.getElementById('f-phone')?.value||'',dress_code:document.getElementById('f-dress')?.value||'',reservation:document.getElementById('f-reservation')?.value||'',menu_text:menuEl?menuEl.value:null};({error}=editItem?await sb.from('outlets').update(obj).eq('id',editItem.id):await sb.from('outlets').insert({...obj,id:tmpId}));}
   else if(editType==='event'){const obj={icon,names,descs,photo_url:photoUrl,event_date:document.getElementById('f-date')?.value,event_time:document.getElementById('f-time')?.value,event_end_time:document.getElementById('f-end-time')?.value||null};({error}=editItem?await sb.from('events').update(obj).eq('id',editItem.id):await sb.from('events').insert({...obj,id:tmpId}));}
-  else if(editType==='service'){const obj={icon,names,infos:descs};({error}=editItem?await sb.from('services').update(obj).eq('id',editItem.id):await sb.from('services').insert(obj));}
+  else if(editType==='service'){const svcCat=editCat==='extraservices'?'extra':'general';const obj={icon,names,infos:descs,category:svcCat};({error}=editItem?await sb.from('services').update(obj).eq('id',editItem.id):await sb.from('services').insert(obj));}
 
   btn.disabled=false;btn.textContent='Kaydet';
   if(error){showToast('❌ '+error.message);return;}
