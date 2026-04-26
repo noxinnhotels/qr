@@ -389,6 +389,9 @@ body {
   cursor: default;
 }
 .service-item:hover { box-shadow: var(--s2); transform: translateY(-2px); }
+.s-photo-wrap{overflow:hidden;border-radius:var(--r-sm) var(--r-sm) 0 0;margin:-20px -16px 14px;height:130px;}
+.s-photo{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;}
+.service-item:hover .s-photo{transform:scale(1.04);}
 .s-icon { font-size: 32px; margin-bottom: 10px; }
 .s-name { font-family: var(--serif); font-size: 17px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
 .s-info { font-size: 12px; color: var(--text-lt); line-height: 1.6; }
@@ -999,7 +1002,21 @@ function renderG(){
     ca.innerHTML=`<div class="section-title">${t(tab)}</div><div class="section-sub">${filtered.length} ${tab==='services'?'🛎️':'⭐'}</div>`;
     if(!filtered.length){ca.innerHTML+=emp();return;}
     const g=document.createElement('div');g.className='service-grid';
-    filtered.forEach(s=>{const el=document.createElement('div');el.className='service-item';el.innerHTML=`<div class="s-icon">${s.icon}</div><div class="s-name">${gn(s)}</div><div class="s-info">${gi(s)}</div>`;g.appendChild(el);});
+    filtered.forEach(function(s){
+      const el=document.createElement('div');el.className='service-item';
+      if(s.photo_url){
+        const pw=document.createElement('div');pw.className='s-photo-wrap';
+        const pi=document.createElement('img');pi.className='s-photo';pi.src=s.photo_url;pi.alt='';
+        pi.onclick=function(e){e.stopPropagation();lb(s.photo_url);};
+        pw.appendChild(pi);el.appendChild(pw);
+      } else {
+        const ic=document.createElement('div');ic.className='s-icon';ic.textContent=s.icon;el.appendChild(ic);
+      }
+      const nm=document.createElement('div');nm.className='s-name';nm.textContent=gn(s);
+      const inf=document.createElement('div');inf.className='s-info';inf.textContent=gi(s);
+      el.appendChild(nm);el.appendChild(inf);
+      g.appendChild(el);
+    });
     ca.appendChild(g);
   }
   else if(tab==='gallery'){
@@ -2150,9 +2167,7 @@ function openModal(type,cat,id){
 
   let html=`<div class="fg"><div class="fl">İkon</div><div class="icon-picker">${ICONS.map(ic=>`<button type="button" class="icon-btn${ic===iv?' sel':''}" onclick="pickIcon('${ic}',this)">${ic}</button>`).join('')}</div><input type="hidden" id="f-icon" value="${iv}"></div>`;
 
-  if(type!=='service'){
-    html+=`<div class="fg"><div class="fl">📸 Fotoğraf</div>${ex?.photo_url?`<img class="photo-prev show" id="photo-prev" src="${ex.photo_url}">`:`<img class="photo-prev" id="photo-prev" src="">`}<button type="button" class="upload-btn" onclick="document.getElementById('pf').click()">📁 Fotoğraf Seç</button><input type="file" id="pf" accept="image/*" style="display:none" onchange="handlePhoto(this)">${ex?.photo_url?`<button type="button" style="width:100%;margin-top:6px;padding:8px;border:none;background:none;color:#c0392b;font-family:var(--font-sans);font-size:12px;cursor:pointer" onclick="removePhoto()">🗑️ Fotoğrafı Kaldır</button>`:''}</div>`;
-  }
+  html+=`<div class="fg"><div class="fl">📸 Fotoğraf</div>${ex?.photo_url?`<img class="photo-prev show" id="photo-prev" src="${ex.photo_url}">`:`<img class="photo-prev" id="photo-prev" src="">`}<button type="button" class="upload-btn" onclick="document.getElementById('pf').click()">📁 Fotoğraf Seç</button><input type="file" id="pf" accept="image/*" style="display:none" onchange="handlePhoto(this)">${ex?.photo_url?`<button type="button" style="width:100%;margin-top:6px;padding:8px;border:none;background:none;color:#c0392b;font-family:var(--font-sans);font-size:12px;cursor:pointer" onclick="removePhoto()">🗑️ Fotoğrafı Kaldır</button>`:''}</div>`;
   if(type==='outlet'){
     html+=`<div class="fr"><div class="fg"><div class="fl">Çalışma Saatleri</div><input class="fi2" id="f-hours" value="${ex?.hours||''}" placeholder="09:00 – 22:00"></div><div class="fg"><div class="fl">Dahili / Tel</div><input class="fi2" id="f-phone" value="${ex?.phone||''}" placeholder="1001"></div></div><div class="fr"><div class="fg"><div class="fl">Kıyafet Kodu</div><input class="fi2" id="f-dress" value="${ex?.dress_code||''}" placeholder="Smart casual"></div><div class="fg"><div class="fl">Rezervasyon</div><input class="fi2" id="f-reservation" value="${ex?.reservation||''}" placeholder="Zorunlu"></div></div>`;
   if(cat==='alacarte'){html+=`<div class="fg"><div class="fl">🍽️ Menü İçeriği</div><textarea class="fi2" id="f-menu" rows="5" placeholder="Menü içeriğini buraya girin...">${ex?.menu_text||''}</textarea></div>`;}
@@ -2220,12 +2235,12 @@ async function saveItem(){
   let photoUrl=editItem?.photo_url||null;
   const tmpId=editItem?.id||crypto.randomUUID();
   if(pendingPhoto==='REMOVE')photoUrl=null;
-  else if(pendingPhoto instanceof File){const folder=editType==='outlet'?'outlets':'events';photoUrl=await uploadPhoto(pendingPhoto,folder,tmpId);}
+  else if(pendingPhoto instanceof File){const folder=editType==='outlet'?'outlets':editType==='service'?'services':'events';photoUrl=await uploadPhoto(pendingPhoto,folder,tmpId);}
 
   let error;
   if(editType==='outlet'){const menuEl=document.getElementById('f-menu');const obj={category:editCat,icon,names,descs,photo_url:photoUrl,hours:document.getElementById('f-hours')?.value||'',phone:document.getElementById('f-phone')?.value||'',dress_code:document.getElementById('f-dress')?.value||'',reservation:document.getElementById('f-reservation')?.value||'',menu_text:menuEl?menuEl.value:null};({error}=editItem?await sb.from('outlets').update(obj).eq('id',editItem.id):await sb.from('outlets').insert({...obj,id:tmpId}));}
   else if(editType==='event'){const obj={icon,names,descs,photo_url:photoUrl,event_date:document.getElementById('f-date')?.value,event_time:document.getElementById('f-time')?.value,event_end_time:document.getElementById('f-end-time')?.value||null};({error}=editItem?await sb.from('events').update(obj).eq('id',editItem.id):await sb.from('events').insert({...obj,id:tmpId}));}
-  else if(editType==='service'){const svcCat=editCat==='extraservices'?'extra':'general';const obj={icon,names,infos:descs,category:svcCat};({error}=editItem?await sb.from('services').update(obj).eq('id',editItem.id):await sb.from('services').insert(obj));}
+  else if(editType==='service'){const svcCat=editCat==='extraservices'?'extra':'general';const obj={icon,names,infos:descs,category:svcCat,photo_url:photoUrl};({error}=editItem?await sb.from('services').update(obj).eq('id',editItem.id):await sb.from('services').insert(obj));}
 
   btn.disabled=false;btn.textContent='Kaydet';
   if(error){showToast('❌ '+error.message);return;}
