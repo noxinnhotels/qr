@@ -957,15 +957,19 @@ function renderG(){
       const arrDiv=document.createElement('div');arrDiv.className='card-arrow';arrDiv.textContent='›';
       hdr.appendChild(iconDiv);hdr.appendChild(infoDiv);hdr.appendChild(arrDiv);d.appendChild(hdr);
       const body=document.createElement('div');body.className='card-body';
-      body.innerHTML=(gd(item)?'<div class="card-desc">'+gd(item)+'</div>':'')
-        +(item.hours?'<div class="detail-row"><span class="detail-label">'+t('hours')+'</span><span class="detail-val">'+item.hours+'</span></div>':'')
-        +(item.phone?'<div class="detail-row"><span class="detail-label">'+t('phone')+'</span><span class="detail-val">📞 '+item.phone+'</span></div>':'')
-        +(item.dress_code?'<div class="detail-row"><span class="detail-label">'+t('dress_code')+'</span><span class="detail-val">'+item.dress_code+'</span></div>':'')
-        +(item.reservation?'<div class="detail-row"><span class="detail-label">'+t('reservation')+'</span><span class="detail-val">'+item.reservation+'</span></div>':'')
-        +(item.category==='alacarte'?(function(){
-          const mt=item.menu_texts?.[lang]||item.menu_texts?.en||item.menu_texts?.tr||item.menu_text||'';
-          return mt?'<div class="menu-section"><div class="menu-section-title">🍽️ '+t('menu')+'</div><div class="menu-text">'+mt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>')+'</div></div>':'';
-        })():'');
+      function buildCardBody(){
+        const mt=item.menu_texts?.[lang]||item.menu_texts?.en||item.menu_texts?.tr||item.menu_text||'';
+        body.innerHTML=(gd(item)?'<div class="card-desc">'+gd(item)+'</div>':'')
+          +(item.hours?'<div class="detail-row"><span class="detail-label">'+t('hours')+'</span><span class="detail-val">'+item.hours+'</span></div>':'')
+          +(item.phone?'<div class="detail-row"><span class="detail-label">'+t('phone')+'</span><span class="detail-val">📞 '+item.phone+'</span></div>':'')
+          +(item.dress_code?'<div class="detail-row"><span class="detail-label">'+t('dress_code')+'</span><span class="detail-val">'+item.dress_code+'</span></div>':'')
+          +(item.reservation?'<div class="detail-row"><span class="detail-label">'+t('reservation')+'</span><span class="detail-val">'+item.reservation+'</span></div>':'')
+          +(item.category==='alacarte'&&mt?'<div class="menu-section"><div class="menu-section-title">🍽️ '+t('menu')+'</div><div class="menu-text">'+mt.split('\n').map(function(l){return l.replace(/&/g,'&amp;').replace(/</g,'&lt;');}).join('<br>')+'</div></div>':'');
+      }
+      buildCardBody();
+      // Dil değişince menüyü yenile
+      d.dataset.buildBody='1';
+      d._buildBody=buildCardBody;
       d.appendChild(body);
       ca.appendChild(d);
     });
@@ -1994,9 +1998,11 @@ function dismissPWA(){
 
 function setLang(c){
   lang=c;
-  // Dil değişince duyuru banner'ını sıfırla — yeni dilde tekrar göster
+  // Dil değişince duyuru banner'ını sıfırla
   const annWrap=document.getElementById('ann-banner-wrap');
   if(annWrap)annWrap.classList.remove('show');
+  // Açık kartların menüsünü güncelle
+  document.querySelectorAll('[data-build-body="1"]').forEach(function(d){if(d._buildBody)d._buildBody();});
   renderG();
 }
 function setTab(id){
