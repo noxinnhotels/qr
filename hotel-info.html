@@ -745,7 +745,7 @@ const sb=supabase.createClient(SUPA_URL,SUPA_KEY);
 const BUCKET='hotel-media';
 
 const LANGS=[{code:'tr',label:'TR',name:'Türkçe',flag:'🇹🇷'},{code:'en',label:'EN',name:'English',flag:'🇬🇧'},{code:'ru',label:'RU',name:'Русский',flag:'🇷🇺'},{code:'de',label:'DE',name:'Deutsch',flag:'🇩🇪'},{code:'fr',label:'FR',name:'Français',flag:'🇫🇷'},{code:'nl',label:'NL',name:'Nederlands',flag:'🇳🇱'},{code:'cs',label:'CS',name:'Čeština',flag:'🇨🇿'},{code:'pl',label:'PL',name:'Polski',flag:'🇵🇱'},{code:'ro',label:'RO',name:'Română',flag:'🇷🇴'}];
-const ADMIN_TABS=[{id:'dashboard',icon:'📊',label:'Dashboard'},{id:'restaurants',icon:'🍽️',label:'Restoranlar'},{id:'bars',icon:'🍸',label:'Barlar'},{id:'alacarte',icon:'🥘',label:'À la Carte'},{id:'pools',icon:'🏊',label:'Havuz & Spa'},{id:'events',icon:'🎉',label:'Etkinlikler'},{id:'services',icon:'🛎️',label:'Genel Hizmetler'},{id:'extraservices',icon:'⭐',label:'Ekstra Hizmetler'},{id:'requests',icon:'📝',label:'Talepler'},{id:'announcements',icon:'📢',label:'Duyuru'},{id:'hotelinfo',icon:'🏨',label:'Otel Bilgisi'},{id:'tabsettings',icon:'🔧',label:'Sekmeler'}];
+const ADMIN_TABS=[{id:'dashboard',icon:'📊',label:'Dashboard'},{id:'restaurants',icon:'🍽️',label:'Restoranlar'},{id:'bars',icon:'🍸',label:'Barlar'},{id:'alacarte',icon:'🥘',label:'À la Carte'},{id:'pools',icon:'🏊',label:'Havuz & Spa'},{id:'events',icon:'🎉',label:'Etkinlikler'},{id:'services',icon:'🛎️',label:'Genel Hizmetler'},{id:'extraservices',icon:'⭐',label:'Ekstra Hizmetler'},{id:'announcements',icon:'📢',label:'Duyuru'},{id:'hotelinfo',icon:'🏨',label:'Otel Bilgisi'},{id:'tabsettings',icon:'🔧',label:'Sekmeler'}];
 const ICONS=['🍽️','🍹','🍸','☕','🥂','🍕','🍔','🍟','🌮','🌯','🥙','🥗','🍜','🍝','🍛','🍣','🍱','🥩','🍗','🥓','🍳','🥚','🧆','🧇','🥞','🧈','🥐','🥖','🫓','🥨','🧀','🥪','🌭','🫔','🥫','🍲','🫕','🥘','🍢','🍡','🍧','🍨','🍦','🧁','🎂','🍰','🍮','🍭','🍬','🍫','🍿','🍩','🍪','🌰','🥜','🍯','🧃','🥤','🧋','🍵','🫖','🍶','🥛','🍺','🍻','🥃','🍷','🫗','🍾','🥄','🍴','🔪','🫙','🧂','🫒','🧄','🧅','🥕','🌽','🫑','🥦','🥬','🥒','🍅','🍆','🌶️','🫚','🫛','🍇','🍓','🫐','🍈','🍉','🍊','🍋','🍌','🍍','🥭','🍎','🍏','🍐','🍑','🍒','🥝','🍠','🏊','💆','🧖','🛁','🎉','🎶','🎭','🌅','🏄','⛵','🎯','🎪','🛎️','📶','🅿️','🚗','🏋️','👶','🧹','🏥','💊','🔑','📸','🌿','🌴','🦀','🐠','☀️','🌊','🎨','🎬','⭐','🏖️','🎠'];
 const ANN_TYPES=[{id:'info',label:'ℹ️ Bilgi'},{id:'warning',label:'⚠️ Uyarı'},{id:'urgent',label:'🚨 Acil'},{id:'success',label:'✅ Başarı'}];
 const ANN_ICONS={info:'ℹ️',warning:'⚠️',urgent:'🚨',success:'✅'};
@@ -909,14 +909,14 @@ function renderG(){
   renderAnn();
   renderLiveEvents();
   document.getElementById('lang-bar').innerHTML=LANGS.map(l=>`<button class="lang-btn ${l.code===lang?'active':''}" onclick="setLang('${l.code}')" title="${l.name}">${l.flag}</button>`).join('');
-  const ALL_GUEST_TABS=[{id:'restaurants',icon:'🍽️'},{id:'bars',icon:'🍸'},{id:'alacarte',icon:'🥘'},{id:'pools',icon:'🏊'},{id:'events',icon:'🎉'},{id:'services',icon:'🛎️'},{id:'extraservices',icon:'⭐'},{id:'gallery',icon:'📸'},{id:'hotelmap',icon:'🗺️'},{id:'tour360',icon:'🔮'},{id:'hotelinfo',icon:'🏨'},{id:'request',icon:'💬'}];
+  const ALL_GUEST_TABS=[{id:'restaurants',icon:'🍽️'},{id:'bars',icon:'🍸'},{id:'alacarte',icon:'🥘'},{id:'pools',icon:'🏊'},{id:'events',icon:'🎉'},{id:'services',icon:'🛎️'},{id:'extraservices',icon:'⭐'},{id:'gallery',icon:'📸'},{id:'hotelmap',icon:'🗺️'},{id:'tour360',icon:'🔮'},{id:'hotelinfo',icon:'🏨'}];
   const hiddenTabs=(C.config.hidden_tabs||'').split(',').filter(Boolean);
   const tabOrder=(C.config.tab_order||'').split(',').filter(Boolean);
   const orderedTabs=tabOrder.length?ALL_GUEST_TABS.slice().sort(function(a,b){const ai=tabOrder.indexOf(a.id),bi=tabOrder.indexOf(b.id);if(ai===-1&&bi===-1)return 0;if(ai===-1)return 1;if(bi===-1)return -1;return ai-bi;}):ALL_GUEST_TABS;
   const tabs=orderedTabs.filter(t=>!hiddenTabs.includes(t.id));
   // Gizli sekmedeyken başka sekmeye geç
   if(hiddenTabs.includes(tab)&&tabs.length){tab=tabs[0].id;}
-  document.getElementById('nav-tabs').innerHTML=tabs.map(c=>`<button class="nav-tab ${c.id===tab?'active':''}" onclick="setTab('${c.id}')">${c.id==='request'?t('request_tab'):c.id==='gallery'?t('gallery'):c.id==='hotelinfo'?t('info_tab'):c.id==='hotelmap'?t('map_tab'):c.id==='tour360'?t('tour360'):c.id==='bars'?t('bars'):c.id==='alacarte'?t('alacarte'):c.id==='extraservices'?t('extraservices'):t(c.id)}</button>`).join('');
+  document.getElementById('nav-tabs').innerHTML=tabs.map(c=>`<button class="nav-tab ${c.id===tab?'active':''}" onclick="setTab('${c.id}')">${c.id==='gallery'?t('gallery'):c.id==='hotelinfo'?t('info_tab'):c.id==='hotelmap'?t('map_tab'):c.id==='tour360'?t('tour360'):c.id==='bars'?t('bars'):c.id==='alacarte'?t('alacarte'):c.id==='extraservices'?t('extraservices'):t(c.id)}</button>`).join('');
   const ca=document.getElementById('content-area');ca.innerHTML='';
 
   if(tab==='restaurants'||tab==='bars'||tab==='alacarte'||tab==='pools'){
@@ -1323,7 +1323,6 @@ function renderTabSettings(ac){
     {id:'hotelmap',icon:'🗺️',label:'Harita'},
     {id:'tour360',icon:'🔮',label:'360° Tur'},
     {id:'hotelinfo',icon:'🏨',label:'Otel Bilgisi'},
-    {id:'request',icon:'💬',label:'Öneri & Şikayet'},
   ];
 
   // Mevcut sırayı uygula
