@@ -2160,7 +2160,6 @@ function showAnnModal(ann){
   LANGS.forEach(l=>{html+=`<div class="fg" style="margin-bottom:8px"><div class="fl"><span class="ltag">${l.label}</span>${l.name}</div><input class="fi2" id="fann-${l.code}" value="${ann?.messages?.[l.code]||''}" placeholder="${l.name}..."></div>`;});
   const formBody=document.getElementById('modal-form-body');
   formBody.innerHTML=html;
-  formBody.insertBefore(photoSection, formBody.children[1]||null);
   document.getElementById('item-modal').classList.add('open');
 }
 function selAnnType(type,btn){document.getElementById('f-ann-type').value=type;document.querySelectorAll('.ann-type-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');}
@@ -2216,7 +2215,7 @@ function openModal(type,cat,id){
 
   const formBody=document.getElementById('modal-form-body');
   formBody.innerHTML=html;
-  formBody.insertBefore(photoSection, formBody.children[1]||null);
+  if(type!=='announcement'){formBody.insertBefore(photoSection, formBody.children[1]||null);}
   document.getElementById('item-modal').classList.add('open');
 }
 
