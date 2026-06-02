@@ -384,7 +384,20 @@ function toggleMic(){
   recognition.start();
 }
 
-renderQuick();
+// Auto-detect device language
+(function(){
+  const nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+  const map = [
+    ['tr', 'tr'],
+    ['ru', 'ru'],
+    ['de', 'de'],
+    ['pl', 'pl'],
+    ['cs', 'cs'], ['cz', 'cs'],
+    ['en', 'en']
+  ];
+  const detected = (map.find(([prefix]) => nav.startsWith(prefix)) || ['en','en'])[1];
+  setLang(detected);
+})();
 </script>
 </body>
 </html>
