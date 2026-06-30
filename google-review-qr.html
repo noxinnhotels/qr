@@ -296,10 +296,14 @@
 
 <!-- LANG BAR -->
 <div class="lang-bar">
-  <button class="lang-btn active" onclick="setLang('tr')">TR</button>
-  <button class="lang-btn" onclick="setLang('en')">EN</button>
-  <button class="lang-btn" onclick="setLang('ru')">RU</button>
-  <button class="lang-btn" onclick="setLang('de')">DE</button>
+  <button class="lang-btn" data-lang="tr" onclick="setLang('tr')">TR</button>
+  <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button>
+  <button class="lang-btn" data-lang="de" onclick="setLang('de')">DE</button>
+  <button class="lang-btn" data-lang="pl" onclick="setLang('pl')">PL</button>
+  <button class="lang-btn" data-lang="cs" onclick="setLang('cs')">CZ</button>
+  <button class="lang-btn" data-lang="fr" onclick="setLang('fr')">FR</button>
+  <button class="lang-btn" data-lang="ro" onclick="setLang('ro')">RO</button>
 </div>
 
 <!-- ══ SCREEN 1: RATING ══ -->
@@ -311,76 +315,50 @@
   </div>
   <div class="divider"></div>
 
-  <p class="question" id="txt-question">Konaklamanızı nasıl değerlendirirsiniz?</p>
+  <p class="question" id="txt-question">How would you rate your stay?</p>
 
   <div class="stars-row" id="stars-row">
-    <button class="star-btn" data-v="1" onclick="selectStar(1)" aria-label="1 yıldız">★</button>
-    <button class="star-btn" data-v="2" onclick="selectStar(2)" aria-label="2 yıldız">★</button>
-    <button class="star-btn" data-v="3" onclick="selectStar(3)" aria-label="3 yıldız">★</button>
-    <button class="star-btn" data-v="4" onclick="selectStar(4)" aria-label="4 yıldız">★</button>
-    <button class="star-btn" data-v="5" onclick="selectStar(5)" aria-label="5 yıldız">★</button>
+    <button class="star-btn" data-v="1" onclick="selectStar(1)" aria-label="1 star">★</button>
+    <button class="star-btn" data-v="2" onclick="selectStar(2)" aria-label="2 stars">★</button>
+    <button class="star-btn" data-v="3" onclick="selectStar(3)" aria-label="3 stars">★</button>
+    <button class="star-btn" data-v="4" onclick="selectStar(4)" aria-label="4 stars">★</button>
+    <button class="star-btn" data-v="5" onclick="selectStar(5)" aria-label="5 stars">★</button>
   </div>
 
-  <p class="hint" id="txt-hint">Yıldıza tıklayarak devam edin</p>
+  <p class="hint" id="txt-hint">Tap a star to continue</p>
 </div>
 
 <!-- ══ SCREEN 2A: GOOGLE ══ -->
 <div id="s-google" class="screen">
   <div class="card">
     <div class="card-icon">🌟</div>
-    <h2 class="card-title" id="txt-g-title">Harika! Bunu duymak çok güzel.</h2>
-    <p class="card-body" id="txt-g-body">Deneyiminizi Google'da paylaşırsanız diğer misafirlerimize de yol göstermiş olursunuz. Bir dakikanızı ayırır mısınız?</p>
+    <h2 class="card-title" id="txt-g-title">Wonderful! We love hearing that.</h2>
+    <p class="card-body" id="txt-g-body">Your Google review helps future guests discover us. Would you take a moment?</p>
     <a id="google-link" href="https://g.page/r/CRbyUyHOZ7snEBM/review" target="_blank" rel="noopener" class="btn btn-gold" style="margin-bottom:.75rem">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><path d="M21.35 11.1H12v2.94h5.35c-.23 1.24-1.38 3.65-5.35 3.65-3.22 0-5.84-2.67-5.84-5.96s2.62-5.96 5.84-5.96c1.83 0 3.06.78 3.76 1.46l2.56-2.47C16.57 3.54 14.47 2.7 12 2.7 6.83 2.7 2.65 6.91 2.65 12s4.18 9.3 9.35 9.3c5.4 0 8.98-3.79 8.98-9.13 0-.61-.07-1.08-.13-1.07z" fill="currentColor"/></svg>
-      <span id="txt-g-btn">Google'da Değerlendir</span>
+      <span id="txt-g-btn">Review on Google</span>
     </a>
-    <button class="btn btn-outline" onclick="goBack()" id="txt-g-skip">Atla</button>
+    <button class="btn btn-outline" onclick="goBack()" id="txt-g-skip">Skip</button>
   </div>
 </div>
 
-<!-- ══ SCREEN 2B: FEEDBACK ══ -->
+<!-- ══ SCREEN 2B: LOW RATING THANK YOU ══ -->
 <div id="s-feedback" class="screen">
-  <div class="card">
-    <div class="card-icon">💬</div>
-    <h2 class="card-title" id="txt-f-title">Geri bildiriminiz bizim için değerli.</h2>
-    <p class="card-body" id="txt-f-body">Yaşadığınız deneyimi bizimle paylaşın. Her geri bildirimi titizlikle değerlendiriyor ve hizmetlerimizi geliştiriyoruz.</p>
-
-    <label class="form-label" id="txt-f-dept-lbl">Konu seçin (isteğe bağlı)</label>
-    <div class="dept-grid" id="dept-grid">
-      <div class="dept-chip" onclick="toggleDept(this)" data-key="reception">🛎 Resepsiyon</div>
-      <div class="dept-chip" onclick="toggleDept(this)" data-key="restaurant">🍽 Restoran</div>
-      <div class="dept-chip" onclick="toggleDept(this)" data-key="room">🛏 Oda</div>
-      <div class="dept-chip" onclick="toggleDept(this)" data-key="pool">🏊 Havuz</div>
-      <div class="dept-chip" onclick="toggleDept(this)" data-key="animation">🎭 Animasyon</div>
-      <div class="dept-chip" onclick="toggleDept(this)" data-key="other">💡 Diğer</div>
-    </div>
-
-    <label class="form-label" id="txt-f-msg-lbl">Mesajınız</label>
-    <textarea id="feedback-text" placeholder="..." rows="4"></textarea>
-
-    <button class="btn btn-gold" onclick="sendFeedback()" id="txt-f-send">Gönder</button>
-  </div>
-</div>
-
-<!-- ══ SCREEN 3: THANK YOU ══ -->
-<div id="s-thanks" class="screen">
   <div class="card" style="text-align:center">
     <div class="thank-icon">✓</div>
-    <h2 class="card-title" id="txt-t-title">Teşekkürler!</h2>
-    <p class="card-body" id="txt-t-body">Geri bildiriminiz bize ulaştı. Noxinn Deluxe ailesi olarak her zaman daha iyisini sunmak için çalışıyoruz.</p>
+    <h2 class="card-title" id="txt-f-title">Thank you.</h2>
+    <p class="card-body" id="txt-f-body">Your feedback matters to us. We will keep working to deliver a better experience.</p>
     <div class="divider"></div>
     <p style="font-size:.72rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">Noxinn Deluxe Hotel · Konaklı, Alanya</p>
   </div>
 </div>
 
+
+
 <script>
 // ── CONFIG ──────────────────────────────────────────────
 const GOOGLE_REVIEW_URL = 'https://g.page/r/CRbyUyHOZ7snEBM/review';
 const POSITIVE_THRESHOLD = 4; // 4-5 yıldız → Google'a yönlendir
-
-// WhatsApp veya e-posta ile bildirim (isteğe bağlı)
-const NOTIFY_WHATSAPP = ''; // örn: '905551234567'
-const NOTIFY_EMAIL    = ''; // örn: 'info@noxinndeluxe.com'
 // ────────────────────────────────────────────────────────
 
 const i18n = {
@@ -391,15 +369,8 @@ const i18n = {
     gBody: 'Deneyiminizi Google\'da paylaşırsanız diğer misafirlerimize de yol göstermiş olursunuz. Bir dakikanızı ayırır mısınız?',
     gBtn: "Google'da Değerlendir",
     gSkip: 'Atla',
-    fTitle: 'Geri bildiriminiz bizim için değerli.',
-    fBody: 'Yaşadığınız deneyimi bizimle paylaşın. Her geri bildirimi titizlikle değerlendiriyoruz.',
-    fDeptLbl: 'Konu seçin (isteğe bağlı)',
-    fMsgLbl: 'Mesajınız',
-    fSend: 'Gönder',
-    tTitle: 'Teşekkürler!',
-    tBody: 'Geri bildiriminiz bize ulaştı. Noxinn Deluxe ailesi olarak her zaman daha iyisini sunmak için çalışıyoruz.',
-    depts: { reception:'🛎 Resepsiyon', restaurant:'🍽 Restoran', room:'🛏 Oda', pool:'🏊 Havuz', animation:'🎭 Animasyon', other:'💡 Diğer' },
-    placeholder: 'Deneyiminizi anlatın…'
+    fTitle: 'Teşekkür ederiz.',
+    fBody: 'Görüşleriniz bizim için değerli. Daha iyi bir deneyim sunmak için çalışmaya devam edeceğiz.'
   },
   en: {
     question: 'How would you rate your stay?',
@@ -408,15 +379,8 @@ const i18n = {
     gBody: 'Your Google review helps future guests discover us. Would you take a moment?',
     gBtn: 'Review on Google',
     gSkip: 'Skip',
-    fTitle: 'Your feedback matters.',
-    fBody: 'Tell us about your experience. Every comment is carefully reviewed so we can serve you better.',
-    fDeptLbl: 'Select a topic (optional)',
-    fMsgLbl: 'Your message',
-    fSend: 'Send',
-    tTitle: 'Thank you!',
-    tBody: 'Your feedback has been received. We are always working to deliver the very best at Noxinn Deluxe.',
-    depts: { reception:'🛎 Reception', restaurant:'🍽 Restaurant', room:'🛏 Room', pool:'🏊 Pool', animation:'🎭 Animation', other:'💡 Other' },
-    placeholder: 'Tell us about your experience…'
+    fTitle: 'Thank you.',
+    fBody: 'Your feedback matters to us. We will keep working to deliver a better experience.'
   },
   ru: {
     question: 'Как вы оцениваете своё пребывание?',
@@ -425,15 +389,8 @@ const i18n = {
     gBody: 'Поделитесь своим отзывом в Google — это поможет другим гостям. Уделите минуту?',
     gBtn: 'Оставить отзыв в Google',
     gSkip: 'Пропустить',
-    fTitle: 'Ваш отзыв важен для нас.',
-    fBody: 'Расскажите о своём опыте. Мы тщательно изучаем каждый отзыв.',
-    fDeptLbl: 'Выберите тему (необязательно)',
-    fMsgLbl: 'Ваше сообщение',
-    fSend: 'Отправить',
-    tTitle: 'Спасибо!',
-    tBody: 'Ваш отзыв получен. Мы всегда стремимся к лучшему.',
-    depts: { reception:'🛎 Ресепшен', restaurant:'🍽 Ресторан', room:'🛏 Номер', pool:'🏊 Бассейн', animation:'🎭 Анимация', other:'💡 Другое' },
-    placeholder: 'Расскажите о своём пребывании…'
+    fTitle: 'Спасибо.',
+    fBody: 'Ваше мнение важно для нас. Мы продолжим работать над качеством обслуживания.'
   },
   de: {
     question: 'Wie bewerten Sie Ihren Aufenthalt?',
@@ -442,49 +399,70 @@ const i18n = {
     gBody: 'Teilen Sie Ihre Erfahrung auf Google — das hilft anderen Gästen. Nehmen Sie sich einen Moment?',
     gBtn: 'Auf Google bewerten',
     gSkip: 'Überspringen',
-    fTitle: 'Ihr Feedback ist uns wichtig.',
-    fBody: 'Erzählen Sie uns von Ihrer Erfahrung. Wir prüfen jedes Feedback sorgfältig.',
-    fDeptLbl: 'Thema wählen (optional)',
-    fMsgLbl: 'Ihre Nachricht',
-    fSend: 'Senden',
-    tTitle: 'Vielen Dank!',
-    tBody: 'Ihr Feedback ist bei uns angekommen. Wir arbeiten stets daran, den besten Service zu bieten.',
-    depts: { reception:'🛎 Rezeption', restaurant:'🍽 Restaurant', room:'🛏 Zimmer', pool:'🏊 Pool', animation:'🎭 Animation', other:'💡 Sonstiges' },
-    placeholder: 'Schildern Sie uns Ihren Aufenthalt…'
+    fTitle: 'Vielen Dank.',
+    fBody: 'Ihre Meinung ist uns wichtig. Wir arbeiten stets daran, Ihren Aufenthalt noch besser zu machen.'
+  },
+  pl: {
+    question: 'Jak oceniasz swój pobyt?',
+    hint: 'Stuknij gwiazdkę, aby kontynuować',
+    gTitle: 'Wspaniale! Bardzo miło to słyszeć.',
+    gBody: 'Twoja opinia na Google pomoże innym gościom nas odkryć. Czy poświęcisz chwilę?',
+    gBtn: 'Oceń nas na Google',
+    gSkip: 'Pomiń',
+    fTitle: 'Dziękujemy.',
+    fBody: 'Twoja opinia jest dla nas ważna. Będziemy nadal pracować nad jeszcze lepszym pobytem.'
+  },
+  cs: {
+    question: 'Jak hodnotíte svůj pobyt?',
+    hint: 'Pokračujte klepnutím na hvězdičku',
+    gTitle: 'Skvělé! Moc nás to těší.',
+    gBody: 'Vaše recenze na Google pomůže dalším hostům nás objevit. Máte chvilku?',
+    gBtn: 'Ohodnotit na Google',
+    gSkip: 'Přeskočit',
+    fTitle: 'Děkujeme.',
+    fBody: 'Váš názor je pro nás důležitý. Budeme i nadále pracovat na ještě lepším pobytu.'
+  },
+  fr: {
+    question: 'Comment évaluez-vous votre séjour ?',
+    hint: 'Touchez une étoile pour continuer',
+    gTitle: 'Formidable ! Cela nous fait très plaisir.',
+    gBody: 'Votre avis sur Google aide les futurs clients à nous découvrir. Avez-vous un instant ?',
+    gBtn: 'Laisser un avis Google',
+    gSkip: 'Passer',
+    fTitle: 'Merci.',
+    fBody: 'Votre avis compte pour nous. Nous continuerons à améliorer votre expérience.'
+  },
+  ro: {
+    question: 'Cum apreciați sejurul dumneavoastră?',
+    hint: 'Atingeți o stea pentru a continua',
+    gTitle: 'Minunat! Ne bucurăm să auzim asta.',
+    gBody: 'Recenzia dumneavoastră pe Google ajută alți oaspeți să ne descopere. Aveți un moment?',
+    gBtn: 'Recenzie pe Google',
+    gSkip: 'Omite',
+    fTitle: 'Vă mulțumim.',
+    fBody: 'Părerea dumneavoastră contează pentru noi. Vom continua să îmbunătățim experiența oferită.'
   }
 };
 
-let lang = 'tr';
+let lang = 'en';
 let selectedRating = 0;
-let selectedDepts = [];
 
 function setLang(l) {
   lang = l;
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === l.toUpperCase()));
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
   applyTexts();
 }
 
 function applyTexts() {
   const t = i18n[lang];
-  document.getElementById('txt-question').textContent   = t.question;
-  document.getElementById('txt-hint').textContent       = t.hint;
-  document.getElementById('txt-g-title').textContent    = t.gTitle;
-  document.getElementById('txt-g-body').textContent     = t.gBody;
-  document.getElementById('txt-g-btn').textContent      = t.gBtn;
-  document.getElementById('txt-g-skip').textContent     = t.gSkip;
-  document.getElementById('txt-f-title').textContent    = t.fTitle;
-  document.getElementById('txt-f-body').textContent     = t.fBody;
-  document.getElementById('txt-f-dept-lbl').textContent = t.fDeptLbl;
-  document.getElementById('txt-f-msg-lbl').textContent  = t.fMsgLbl;
-  document.getElementById('txt-f-send').textContent     = t.fSend;
-  document.getElementById('txt-t-title').textContent    = t.tTitle;
-  document.getElementById('txt-t-body').textContent     = t.tBody;
-  document.getElementById('feedback-text').placeholder  = t.placeholder;
-
-  document.querySelectorAll('#dept-grid .dept-chip').forEach(chip => {
-    const key = chip.dataset.key;
-    if (t.depts[key]) chip.textContent = t.depts[key];
-  });
+  document.getElementById('txt-question').textContent = t.question;
+  document.getElementById('txt-hint').textContent     = t.hint;
+  document.getElementById('txt-g-title').textContent  = t.gTitle;
+  document.getElementById('txt-g-body').textContent   = t.gBody;
+  document.getElementById('txt-g-btn').textContent    = t.gBtn;
+  document.getElementById('txt-g-skip').textContent   = t.gSkip;
+  document.getElementById('txt-f-title').textContent  = t.fTitle;
+  document.getElementById('txt-f-body').textContent   = t.fBody;
 }
 
 function goTo(screenId) {
@@ -518,47 +496,16 @@ function goBack() {
   goTo('s-rating');
 }
 
-function toggleDept(chip) {
-  chip.classList.toggle('selected');
-  const key = chip.dataset.key;
-  if (chip.classList.contains('selected')) {
-    if (!selectedDepts.includes(key)) selectedDepts.push(key);
-  } else {
-    selectedDepts = selectedDepts.filter(d => d !== key);
-  }
-}
-
-function sendFeedback() {
-  const msg = document.getElementById('feedback-text').value.trim();
-  if (!msg) {
-    document.getElementById('feedback-text').focus();
-    return;
-  }
-
-  const t = i18n[lang];
-  const deptLabels = selectedDepts.map(k => t.depts[k] || k).join(', ');
-  const fullMsg = `⭐ ${selectedRating}/5 | ${deptLabels || '-'}\n${msg}`;
-
-  // WhatsApp bildirimi
-  if (NOTIFY_WHATSAPP) {
-    const waUrl = `https://wa.me/${NOTIFY_WHATSAPP}?text=${encodeURIComponent(fullMsg)}`;
-    window.open(waUrl, '_blank');
-  }
-
-  // E-posta bildirimi (mailto fallback)
-  if (NOTIFY_EMAIL && !NOTIFY_WHATSAPP) {
-    const subject = encodeURIComponent('Noxinn Deluxe — Misafir Geri Bildirimi');
-    const body = encodeURIComponent(fullMsg);
-    window.location.href = `mailto:${NOTIFY_EMAIL}?subject=${subject}&body=${body}`;
-  }
-
-  goTo('s-thanks');
-}
-
-// Detect browser language on load
+// Cihaz/tarayıcı diline göre otomatik dil seçimi
 (function() {
-  const bl = (navigator.language || 'tr').split('-')[0].toLowerCase();
-  if (['tr','en','ru','de'].includes(bl)) setLang(bl);
+  const supported = ['tr','en','ru','de','pl','cs','fr','ro'];
+  const browserLangs = navigator.languages || [navigator.language || 'en'];
+  let detected = 'en';
+  for (const bl of browserLangs) {
+    const code = bl.split('-')[0].toLowerCase();
+    if (supported.includes(code)) { detected = code; break; }
+  }
+  setLang(detected);
 })();
 </script>
 </body>
